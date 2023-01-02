@@ -1,14 +1,15 @@
 require('dotenv').config()
 const express = require('express')
-const sequelize = require('./db')
-const models = require('./models/models')
-const models_hooks = require('./models/hooks')
 const cors = require('cors')
-const router = require('./routes/index')
-const errorHandler = require('./middleware/ErrorHandling')
 const fileupload = require('express-fileupload')
 const path = require('path')
 const mongo_client = require('./mongo')
+
+const sequelize = require('./db')
+const models = require('./models/index')
+const models_hooks = require('./models/index')
+const router = require('./routes/index')
+const errorHandler = require('./middleware/ErrorHandling')
 
 const PORT = process.env.PORT || 5000
 

@@ -1,13 +1,13 @@
 const ApiError = require('../error/ApiError')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const { User} = require('../models/models')
+const { User} = require('../models/userModel')
 
-const generateJwt = (id,email,role) => {
+const generateJwt = (id,name,email) => {
     return jwt.sign({
         id,
-        email,
-        role
+        name,
+        email
     },
         process.env.SECRET_KEY,
         {expiresIn:'24h'})
@@ -36,7 +36,7 @@ class AuthController {
             const avatar = 'defaultPic.jpg'
         }
         const user = await User.create({ name,avatar,email,password: hashPassword })
-        const token = generateJwt(user.id,user.email,user.role)
+        const token = generateJwt(user.id,user.name,user.email)
         return res.json({token})
     }
 
