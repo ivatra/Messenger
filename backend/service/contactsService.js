@@ -32,30 +32,51 @@ async function fetchContactsInfo(contacts, userId) {
 }
 
 async function isContactExists(senderId, recipientId) {
-  var contact = await Contact.findOne({ where: { senderId: senderId, recipientId: recipientId } })
-  if (contact !== null) {
-    return true
-  }
-  contact = await Contact.findOne({ where: { recipientId: senderId, senderId: recipientId } })
-  if (contact !== null) {
-    return true
-  }
-  return false
+  const contact = await Contact.findOne({
+    where: {
+      [Sequelize.Op.or]: [
+        { senderId: senderId, recipientId: recipientId },
+        { recipientId: senderId, senderId: recipientId }
+      ]
+    }
+  });
+  return contact !== null;
 }
 
 async function updateContact(userId, contactId, type) {
-  var status
-  if (type === "accept") { status = "accepted" }
-  else if (type == "deny") { status = "declined" }
-  else { throw ApiError.badRequest("Incorrect type") }
+  let status;
+  if (type === "accept") {
+    status = "accepted";
+  } else if (type === "deny") {
+    status = "declined";
+  } else {
+    throw ApiError.badRequest("Incorrect type");
+  }
 
-  await Contact.update({ status: status }, { where: { recipientId: userId, senderId: contactId } })
-  await Contact.update({ status: status }, { where: { senderId: userId, recipientId: contactId } })
-  return status
+  await Contact.update(
+    { status: status },
+    {
+      where: {
+        [Sequelize.Op.or]: [
+          { recipientId: userId, senderId: contactId },
+          { senderId: userId, recipientId: contactId },
+        ],
+      },
+    }
+  );
+
+  return status;
 }
+
 async function destroyContact(senderId, recipientId) {
-  await Contact.destroy({ where: { senderId: senderId, recipientId: recipientId, status: "accepted" } })
-  await Contact.destroy({ where: { recipientId: senderId, senderId: recipientId, status: "accepted" } })
+  await Contact.destroy({ 
+    where: { 
+      [Sequelize.Op.or]: [
+        { senderId: senderId, recipientId: recipientId },
+        { recipientId: senderId, senderId: recipientId }
+      ]
+    }
+  });
 }
 
 module.exports = { getContactInfo, findContacts, fetchContactsInfo, isContactExists, destroyContact, updateContact }

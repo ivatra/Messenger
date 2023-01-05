@@ -7,7 +7,6 @@ const {User} = require('./userModel')
 const Chat = sequelize.define('chat', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     type: Sequelize.ENUM('individual', 'group'),
-    isPinned: { type: DataTypes.BOOLEAN, defaultValue: false }
 })
 
 const GroupChat = sequelize.define("groupChat", {
@@ -23,22 +22,27 @@ const IndividualChat = sequelize.define("individualChat", {
     isActive: { type: DataTypes.BOOLEAN, defaultValue: false }
 })
 
-const ChatParticipants = sequelize.define('chatParticipiants', {
+const ChatParticipant = sequelize.define('chatParticipiants', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    role: { type: DataTypes.STRING, defaultValue: "USER" }
+    role: { type: DataTypes.STRING, defaultValue: "USER" },
 })
 
 
-GroupChat.hasOne(Chat, {foreignKey: { allowNull: true}})
-IndividualChat.hasOne(Chat, {foreignKey: { allowNull: true}})
 
-ChatParticipants.belongsTo(User,{allowNull:false})
-ChatParticipants.belongsTo(Chat,{allowNull:false})
+GroupChat.hasOne(Chat)
+IndividualChat.hasOne(Chat)
 
+ChatParticipant.belongsTo(User,{allowNull:false})
+ChatParticipant.belongsTo(Chat,{allowNull:false})
+
+Chat.belongsTo(GroupChat, {foreignKey: { allowNull: true}})
+Chat.belongsTo(IndividualChat, {foreignKey: { allowNull: true}})
+
+Chat.hasMany(ChatParticipant,{as: 'participants'})
 
 module.exports = {
     Chat,
-    ChatParticipants,
+    ChatParticipant,
     GroupChat,
     IndividualChat
 }

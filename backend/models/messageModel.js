@@ -10,15 +10,6 @@ const Message = sequelize.define('message', {
     messageContent: { type: DataTypes.STRING, allowNull: true },
 })
 
-
-const MessageRead = sequelize.define('messageRead',{
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    isRead: { type: DataTypes.BOOLEAN, defaultValue: false }
-    })
-
-MessageRead.belongsTo(Message)
-MessageRead.belongsTo(User)
-
 Message.belongsTo(Chat,{allowNull:false})
 Message.belongsTo(User,{as:'sender',allowNull:false})
 Message.belongsTo(Attachement,{foreignKey: { allowNull: true}})
@@ -26,5 +17,4 @@ Message.belongsTo(Attachement,{foreignKey: { allowNull: true}})
 
 module.exports = {
     Message,
-    MessageRead
 }

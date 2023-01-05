@@ -1,6 +1,6 @@
 const {Attachement} = require('./attachementModel')
-const {Chat,GroupChat,IndividualChat,ChatParticipants} = require('./chatModel')
-const {Message,MessageRead} = require('./messageModel')
+const {Chat,GroupChat,IndividualChat,ChatParticipant} = require('./chatModel')
+const {Message} = require('./messageModel')
 const {InBox} = require('./inBoxModel')
 const {User} = require('./userModel')
 const {Contact} = require('./contactModel')
@@ -13,7 +13,6 @@ module.exports = {
     IndividualChat,
     Message,
     Attachement,
-    ChatParticipants,
+    ChatParticipant,
     InBox,
-    MessageRead
 }

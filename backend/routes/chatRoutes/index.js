@@ -1,12 +1,14 @@
 const Router = require('express')
 const router = new Router()
 
-const chatRouter = require('./chatRouter')
 const attachementRouter = require('./attachementsRouter')
 const messageRouter = require('./messageRouter')
+const ChatController = require('../../controllers/chatController')
 
-router.use('/',)
-router.use('/attachements',attachementRouter)
-router.use('/messages',messageRouter)
+
+router.get('/',ChatController.createOrGet)
+router.get('/:id',ChatController.getChat)
+// router.use('/attachements',attachementRouter)
+// router.use('/messages',messageRouter)
 
 module.exports = router

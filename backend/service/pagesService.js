@@ -1,5 +1,4 @@
 const { User, InBox, Contact } = require('../models')
-const Sequelize = require('sequelize')
 const { getContactInfo, findContacts, fetchContactsInfo, isContactExists, destroyContact, updateContact } = require('./contactsService')
 const ApiError = require('../error/ApiError')
 
@@ -18,7 +17,7 @@ class PagesService {
   }
 
   async sendContactRequest(userId, contactId) {
-    const contactExists= await isContactExists(userId, contactId)
+    const contactExists = await isContactExists(userId, contactId)
     if (contactExists) {
       throw ApiError.badRequest("Contact arleady exists")
     }
@@ -37,11 +36,11 @@ class PagesService {
 
   async removeContact(userId, contactId) {
     const contactExists = await isContactExists(userId, contactId)
-    if (contactExists) {
-      await destroyContact(userId, contactId)
-      return `contact ${contactId} removed`
-    }
-    return `contact ${contactId} doesn't exist`
+    if (!contactExists)
+      throw ApiError.badRequest(`Contact ${contactId} doesn't exist`)
+
+    await destroyContact(userId, contactId)
+    return `contact ${contactId} removed`
   }
 
   async getInbox(userId) {
