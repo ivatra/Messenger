@@ -18,7 +18,7 @@ async function getUsersInChat(chat, sender) {
   return users
 }
 
-export const messageReceived = async() => {Message.addHook('afterCreate', async (message) => {
+module.exports  = async() => {Message.addHook('afterCreate', async (message) => {
     const users = await getUsersInChat(message.chatId, message.senderId)
     users.forEach(async (userId) => {
       var event = {
@@ -28,7 +28,7 @@ export const messageReceived = async() => {Message.addHook('afterCreate', async 
           messageId: message.id
         },
         notify: true,
-        seen: false
+        sent: false
       }
       await events.insertOne(event)
   

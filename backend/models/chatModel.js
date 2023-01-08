@@ -29,16 +29,16 @@ const ChatParticipant = sequelize.define('chatParticipiants', {
 
 
 
-GroupChat.hasOne(Chat)
-IndividualChat.hasOne(Chat)
-
-ChatParticipant.belongsTo(User,{allowNull:false})
-ChatParticipant.belongsTo(Chat,{allowNull:false})
-
-Chat.belongsTo(GroupChat, {foreignKey: { allowNull: true}})
-Chat.belongsTo(IndividualChat, {foreignKey: { allowNull: true}})
 
 Chat.hasMany(ChatParticipant,{as: 'participants'})
+ChatParticipant.belongsTo(User)
+ChatParticipant.belongsTo(Chat)
+
+GroupChat.hasOne(Chat)
+Chat.belongsTo(GroupChat, {foreignKey: { allowNull: true}})
+
+IndividualChat.hasOne(Chat)
+Chat.belongsTo(IndividualChat, {foreignKey: { allowNull: true}})
 
 module.exports = {
     Chat,
