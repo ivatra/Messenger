@@ -1,7 +1,7 @@
 const { Sequelize, DataTypes } = require('sequelize')
 
 const sequelize = require('../db')
-const {User} = require('./userModel')
+const { User } = require('./userModel')
 
 
 const Chat = sequelize.define('chat', {
@@ -22,7 +22,7 @@ const IndividualChat = sequelize.define("individualChat", {
     isActive: { type: DataTypes.BOOLEAN, defaultValue: false }
 })
 
-const ChatParticipant = sequelize.define('chatParticipiants', {
+const ChatParticipant = sequelize.define('chatParticipant', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     role: { type: DataTypes.STRING, defaultValue: "USER" },
 })
@@ -30,15 +30,15 @@ const ChatParticipant = sequelize.define('chatParticipiants', {
 
 
 
-Chat.hasMany(ChatParticipant,{as: 'participants'})
+Chat.hasMany(ChatParticipant, { as: 'participants' })
 ChatParticipant.belongsTo(User)
 ChatParticipant.belongsTo(Chat)
 
 GroupChat.hasOne(Chat)
-Chat.belongsTo(GroupChat, {foreignKey: { allowNull: true}})
+Chat.belongsTo(GroupChat, { foreignKey: { allowNull: true } })
 
 IndividualChat.hasOne(Chat)
-Chat.belongsTo(IndividualChat, {foreignKey: { allowNull: true}})
+Chat.belongsTo(IndividualChat, { foreignKey: { allowNull: true } })
 
 module.exports = {
     Chat,

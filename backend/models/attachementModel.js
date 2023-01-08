@@ -1,4 +1,4 @@
-const {Sequelize,DataTypes} = require('sequelize')
+const { Sequelize, DataTypes } = require('sequelize')
 
 const sequelize = require('../db')
 
@@ -8,5 +8,4 @@ const Attachement = sequelize.define('attachement', {
     url: { type: DataTypes.STRING, allowNull: false }
 })
 
-
-module.exports = {Attachement}
+module.exports = { Attachement }

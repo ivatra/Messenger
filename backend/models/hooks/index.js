@@ -1,11 +1,13 @@
-const {newChatParticipiant} = require('./chatParticipiantsHook')
-const {messageReceived} = require('./messageHook')
-const {contactChanged} = require('./contactHook')
-const {inBoxUpdated} = require ('./inboxHook')
+const updateParticipantsCount = require('./chatParticipiantsHook')
+const messageReceived = require('./messageHook')
+const contactChanged = require('./contactHook')
+const inBoxUpdated = require ('./inboxHook')
+const attachementHook = require('./attachementHook')
 
 module.exports = {
-  newChatParticipiant,
+  updateParticipantsCount,
   messageReceived,
   contactChanged,
-  inBoxUpdated
+  inBoxUpdated,
+  attachementHook
 }

@@ -1,12 +1,12 @@
-const {Message} = require('../../models/messageModel')
-const {InBox} = require('../../models/inBoxModel')
-const {ChatParticipants} = require('../../models/chatModel')
+const { Message } = require('../../models/messageModel')
+const { InBox } = require('../../models/inBoxModel')
+const { ChatParticipant } = require('../../models/chatModel')
 const mongo_client = require('../../mongo')
 
 const events = mongo_client.db().collection('events')
 
 async function getUsersInChat(chat, sender) {
-  const users = await ChatParticipants.findAll({
+  const users = await ChatParticipant.findAll({
     attributes: 'userId',
     where: {
       userId: {
@@ -18,7 +18,8 @@ async function getUsersInChat(chat, sender) {
   return users
 }
 
-module.exports  = async() => {Message.addHook('afterCreate', async (message) => {
+async function sendMessageReceivedEvent() {
+  Message.addHook('afterCreate', async (message) => {
     const users = await getUsersInChat(message.chatId, message.senderId)
     users.forEach(async (userId) => {
       var event = {
@@ -31,10 +32,15 @@ module.exports  = async() => {Message.addHook('afterCreate', async (message) => 
         sent: false
       }
       await events.insertOne(event)
-  
-      await InBox.update({messageId:message.id},{where:{
-        chatId:message.chatId
-      }})
+
+      await InBox.update({ messageId: message.id }, {
+        where: {
+          chatId: message.chatId
+        }
+      })
     })
-  
-  })};
+  })
+}
+
+
+module.exports = sendMessageReceivedEvent

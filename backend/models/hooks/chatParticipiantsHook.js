@@ -1,14 +1,16 @@
-const {Chat,ChatParticipants,GroupChat} = require('../../models/chatModel')
+const { Chat, ChatParticipant, GroupChat } = require('../../models/chatModel')
 
-module.exports = async() => {ChatParticipants.addHook('afterInsert', async (participiants) => {
+async function updateParticipantsCount() {
+  ChatParticipant.addHook('afterCreate', async (participiants) => {
     const chat = await Chat.findOne({ where: { chatId: participiants.chatId } })
     if (chat.type === "Group") {
-      const countOfParticipiants = await ChatParticipants.count({ where: { id: participiants.chatId } })
+      const countOfParticipiants = await ChatParticipant.count({ where: { id: participiants.chatId } })
       await GroupChat.update({ participiantsCount: countOfParticipiants }, {
         where: {
           id: chat.groupChatId
         }
       })
     }
-  
-  })}
+})}
+
+module.exports = updateParticipantsCount()

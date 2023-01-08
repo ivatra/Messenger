@@ -1,9 +1,11 @@
-const {Contact} = require('../../models/contactModel')
+const { Contact } = require('../../models/contactModel')
 
 mongoClient = require('../../mongo')
 const events = mongoClient.db().collection('events')
 
-module.exports = async() => {Contact.addHook('afterSave', async (contact) => {
+async function makeContactStatusChangedEvent(contact) {
+
+  Contact.addHook('afterSave', async (contact) => {
     var event = {
       recipient_id: contact.recipientId,
       type: contact.status,
@@ -14,5 +16,8 @@ module.exports = async() => {Contact.addHook('afterSave', async (contact) => {
       sent: false
     }
     await events.insertOne(event)
-  }
-  )}
+  })
+}
+
+
+module.exports = makeContactStatusChangedEvent()

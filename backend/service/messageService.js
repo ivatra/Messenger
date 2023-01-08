@@ -1,27 +1,27 @@
 const { Message } = require("../models/messageModel")
-const {Attachement} = require('../models/attachementModel')
-class MessageService{
-    async fetchMessages(chatId,limit,offset){
+const { Attachement } = require('../models/attachementModel')
+class MessageService {
+    async fetchMessages(chatId, limit, offset) {
         return await Message.findAll({
-            where:{
-                chatId:chatId
+            where: {
+                chatId: chatId
             },
-            include:{
-              model:Attachement,
-              attributes:['type','url']  
+            include: {
+                model: Attachement,
+                attributes: ['type', 'url']
             },
-            limit:limit,
-            offset:offset,
-            attributes:['id','content','senderId']
+            limit: limit,
+            offset: offset,
+            attributes: ['id', 'content', 'senderId', 'createdAt']
         })
     }
 
-    async createMessage(content){
+    async createMessage(content,attachementId,senderId,chatId) {
         return await Message.create({
-          chatId:content.chatId,
-          content:content.content,
-          senderId:content.userId,
-          attachementId:content.attachementId  
+            chatId: chatId,
+            content: content,
+            senderId: senderId,
+            attachementId: attachementId
         })
     }
 
