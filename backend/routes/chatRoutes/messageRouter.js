@@ -1,11 +1,9 @@
-// const Router = require('express')
-// const router = new Router()
-// const userController = require('../controllers/userController')
-// const authMiddleware = require('../middleware/authMiddleware')
+const express = require('express');
+const messageController = require('../../controllers/messageController');
+const paginationMiddleware = require('../../middleware/paginationMiddleware');
+const router = express.Router({ mergeParams: true });
 
+router.get('/',paginationMiddleware,messageController.getAll)
+router.post('/',messageController.create)
 
-// router.post('/registration',userController.registration)
-// router.post('/login',userController.login)
-// router.get('/auth',authMiddleware,userController.check)
-
-// module.exports = router
+module.exports = router

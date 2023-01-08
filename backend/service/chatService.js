@@ -1,5 +1,5 @@
 const ApiError = require('../error/ApiError');
-const { User, Contact } = require('../models')
+const { User } = require('../models')
 const { Sequelize } = require('sequelize')
 const { Chat, GroupChat, IndividualChat, ChatParticipant } = require('../models/chatModel')
 
@@ -14,10 +14,11 @@ class ChatService {
     const { id } = await chatModel.create()
     chatData[`${chatType}ChatId`] = id
     const chat = await Chat.create(chatData)
+
     await this.addParticipantToChat(chat.id, userId)
-    if (userId2) {
+    if (userId2) 
       await this.addParticipantToChat(chat.id, userId2)
-    }
+
     return chat
   }
 
@@ -84,10 +85,10 @@ class ChatService {
       },
       {
         model: GroupChat,
-        attributes:['avatar','name','participiantsCount']
+        attributes: ['avatar', 'name', 'participiantsCount']
       }, {
         model: IndividualChat,
-        attributes:['isActive']
+        attributes: ['isActive']
       }],
     });
   }
