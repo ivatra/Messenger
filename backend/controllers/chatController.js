@@ -7,13 +7,13 @@ class ChatController {
     var [chat] = await ChatService.findChat(req.user.id, participantId, chatType)
     if (!chat)
       chat = await ChatService.createChat(req.user.id, participantId, chatType);
-    // res.redirect(chat);
+    // res.redirect(chat.id);
     return res.json(chat.id)
   }
 
   async getChatContent(req, res) {
-    const { id } = req.params
-    const chatContent = await ChatService.fetchChatContent(id, req.user.id)
+    const { chatId } = req.params
+    const chatContent = await ChatService.fetchChatContent(chatId, req.user.id)
     return res.json(chatContent)
   }
 

@@ -9,9 +9,9 @@ const ChatController = require('../../controllers/chatController')
 const checkChatRole = require('../../middleware/checkChatRole')
 
 router.get('/',ChatController.createOrGet)
-router.get('/:id',ChatController.getChatContent)
-router.use('/:id/participants',checkChatRole('ADMIN'),participantsRouter)
-// router.use('/attachements',attachementRouter)
-router.use('/:id/messages',messageRouter)
+router.get('/:chatId',ChatController.getChatContent)
+router.use('/:chatId/participants',checkChatRole('ADMIN'),participantsRouter)
+router.use('/:chatId/attachements',attachementRouter)
+router.use('/:chatId/messages',messageRouter)
 
 module.exports = router

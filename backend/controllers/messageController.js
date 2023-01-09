@@ -1,31 +1,28 @@
 const messageService = require("../service/messageService")
-const uuid = require('uuid')
-const mime = require('mime-types')
-const path = require('path')
 const attachementService = require("../service/attachementService")
 const fileHandler = require("../service/fileHandler")
-const { Message, Attachement } = require("../models")
+const { Message } = require("../models")
 
 class messageController {
     async getAll(req, res) {
-        const chatId = req.params.id
+        const chatId = req.params.chatId
         const messages = await messageService.fetchMessages(chatId, req.limit, req.offset)
         return res.json(messages)
     }
 
     async create(req, res) {
         const { content } = req.body
-        const { attachement } = req.files
-        const { chatId } = req.params.id
+        const { attachement } = req.files || false
+        const chatId = req.params.chatId
         var attachementId
 
+        const message = await messageService.createMessage(content, attachementId, req.user.id, chatId)
+        
         if (attachement) {
             const fileName = await fileHandler.saveAttachement(attachement, attachement.name)
             const fileType = await fileHandler.getFileType(attachement.name)
-            const { id } = await attachementService.create(fileType, fileName)
-            attachementId = id
+            await attachementService.create(fileType, fileName,message.id)
         }
-        const message = await messageService.createMessage(content, attachementId, req.user.id, chatId)
         return res.json(message)
     }
 }

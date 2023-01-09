@@ -1,11 +1,10 @@
-// const Router = require('express')
-// const router = new Router()
-// const userController = require('../controllers/userController')
-// const authMiddleware = require('../middleware/authMiddleware')
+const express = require('express');
+const paginationMiddleware = require('../../middleware/paginationMiddleware');
+const attachementController = require('../../controllers/attachementController');
+const router = express.Router({ mergeParams: true });
 
+router.get('/',paginationMiddleware,attachementController.getAll)
+router.get('/:attachId',paginationMiddleware,attachementController.getOne)
+router.post('/',attachementController.create)
 
-// router.post('/registration',userController.registration)
-// router.post('/login',userController.login)
-// router.get('/auth',authMiddleware,userController.check)
-
-// module.exports = router
+module.exports = router

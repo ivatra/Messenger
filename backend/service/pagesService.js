@@ -25,12 +25,15 @@ class PagesService {
     return contact
   }
 
-  async changeContactStatus(userId, contactId, type) {
+  async changeContactStatus(userId, contactId, status) {
     const contactExists = await isContactExists(userId, contactId)
     if (!contactExists) {
       throw ApiError.badRequest("Contact doesn't exist")
     }
-    const status = await updateContact(userId, contactId, type)
+    if (status !== "accepted" && status !== "declined") {
+      throw ApiError.badRequest("Incorrect status ")
+    }
+    await updateContact(userId, contactId, status)
     return `contact ${contactId} ${status}`
   }
 

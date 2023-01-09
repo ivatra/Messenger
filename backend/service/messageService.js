@@ -21,7 +21,6 @@ class MessageService {
             chatId: chatId,
             content: content,
             senderId: senderId,
-            attachementId: attachementId
         })
     }
 

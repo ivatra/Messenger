@@ -43,15 +43,8 @@ async function isContactExists(senderId, recipientId) {
   return contact !== null;
 }
 
-async function updateContact(userId, contactId, type) {
-  let status;
-  if (type === "accept") {
-    status = "accepted";
-  } else if (type === "deny") {
-    status = "declined";
-  } else {
-    throw ApiError.badRequest("Incorrect type");
-  }
+async function updateContact(userId, contactId, status) {
+
 
   await Contact.update(
     { status: status },

@@ -1,5 +1,5 @@
 const ApiError = require('../error/ApiError');
-const { User } = require('../models')
+const { User, Contact } = require('../models')
 const { Sequelize } = require('sequelize')
 const { Chat, GroupChat, IndividualChat, ChatParticipant } = require('../models/chatModel')
 
@@ -9,11 +9,10 @@ class ChatService {
       return ApiError.badRequest("Incorrect chat type ")
     }
 
-    const chatData = { type: chatType }
-    const chatModel = chatType === "group" ? GroupChat : IndividualChat
-    const { id } = await chatModel.create()
-    chatData[`${chatType}ChatId`] = id
-    const chat = await Chat.create(chatData)
+    const chat = await Chat.create({type:chatType})
+
+    const chatModel = chat.type === "group" ? GroupChat : IndividualChat
+    await chatModel.create({chatId:chat.id})
 
     await this.addParticipantToChat(chat.id, userId)
     if (userId2) 

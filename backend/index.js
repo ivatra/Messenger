@@ -1,6 +1,6 @@
 require('dotenv').config()
 const express = require('express')
-require('express-async-errors')
+// require('express-async-errors')
 const cors = require('cors')
 const fileupload = require('express-fileupload')
 const path = require('path')

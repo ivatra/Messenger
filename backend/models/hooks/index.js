@@ -9,5 +9,5 @@ module.exports = {
   messageReceived,
   contactChanged,
   inBoxUpdated,
-  attachementHook
+  attachementHook,
 }
