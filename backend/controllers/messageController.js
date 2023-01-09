@@ -1,6 +1,6 @@
 const messageService = require("../service/messageService")
 const attachementService = require("../service/attachementService")
-const fileHandler = require("../service/fileHandler")
+const fileService = require("../service/fileService")
 const { Message } = require("../models")
 
 class messageController {
@@ -19,8 +19,8 @@ class messageController {
         const message = await messageService.createMessage(content, attachementId, req.user.id, chatId)
         
         if (attachement) {
-            const fileName = await fileHandler.saveAttachement(attachement, attachement.name)
-            const fileType = await fileHandler.getFileType(attachement.name)
+            const fileName = await fileService.saveAttachement(attachement, attachement.name)
+            const fileType = await fileService.getFileType(attachement.name)
             await attachementService.create(fileType, fileName,message.id)
         }
         return res.json(message)

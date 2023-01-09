@@ -3,7 +3,7 @@ const uuid = require('uuid')
 const path = require('path')
 const fs = require('fs')
 
-class fileHandler {
+class fileService {
     async saveAttachement(file, fileName) {
         const fileExtension = path.extname(fileName);
         const generatedFileName = uuid.v4() + fileExtension
@@ -21,4 +21,4 @@ class fileHandler {
 
 }
 
-module.exports = new fileHandler()
+module.exports = new fileService()

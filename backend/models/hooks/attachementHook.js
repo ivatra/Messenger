@@ -1,11 +1,11 @@
 const { Attachement } = require('../../models/attachementModel')
-const fileHandler = require('../../service/fileHandler')
+const fileService = require('../../service/fileService')
 
 
 async function deleteFileHook() {
     Attachement.addHook('afterDestroy', async (attachement) => {
         console.log('deleted ', attachement.url)
-        await fileHandler.deleteFile(attachement.url)
+        await fileService.deleteFile(attachement.url)
     })
 }
 
