@@ -10,7 +10,7 @@ const sequelize = require('./db')
 const models = require('./models/index')
 const modelHooks = require('./models/hooks/index')
 const router = require('./routes/index')
-const errorHandler = require('./middleware/ErrorHandling')
+const errorHandler = require('./middleware/errorHandling')
 const PORT = process.env.PORT || 5000
 
 const app = express()
