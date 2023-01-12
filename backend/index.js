@@ -4,7 +4,7 @@ const express = require('express')
 const cors = require('cors')
 const fileupload = require('express-fileupload')
 const path = require('path')
-const mongo_client = require('./mongo')
+const mongoCl = require('./mongo')
 
 const sequelize = require('./db')
 const models = require('./models/index')
@@ -26,7 +26,7 @@ const start = async () => {
     try {
         await sequelize.authenticate()
         await sequelize.sync()
-        await mongo_client.connect()
+        await mongoCl.connect()
         app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
     } catch (e) {
         console.log(e)

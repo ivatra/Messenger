@@ -4,7 +4,6 @@ const fileService = require('../../service/fileService')
 
 async function deleteFileHook() {
     Attachement.addHook('afterDestroy', async (attachement) => {
-        console.log('deleted ', attachement.url)
         await fileService.deleteFile(attachement.url)
     })
 }

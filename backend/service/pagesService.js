@@ -1,5 +1,5 @@
 const { User, InBox, Contact } = require('../models')
-const { getContactInfo, findContacts, fetchContactsInfo, isContactExists, destroyContact, updateContact } = require('./contactsService')
+const { getContactInfo, findContacts, fetchContactsInfo, isContactExists, destroyContact, updateContact, checkContactStatus } = require('./contactsService')
 const ApiError = require('../error/ApiError')
 
 
@@ -33,6 +33,10 @@ class PagesService {
     if (status !== "accepted" && status !== "declined") {
       throw ApiError.badRequest("Incorrect status ")
     }
+
+    if(checkContactStatus(userId,contactId))
+      throw ApiError.badRequest(`Contact ${userId} and ${contactId} has reviewed status`)
+      
     await updateContact(userId, contactId, status)
     return `contact ${contactId} ${status}`
   }

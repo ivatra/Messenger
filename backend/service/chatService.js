@@ -1,5 +1,5 @@
 const ApiError = require('../error/ApiError');
-const { User, Contact } = require('../models')
+const { User, InBox } = require('../models')
 const { Sequelize } = require('sequelize')
 const { Chat, GroupChat, IndividualChat, ChatParticipant } = require('../models/chatModel')
 
@@ -9,16 +9,26 @@ class ChatService {
       return ApiError.badRequest("Incorrect chat type ")
     }
 
+    if (chatType === "individual" && !userId2)
+      return ApiError.badRequest("Second user is absent")
+
     const chat = await Chat.create({type:chatType})
 
     const chatModel = chat.type === "group" ? GroupChat : IndividualChat
     await chatModel.create({chatId:chat.id})
 
-    await this.addParticipantToChat(chat.id, userId)
-    if (userId2) 
-      await this.addParticipantToChat(chat.id, userId2)
+    await this.createSubTables(chat.id,userId,userId2)
 
     return chat
+  }
+
+  async createSubTables(chatId,userId,userId2){
+    await this.addParticipantToChat(chatId, userId)
+    await InBox.create({chatId:chatId,userId:userId})
+    if (userId2){
+      await InBox.create({chatId:chatId,userId:userId2})
+      await this.addParticipantToChat(chatId, userId2)
+    }
   }
 
   async findChat(userId1, userId2, chatType) {

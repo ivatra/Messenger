@@ -44,9 +44,7 @@ async function isContactExists(senderId, recipientId) {
 }
 
 async function updateContact(userId, contactId, status) {
-
-
-  await Contact.update(
+  const contact = await Contact.update(
     { status: status },
     {
       where: {
@@ -54,11 +52,26 @@ async function updateContact(userId, contactId, status) {
           { recipientId: userId, senderId: contactId },
           { senderId: userId, recipientId: contactId },
         ],
+        status:"pending"
       },
     }
   );
+}
 
-  return status;
+  async function checkContactStatus(userId, contactId) {
+    const contact = await Contact.findOne(
+      {
+        where: {
+          [Sequelize.Op.or]: [
+            { recipientId: userId, senderId: contactId },
+            { senderId: userId, recipientId: contactId },
+          ],
+          status:"pending"
+        },
+      }
+    );
+  
+  return contact;
 }
 
 async function destroyContact(senderId, recipientId) {
@@ -72,4 +85,4 @@ async function destroyContact(senderId, recipientId) {
   });
 }
 
-module.exports = { getContactInfo, findContacts, fetchContactsInfo, isContactExists, destroyContact, updateContact }
+module.exports = { getContactInfo, findContacts, fetchContactsInfo, isContactExists, destroyContact, updateContact,checkContactStatus }

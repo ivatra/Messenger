@@ -13,7 +13,7 @@ const GroupChat = sequelize.define("groupChat", {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     avatar: { type: DataTypes.STRING, allowNull: true },
     name: { type: DataTypes.STRING, allowNull: true },
-    participiantsCount: { type: DataTypes.STRING, allowNull: true },
+    participiantsCount: { type: DataTypes.STRING, defaultValue:1},
 })
 
 
