@@ -9,7 +9,7 @@ async function updateParticipantsCount() {
         participiantsCount: countOfParticipiants
        }, {
         where: {
-          id: chat.groupChatId
+          chatId: participiants.chatId
         }
       })
     }

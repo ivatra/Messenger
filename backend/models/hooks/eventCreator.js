@@ -1,10 +1,10 @@
-function getMessageReceivedEvent(recipientId, messageId, isMentioned = false) {
+function getMessageReceivedEvent(recipientId, message, isMentioned = false) {
     const event = {
         recipientId: recipientId,
         type: "Message",
         content: {
             status: "Received Message",
-            messageId,
+            message,
             isRead: false,
             isMentioned: isMentioned
         },

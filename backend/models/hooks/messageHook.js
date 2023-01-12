@@ -54,7 +54,7 @@ const sendMessageReceivedEvent = async () => {
     const promises = users.map(async (user) => {
       const { id, login } = user.user;
       const userMentioned = mentionedUsers.includes(login);
-      const event = getMessageReceivedEvent(id, message.id, userMentioned);
+      const event = getMessageReceivedEvent(id, message.dataValues, userMentioned);
       
       if (message.senderId !== id) {
         await events.insertOne(event);
