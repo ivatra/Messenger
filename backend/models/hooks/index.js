@@ -3,6 +3,7 @@ const messageReceived = require('./messageHook')
 const contactChanged = require('./contactHook')
 const inBoxUpdated = require ('./inboxHook')
 const attachementHook = require('./attachementHook')
+const userHook = require('./userHook')
 
 module.exports = {
   updateParticipantsCount,
@@ -10,4 +11,5 @@ module.exports = {
   contactChanged,
   inBoxUpdated,
   attachementHook,
+  userHook
 }

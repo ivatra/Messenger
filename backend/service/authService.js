@@ -24,7 +24,7 @@ class authService {
     }
 
     checkIsPasswordCorrect(rightPassword, usersPassword) {
-        let comparePassword = bcrypt.compareSync(rightPassword, usersPassword)
+        let comparePassword = bcrypt.compareSync(usersPassword, rightPassword)
         if (!comparePassword)
             throw ApiError.Internal('Incorrent password')
     }
@@ -42,7 +42,7 @@ class authService {
 
         this.checkIsPasswordCorrect(user.password, password)
 
-        return generateJwt(user.id, user.email, user.role)
+        return this.generateJwt(user.id, user.email, user.role)
     }
 
     async register(name, avatar, email, password) {
