@@ -44,18 +44,18 @@ async function isContactExists(senderId, recipientId) {
 }
 
 async function updateContact(userId, contactId, status) {
-  const contact = await Contact.update(
-    { status: status },
+  const contact = await Contact.findOne(
     {
       where: {
         [Sequelize.Op.or]: [
           { recipientId: userId, senderId: contactId },
           { senderId: userId, recipientId: contactId },
         ],
-        status:"pending"
       },
     }
   );
+  contact.status = status
+  await contact.save()
 }
 
   async function checkContactStatus(userId, contactId) {

@@ -4,6 +4,5 @@ const router = new Router()
 const eventsController = require('../../controllers/eventsController')
 
 router.get('/',eventsController.get)
-router.post('/',eventsController.create)
-
+router.post('/typing',eventsController.get)
 module.exports = router

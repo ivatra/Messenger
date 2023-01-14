@@ -5,10 +5,6 @@ class eventService{
     async get(userId){
         return await events.find({recipientId:"cca23be1-897c-42a3-bfc3-178d96a73cba"}).toArray()
     }
-
-    async create(userId,event){
-
-    }
 }
 
 module.exports = new eventService()

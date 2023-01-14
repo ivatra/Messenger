@@ -34,8 +34,8 @@ class PagesService {
       throw ApiError.badRequest("Incorrect status ")
     }
 
-    if(checkContactStatus(userId,contactId))
-      throw ApiError.badRequest(`Contact ${userId} and ${contactId} has reviewed status`)
+    // if(checkContactStatus(userId,contactId))
+    //   throw ApiError.badRequest(`Contact ${userId} and ${contactId} has reviewed status`)
       
     await updateContact(userId, contactId, status)
     return `contact ${contactId} ${status}`
@@ -52,6 +52,9 @@ class PagesService {
 
   async getInbox(userId) {
     return "13131331"
+    /////////////////////////////////////////////////
+    ////////////////////////////////////////////////////
+    ////////////////////////ASDASDADAADASDASDADADA
   }
 
   async getNotifications(userId) {

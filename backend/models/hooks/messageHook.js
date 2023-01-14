@@ -3,7 +3,8 @@ const { InBox } = require('../../models/inBoxModel');
 const { ChatParticipant, Chat } = require('../../models/chatModel');
 const mongoClient = require('../../mongo');
 const { User } = require('../userModel');
-const getMessageReceivedEvent = require('./eventCreator');
+const inboxHook = require('./inboxHook');
+const eventCreator = require('../../events/eventCreator');
 
 const events = mongoClient.db('Messenger').collection('events');
 
@@ -20,12 +21,14 @@ const getUsersInChat = async (chatId) => {
 }
 
 const updateInbox = async (messageId, userId, chatId) => {
-  await InBox.update({ messageId }, {
+  const inbox = await InBox.findOne({
     where: {
       userId,
       chatId
     }
   });
+  inbox.messageId = messageId
+  await inbox.save()
 }
 
 const checkForMention = async (message, userLogins) => {
@@ -45,6 +48,8 @@ const checkForMention = async (message, userLogins) => {
   return mentionedUsers;
 }
 
+
+
 const sendMessageReceivedEvent = async () => {
   Message.addHook('afterCreate', async (message) => {
     const users = await getUsersInChat(message.chatId);
@@ -54,11 +59,11 @@ const sendMessageReceivedEvent = async () => {
     const promises = users.map(async (user) => {
       const { id, login } = user.user;
       const userMentioned = mentionedUsers.includes(login);
-      const event = getMessageReceivedEvent(id, message.dataValues, userMentioned);
-      
-      if (message.senderId !== id) {
+      const event = eventCreator.createMessageReceivedEvent(id, message.dataValues, userMentioned);
+
+      if (message.senderId !== id)
         await events.insertOne(event);
-      }
+
       await updateInbox(message.id, id, message.chatId);
     });
     await Promise.all(promises);

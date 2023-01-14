@@ -69,9 +69,10 @@ class ChatService {
         userId: participantId
       }
     });
-    if (participant === 0) {
+    
+    if (participant === 0) 
       throw ApiError.badRequest(`Participant ${participantId} doesn't exist in chat ${chatId}`)
-    }
+    
     return `Participant ${participantId} removed to ${chatId}`;
   }
 

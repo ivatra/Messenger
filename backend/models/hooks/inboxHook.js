@@ -1,24 +1,21 @@
 const { InBox } = require('../../models/inBoxModel')
-const { MessageRead } = require('../../models/messageModel')
 
 const mongoClient = require('../../mongo')
 const events = mongoClient.db('Messenger').collection('events')
 
 
-async function getCountOfUnreadMsgs(inbox) {
+async function getCountOfUnreadMsgs(userId) {
   const countUnreadMsgs = events.find({
-    type: "message",
-    userId: inbox.userId,
-    content: {
-      read: false
-    }
-  })
+    type: "Message",
+    recipientId: userId,
+    "content.isRead": false
+  }).toArray()
 
-  return len(countUnreadMsgs)
+  return (await countUnreadMsgs).length
 }
 async function changeCountOfUnreadMsgs() {
   InBox.addHook('afterUpdate', async (inbox) => {
-    const countUnreadMsgs = getCountOfUnreadMsgs(inbox)
+    const countUnreadMsgs = await getCountOfUnreadMsgs(inbox.userId)
     inbox.countUnreadMsgs = countUnreadMsgs
     inbox.save()
   })
