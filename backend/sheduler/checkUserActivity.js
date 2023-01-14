@@ -4,7 +4,7 @@ const requests = mongoClient.db('Messenger').collection('usersRequests');
 
 async function findActiveUsers() {
     return await User.findAll({
-        where: { isActive: false },
+        where: { isActive: true },
         attributes: ['id']
     })
 }
@@ -12,10 +12,11 @@ async function findActiveUsers() {
 function minutesToTimeSwamp(minutes){
     return 1000 * 60 * minutes
 }
+
 async function checkUserActivity() {
     const activeUsers = await findActiveUsers();
-    const ids = activeUsers.map(user => user._id);
-    
+    const ids = activeUsers.map(user => user.id);
+
     const inActiveUsers = await requests.find({
         _id: { $in: ids },
         lastRequestTime: { $lt: Date.now() - minutesToTimeSwamp(5) }
@@ -23,6 +24,9 @@ async function checkUserActivity() {
 
     inActiveUsers.forEach(async (user) => {
         await requests.updateOne({ _id: user._id }, { $set: { isActive: false } });
+        await User.update({isActive:false},{where:{
+            id:user._id
+        }})
     });
 }
 

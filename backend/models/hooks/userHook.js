@@ -63,7 +63,6 @@ const usersActivityUpdated = async () => {
     // var user = await User.findByPk('03cb010a-2237-476d-931c-462e44695c03')
     // var status = user.isActive ? false : true
     // user.update({ isActive: status })
-
     User.addHook('afterUpdate', async (user) => {
         const isActiveChanged = user._changed.has('isActive');
         if (isActiveChanged) {

@@ -12,7 +12,7 @@ async function updateUserActivity(userId) {
         })
 
     const user = await User.findByPk(userId)
-    await user.update({ isActive: true })
+    user.update({ isActive: true })
 }
 
 module.exports = async function (req, res, next) {
