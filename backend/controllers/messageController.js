@@ -17,11 +17,11 @@ class messageController {
         var attachementId
 
         const message = await messageService.createMessage(content, attachementId, req.user.id, chatId)
-        
+
         if (attachement) {
             const fileName = await fileService.saveAttachement(attachement, attachement.name)
             const fileType = await fileService.getFileType(attachement.name)
-            await attachementService.create(fileType, fileName,message.id)
+            await attachementService.create(fileType, fileName, message.id)
         }
         return res.json(message)
     }

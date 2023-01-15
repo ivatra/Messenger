@@ -78,9 +78,9 @@ class ChatService {
 
     if (chat.type === 'group') {
       const destroyedParticipant = await ChatParticipant.destroy({
-        where: { chatId, userId: participantId },individualHooks:true
+        where: { chatId, userId: participantId }, individualHooks: true
       });
-      
+
       if (destroyedParticipant === 0) {
         throw ApiError.badRequest(`Participant ${participantId} doesn't exist in chat ${chatId}`);
       }
@@ -114,6 +114,18 @@ class ChatService {
         attributes: ['isActive']
       }],
     });
+  }
+
+  async getChatParticipants(chatId) {
+    const chat =  await Chat.findOne({
+      where: { id: chatId },
+      include: {
+        model: ChatParticipant,
+        as: 'participants',
+        attributes: ['userId']
+      }
+    })
+    return chat.participants
   }
 
 }

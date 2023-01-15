@@ -8,7 +8,7 @@ class fileService {
         const fileExtension = path.extname(fileName);
         const generatedFileName = uuid.v4() + fileExtension
         file.mv(path.resolve(__dirname, '..', 'static', generatedFileName))
-        return fileName
+        return generatedFileName
     }
 
     async getFileType(fileName) {

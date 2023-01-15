@@ -37,7 +37,7 @@ const start = async () => {
 start()
 
 // @TODO: FINISH GET INBOX,  /// DONE
-// event : u were added to chat
+// event : u were added to chat/kicked // DONE
 // is typing event
 // set message readen
 // get notifications function

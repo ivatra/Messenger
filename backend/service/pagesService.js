@@ -2,6 +2,7 @@ const { User, InBox, Contact, Message, GroupChat, Chat, IndividualChat, ChatPart
 const { getContactInfo, findContacts, fetchContactsInfo, isContactExists, destroyContact, updateContact, checkContactStatus } = require('./contactsService')
 const ApiError = require('../error/ApiError')
 const { Sequelize } = require('../db')
+const chatService = require('./chatService')
 
 
 class PagesService {
@@ -76,13 +77,13 @@ class PagesService {
               as: 'participants',
               where: {
                 userId: { [Sequelize.Op.ne]: userId },
-                '$chat.type$': 'individual'
               },
               include: [
                 {
                   model: User,
                   attributes: ['avatar', 'name', 'lastSeen'],
-                }]
+                }
+              ]
             }]
         }]
     });

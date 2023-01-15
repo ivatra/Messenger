@@ -1,13 +1,13 @@
 
 class EventCreator {
-    createMessageReceivedEvent(recipientId, message, isMentioned = false) {
+    createMessageEvent(recipientId, message, isMentioned = false,isRead = false) {
         return {
             recipientId: recipientId,
             type: "Message",
             content: {
                 status: "Received Message",
-                message,
-                isRead: false,
+                message: message,
+                isRead: isRead,
                 isMentioned: isMentioned
             },
             notify: true,
@@ -28,12 +28,13 @@ class EventCreator {
         }
     }
 
-    createChatEvent(recipientId,chat,status){
+    createChatEvent(recipientId, chat, status, userId = null) {
         return {
             recipientId: recipientId,
             type: "Chat",
             content: {
                 status: status,
+                userId: userId,
                 chat: chat
             },
             notify: true,

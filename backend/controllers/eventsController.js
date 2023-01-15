@@ -8,8 +8,19 @@ class EventsController{
         return res.json(events)
     }
 
-    async create(){
+    async setTyping(req,res){
+        const {chatId} = req.body
+        const userId = req.user.id
+        await eventService.setTyping(userId,chatId)
+        return res.json(`Event is typing successfully sent to chat ${chatId}`)
+    }
 
+    async setMessageRead(req,res){
+        const {messageId,chatId} = req.body
+        console.log(req.body)
+        const userId = req.user.id
+        await eventService.setMessageRead(userId,messageId,chatId)
+        return res.json(`Event messageRead successfully sent to chat ${chatId}`)
     }
 }
 
