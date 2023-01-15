@@ -60,7 +60,7 @@ async function checkIfAllUsersOnline(participants) {
 }
 
 const usersActivityUpdated = async () => {
-    // var user = await User.findByPk('03cb010a-2237-476d-931c-462e44695c03')
+    // var user = await User.findByPk('cca23be1-897c-42a3-bfc3-178d96a73cba')
     // var status = user.isActive ? false : true
     // user.update({ isActive: status })
     User.addHook('afterUpdate', async (user) => {

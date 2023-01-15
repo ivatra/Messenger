@@ -1,18 +1,16 @@
+const { Sequelize } = require("../db");
 const ApiError = require("../error/ApiError");
 const { User } = require("../models");
-const mongoClient = require("../mongo")
-const requests = mongoClient.db('Messenger').collection('userRequests');
-
 
 async function updateUserActivity(userId) {
-    await requests.updateOne(
-        { _id: userId },
-        {
-            $set: { lastRequestTime: Date.now() }
-        })
-
-    const user = await User.findByPk(userId)
-    user.update({ isActive: true })
+    User.update({
+        lastSeen: Sequelize.literal('CURRENT_TIMESTAMP'),
+        isActive: true
+    }, {
+        where: {
+            id: userId
+        }
+    })
 }
 
 module.exports = async function (req, res, next) {

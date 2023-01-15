@@ -1,6 +1,7 @@
-const { User, InBox, Contact } = require('../models')
+const { User, InBox, Contact, Message, GroupChat, Chat, IndividualChat, ChatParticipant } = require('../models')
 const { getContactInfo, findContacts, fetchContactsInfo, isContactExists, destroyContact, updateContact, checkContactStatus } = require('./contactsService')
 const ApiError = require('../error/ApiError')
+const { Sequelize } = require('../db')
 
 
 class PagesService {
@@ -36,7 +37,7 @@ class PagesService {
 
     // if(checkContactStatus(userId,contactId))
     //   throw ApiError.badRequest(`Contact ${userId} and ${contactId} has reviewed status`)
-      
+
     await updateContact(userId, contactId, status)
     return `contact ${contactId} ${status}`
   }
@@ -51,10 +52,43 @@ class PagesService {
   }
 
   async getInbox(userId) {
-    return "13131331"
-    /////////////////////////////////////////////////
-    ////////////////////////////////////////////////////
-    ////////////////////////ASDASDADAADASDASDADADA
+    return await InBox.findAll({
+      where: { userId: userId },
+      include: [
+        { model: Message, attributes: ['content', 'senderId'] },
+        {
+          model: Chat,
+          attributes: ['type'],
+          include: [
+            {
+              model: GroupChat,
+              attributes: ['name', 'avatar'],
+              required: false
+            },
+            {
+              model: IndividualChat,
+              attributes: ['isActive'],
+              required: false,
+            },
+            {
+              model: ChatParticipant,
+              attributes: ['userId'],
+              as: 'participants',
+              where: {
+                userId: { [Sequelize.Op.ne]: userId },
+                '$chat.type$': 'individual'
+              },
+              include: [
+                {
+                  model: User,
+                  attributes: ['avatar', 'name', 'lastSeen'],
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    });
   }
 
   async getNotifications(userId) {

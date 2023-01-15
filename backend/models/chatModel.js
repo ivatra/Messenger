@@ -31,6 +31,7 @@ const ChatParticipant = sequelize.define('chatParticipant', {
 
 
 Chat.hasMany(ChatParticipant, { as: 'participants' })
+
 ChatParticipant.belongsTo(User)
 ChatParticipant.belongsTo(Chat)
 

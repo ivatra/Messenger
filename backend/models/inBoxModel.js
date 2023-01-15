@@ -11,6 +11,7 @@ const InBox = sequelize.define('inbox',{
     isPinned: { type: DataTypes.BOOLEAN, defaultValue: false }
 })
 
+User.hasMany(InBox)
 InBox.belongsTo(Chat)
 InBox.belongsTo(User)
 InBox.belongsTo(Message,{allowNull:true})

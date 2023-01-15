@@ -36,5 +36,8 @@ const start = async () => {
 
 start()
 
-// @TODO: FINISH GET INBOX,
-//  FIND OUT WHY IS SEND MESSAGE SO LONG
+// @TODO: FINISH GET INBOX,  /// DONE
+// event : u were added to chat
+// is typing event
+// set message readen
+//
