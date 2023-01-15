@@ -5,12 +5,11 @@ module.exports = function (role) {
   return async function (req, res, next) {
     const { participantId } = req.body
     const { id } = req.params
-    req.chatId = id
     const participant = await ChatParticipant.findOne({
       where: {
         role: role,
         userId: participantId,
-        chatId: id
+        chatId: req.params.chatId
       }
     })
     // if (!participant) {

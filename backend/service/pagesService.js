@@ -82,12 +82,9 @@ class PagesService {
                 {
                   model: User,
                   attributes: ['avatar', 'name', 'lastSeen'],
-                }
-              ]
-            }
-          ]
-        }
-      ]
+                }]
+            }]
+        }]
     });
   }
 

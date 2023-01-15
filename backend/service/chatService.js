@@ -1,7 +1,10 @@
 const ApiError = require('../error/ApiError');
 const { User, InBox } = require('../models')
 const { Sequelize } = require('sequelize')
-const { Chat, GroupChat, IndividualChat, ChatParticipant } = require('../models/chatModel')
+const { Chat, GroupChat, IndividualChat, ChatParticipant } = require('../models/chatModel');
+
+const eventCreator = require('../events/eventCreator');
+const mongoClient = require('../mongo');
 
 class ChatService {
   async createChat(userId, userId2, chatType) {
@@ -12,22 +15,28 @@ class ChatService {
     if (chatType === "individual" && !userId2)
       return ApiError.badRequest("Second user is absent")
 
-    const chat = await Chat.create({type:chatType})
+    const chat = await Chat.create({ type: chatType })
 
     const chatModel = chat.type === "group" ? GroupChat : IndividualChat
-    await chatModel.create({chatId:chat.id})
+    await chatModel.create({ chatId: chat.id })
 
-    await this.createSubTables(chat.id,userId,userId2)
+    await this.createSubTables(chat.id, userId, userId2)
 
     return chat
   }
 
-  async createSubTables(chatId,userId,userId2){
+  async createChatEvent(userId, chat, status) {
+    const event = eventCreator.createChatEvent(userId, chat, status)
+    const events = mongoClient.db('Messenger').collection('events');
+    await events.insertOne(event)
+  }
+
+  async createSubTables(chatId, userId, userId2) {
     await this.addParticipantToChat(chatId, userId)
-    await InBox.create({chatId:chatId,userId:userId})
-    if (userId2){
-      await InBox.create({chatId:chatId,userId:userId2})
-      await this.addParticipantToChat(chatId, userId2)
+    await InBox.create({ chatId: chatId, userId: userId })
+    if (userId2) {
+      await InBox.create({ chatId: chatId, userId: userId2 })
+      await this.addParticipantToChat(chatId, userId2, true)
     }
   }
 
@@ -48,7 +57,7 @@ class ChatService {
       ],
     });
   }
-  async addParticipantToChat(chatId, participantId) {
+  async addParticipantToChat(chatId, participantId, eventNeeded = false) {
     const [participant, created] = await ChatParticipant.findOrCreate({
       where: {
         chatId: chatId,
@@ -59,21 +68,25 @@ class ChatService {
     if (!created)
       throw ApiError.badRequest(`Participant ${participantId} arleady exists in ${chatId} or chat doesn't exist`);
 
-    return `Participant ${participantId} added to ${chatId}`;
+    const chat = await Chat.findByPk(chatId)
+    if (eventNeeded && chat.type === 'group')
+      await this.createChatEvent(participantId, chat.dataValues, 'Invited')
   }
 
   async destroyParticipantFromChat(chatId, participantId) {
-    const participant = await ChatParticipant.destroy({
-      where: {
-        chatId: chatId,
-        userId: participantId
+    const chat = await Chat.findByPk(chatId);
+
+    if (chat.type === 'group') {
+      const destroyedParticipant = await ChatParticipant.destroy({
+        where: { chatId, userId: participantId },individualHooks:true
+      });
+      
+      if (destroyedParticipant === 0) {
+        throw ApiError.badRequest(`Participant ${participantId} doesn't exist in chat ${chatId}`);
       }
-    });
-    
-    if (participant === 0) 
-      throw ApiError.badRequest(`Participant ${participantId} doesn't exist in chat ${chatId}`)
-    
-    return `Participant ${participantId} removed to ${chatId}`;
+    }
+
+    await this.createChatEvent(participantId, chat.dataValues, 'Kicked');
   }
 
   async fetchChatContent(chatId, userId) {

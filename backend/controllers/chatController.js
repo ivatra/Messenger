@@ -19,15 +19,16 @@ class ChatController {
 
   async addChatParticipant(req, res) {
     const { participantId } = req.body
-    await ChatService.addParticipantToChat(req.chatId, participantId)
-    return res.json(`Participant ${participantId} added to chat ${req.chatId}`)
+    const {chatId} =  req.params
+    await ChatService.addParticipantToChat(chatId, participantId,true)
+    return res.json(`Participant ${participantId} added to chat ${chatId}`)
   }
 
   async removeChatParticipant(req, res) {
     const { participantId } = req.body
-
-    await ChatService.destroyParticipantFromChat(req.chatId, participantId)
-    return res.json(`Participant ${participantId} removed from chat ${req.chatId}`)
+    const {chatId} =  req.params
+    await ChatService.destroyParticipantFromChat(chatId, participantId)
+    return res.json(`Participant ${participantId} removed from chat ${chatId}`)
   }
 }
 

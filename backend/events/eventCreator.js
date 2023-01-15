@@ -27,6 +27,20 @@ class EventCreator {
             sent: false
         }
     }
+
+    createChatEvent(recipientId,chat,status){
+        return {
+            recipientId: recipientId,
+            type: "Chat",
+            content: {
+                status: status,
+                chat: chat
+            },
+            notify: true,
+            sent: false
+        }
+
+    }
 }
 
 

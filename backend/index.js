@@ -40,4 +40,4 @@ start()
 // event : u were added to chat
 // is typing event
 // set message readen
-//
+// get notifications function
