@@ -1,40 +1,20 @@
-const { Message } = require("../models/messageModel")
-const { Attachement } = require('../models/attachementModel')
+const messageQueries = require("../database/postqre/queries/messageQueries");
+const attachementService = require("../service/attachementService")
+const fileService = require("../service/fileService")
 
-const mongoClient = require('../mongo');
 class MessageService {
     async fetchMessages(chatId, limit, offset) {
-        const events = mongoClient.db('Messenger').collection('events');
-        const messages = await Message.findAll({
-            where: {
-                chatId: chatId
-            },
-            include: {
-                model: Attachement,
-                attributes: ['type', 'url']
-            },
-            limit: limit,
-            offset: offset,
-            attributes: ['id', 'content', 'senderId', 'createdAt','isRead']
-        })
-
-        await Promise.all(messages.map(async (message) => {
-            const result = await events.findOne({
-                type: 'Message', message: {
-                    id: 131
-                }
-            })
-            console.log(result)
-        }))
-        return messages
+        return await messageQueries.receiveByChat(chatId,limit,offset)
     }
 
-    async createMessage(content, attachementId, senderId, chatId) {
-        return await Message.create({
-            chatId: chatId,
-            content: content,
-            senderId: senderId,
-        })
+    async createMessage(content,attachement,senderId, chatId) {
+        const message = await messageQueries.createMessage(chatId,content,senderId)
+        if (attachement) {
+            const fileName = await fileService.saveAttachement(attachement, attachement.name)
+            const fileType = await fileService.getFileType(attachement.name)
+            attachement = await attachementService.create(fileType, fileName, message.id)
+        }
+        return [message,attachement]
     }
 
 }

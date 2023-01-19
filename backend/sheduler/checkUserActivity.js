@@ -1,26 +1,14 @@
-const { Sequelize } = require('../db');
-const { User } = require('../models/userModel')
+const userQueries = require('../database/postqre/queries/userQueries');
+const countDate = require('./dateCounter');
 
-async function findInActiveUsers() {
-    return await User.findAll({
-        where: {
-            lastSeen: { [Sequelize.Op.lt]: new Date(Date.now() - minutesToTimeSwamp(5)) }
-        }
-    });
-}
-
-function minutesToTimeSwamp(minutes) {
-    return 1000 * 60 * minutes
+async function setUserActivityFalse(userId) {
+    await userQueries.update(userId, { isActive: false })
 }
 
 async function checkUserActivity() {
-    const inActiveUsers = await findInActiveUsers();
+    const inActiveUsers = await userQueries.receiveInActiveUsers(countDate(5))
     const promises = inActiveUsers.map(async (user) => {
-        await User.update({ isActive: false }, {
-            where: {
-                id: user.id
-            }
-        })
+        await setUserActivityFalse(user.id)
     })
     await Promise.all(promises)
 }

@@ -1,16 +1,7 @@
-const { Sequelize } = require("../db");
-const ApiError = require("../error/ApiError");
-const { User } = require("../models");
+const userQueries = require("../database/postqre/queries/userQueries");
 
 async function updateUserActivity(userId) {
-    User.update({
-        lastSeen: Sequelize.literal('CURRENT_TIMESTAMP'),
-        isActive: true
-    }, {
-        where: {
-            id: userId
-        }
-    })
+    userQueries.updateUserActivity(userId)
 }
 
 module.exports = async function (req, res, next) {
@@ -18,6 +9,6 @@ module.exports = async function (req, res, next) {
         await updateUserActivity(req.user.id)
         next()
     } catch (e) {
-        return ApiError.Internal('Something went wrong with active status setting')
+        return res.status(500).json({ message: 'Something went wrong with active status setting' })
     }
 }

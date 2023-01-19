@@ -1,25 +1,10 @@
-const { Sequelize } = require('../db');
-const { ChatParticipant } = require('../models');
-
-async function findInTypingUsers() {
-    return await ChatParticipant.findAll({where:{
-        isTyping:true,
-        updatedAt: { [Sequelize.Op.lt]: new Date(Date.now() - minutesToTimeSwamp(1)) }
-    }})
-}
-
-function minutesToTimeSwamp(minutes) {
-    return 1000 * 60 * minutes
-}
+const chatQueries = require('../database/postqre/queries/chatQueries');
+const countDate = require('./dateCounter');
 
 async function checkTypingStatus() {
-    const inTypingUsers = await findInTypingUsers();
+    const inTypingUsers = await chatQueries.receiveInTypingParticipiants(countDate(5))
     const promises = inTypingUsers.map(async (participant) => {
-        await ChatParticipant.update({ isTyping: false }, {
-            where: {
-                id: participant.id
-            }
-        })
+        chatQueries.updateParticipantTypingStatus(participant.id,false)
     })
     await Promise.all(promises)
 }

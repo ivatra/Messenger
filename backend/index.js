@@ -4,11 +4,11 @@ const cors = require('cors')
 // require('express-async-errors')
 const fileupload = require('express-fileupload')
 const path = require('path')
-const mongoCl = require('./mongo')
+const mongoCl = require('./database/mongo/mongo')
 
-const sequelize = require('./db')
-const models = require('./models/index')
-const modelHooks = require('./models/hooks/index')
+const sequelize = require('./database/postqre/postgre')
+const models = require('./database/postqre/models/index')
+const modelHooks = require('./database/postqre/hooks/index')
 const router = require('./routes/index')
 const errorHandler = require('./middleware/errorHandling')
 const PORT = process.env.PORT || 5000
@@ -38,6 +38,13 @@ start()
 
 // @TODO: FINISH GET INBOX,  /// DONE
 // event : u were added to chat/kicked // DONE
-// is typing event
-// set message readen
+// is typing event // DONE
+// set message readen // DONE
 // get notifications function
+// set sent status false when it sent
+// убрать нахуй .datavalues отовсюду
+// middleware check for count of queries per 10 seconds for example
+// change get chat content.if user is participant of chat
+// do email authorization
+// sdelat norm error handling.contacts change status for example
+// pages service check contact status doesnt work

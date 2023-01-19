@@ -1,10 +1,10 @@
 const ApiError = require('../error/ApiError');
-const { User, InBox } = require('../models')
-const { Sequelize } = require('sequelize')
-const { Chat, GroupChat, IndividualChat, ChatParticipant } = require('../models/chatModel');
+const { GroupChat, IndividualChat } = require("../database/postqre/models/chatModel");
 
-const eventCreator = require('../events/eventCreator');
-const mongoClient = require('../mongo');
+
+const chatQueries = require('../database/postqre/queries/chatQueries');
+const eventsQueries = require('../database/mongo/queries/eventsQueries');
+const inboxQueries = require('../database/postqre/queries/inboxQueries');
 
 class ChatService {
   async createChat(userId, userId2, chatType) {
@@ -15,116 +15,60 @@ class ChatService {
     if (chatType === "individual" && !userId2)
       return ApiError.badRequest("Second user is absent")
 
-    const chat = await Chat.create({ type: chatType })
+    const chat = await chatQueries.createChat(chatType)
 
-    const chatModel = chat.type === "group" ? GroupChat : IndividualChat
-    await chatModel.create({ chatId: chat.id })
+    const chatModel = chatType === "group" ? GroupChat : IndividualChat
+    await chatQueries.createChatModel(chatModel, chat.id)
 
     await this.createSubTables(chat.id, userId, userId2)
 
     return chat
   }
 
-  async createChatEvent(userId, chat, status) {
-    const event = eventCreator.createChatEvent(userId, chat, status)
-    const events = mongoClient.db('Messenger').collection('events');
-    await events.insertOne(event)
-  }
-
   async createSubTables(chatId, userId, userId2) {
     await this.addParticipantToChat(chatId, userId)
-    await InBox.create({ chatId: chatId, userId: userId })
+    await inboxQueries.createInbox(chatId, userId)
     if (userId2) {
-      await InBox.create({ chatId: chatId, userId: userId2 })
+      await inboxQueries.createInbox(chatId, userId2)
       await this.addParticipantToChat(chatId, userId2, true)
     }
   }
 
   async findChat(userId1, userId2, chatType) {
-    return await Chat.findAll({
-      where: {
-        '$participants.userId$': userId1,
-        '$participants.userId$': userId2,
-        type: chatType
-      },
-      attributes: ['id'],
-      include: [
-        {
-          model: ChatParticipant,
-          as: 'participants',
-          attributes: ['userId']
-        }
-      ],
-    });
+    return await chatQueries.receiveChatByParticipants(userId1, userId2, chatType)
   }
+
   async addParticipantToChat(chatId, participantId, eventNeeded = false) {
-    const [participant, created] = await ChatParticipant.findOrCreate({
-      where: {
-        chatId: chatId,
-        userId: participantId
-      }
-    });
+    const [participant, created] = await chatQueries.createParticipant(chatId, participantId)
 
     if (!created)
       throw ApiError.badRequest(`Participant ${participantId} arleady exists in ${chatId} or chat doesn't exist`);
 
-    const chat = await Chat.findByPk(chatId)
+    const chat = await chatQueries.receiveChatByPk(chatId)
     if (eventNeeded && chat.type === 'group')
-      await this.createChatEvent(participantId, chat.dataValues, 'Invited')
+      await eventsQueries.createChatEvent(participantId, chatId, { status: 'Invited' })
   }
 
   async destroyParticipantFromChat(chatId, participantId) {
-    const chat = await Chat.findByPk(chatId);
+    const chat = await chatQueries.receiveChatByPk(chatId);
 
     if (chat.type === 'group') {
-      const destroyedParticipant = await ChatParticipant.destroy({
-        where: { chatId, userId: participantId }, individualHooks: true
-      });
+      const destroyedParticipant = await chatQueries.destroyParticipant(chatId, participantId)
 
       if (destroyedParticipant === 0) {
         throw ApiError.badRequest(`Participant ${participantId} doesn't exist in chat ${chatId}`);
       }
     }
 
-    await this.createChatEvent(participantId, chat.dataValues, 'Kicked');
+    await eventsQueries.createChatEvent(participantId, chatId, { status: 'Kicked' })
   }
 
   async fetchChatContent(chatId, userId) {
-    return await Chat.findByPk(chatId, {
-      attributes: ['id', 'type'],
-      include: [{
-        model: ChatParticipant,
-        as: 'participants',
-        include: [{
-          model: User,
-          attributes: ['id', 'name', 'avatar', 'isActive', 'lastSeen'],
-          where: {
-            id: {
-              [Sequelize.Op.ne]: userId
-            }
-          }
-        }],
-        attributes: ['role']
-      },
-      {
-        model: GroupChat,
-        attributes: ['avatar', 'name', 'participiantsCount']
-      }, {
-        model: IndividualChat,
-        attributes: ['isActive']
-      }],
-    });
+    return await chatQueries.receiveChatContent(chatId, userId)
   }
 
   async getChatParticipants(chatId) {
-    const chat =  await Chat.findOne({
-      where: { id: chatId },
-      include: {
-        model: ChatParticipant,
-        as: 'participants',
-        attributes: ['userId']
-      }
-    })
+    const chat = await chatQueries.receiveParticipants(chatId)
     return chat.participants
   }
 

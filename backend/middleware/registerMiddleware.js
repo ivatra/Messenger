@@ -1,25 +1,24 @@
-const ApiError = require("../error/ApiError")
-const { User } = require("../models/userModel")
+const userQueries = require("../database/postqre/queries/userQueries")
 
 module.exports = async function (req, res, next) {
     try {
         const { name, avatar, email, password } = req.body
         if (!email || !password)
-            throw ApiError.badRequest('Incorrect email or password')
+            return res.status(400).json({ message: "Incorrect email or password" })
 
         if (email && password && !name)
-            throw ApiError.badRequest('Enter your name, please')
+            return res.status(400).json({ message: 'Enter your name, please' })
 
-        const candidate = await User.findOne({ where: { email } })
+        const candidate = await userQueries.receiveUserByEmail(email)
 
         if (candidate)
-            throw ApiError.badRequest('User with this email arleady exists')
+            return res.status(400).json({ message: 'User with this email arleady exists' })
 
-        req.avatar = avatar || 'defaultPic.jpg';
+        req.body.avatar = avatar || 'defaultPic.jpg';
 
         next()
 
     } catch (e) {
-        return ApiError.Internal('Something went wrong with registration.')
+        return res.status(400).json({ message: 'Something went wrong with registration' })
     }
 }

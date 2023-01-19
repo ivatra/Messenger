@@ -17,7 +17,6 @@ class EventsController{
 
     async setMessageRead(req,res){
         const {messageId,chatId} = req.body
-        console.log(req.body)
         const userId = req.user.id
         await eventService.setMessageRead(userId,messageId,chatId)
         return res.json(`Event messageRead successfully sent to chat ${chatId}`)

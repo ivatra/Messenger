@@ -1,58 +1,43 @@
-const { User } = require("../models/userModel")
 const ApiError = require('../error/ApiError')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const mongoClient = require('../mongo')
+const userQueries = require("../database/postqre/queries/userQueries")
+
+
+function generateJwt(id, name, email) {
+    return jwt.sign({
+        id,
+        name,
+        email
+    },
+        process.env.SECRET_KEY,
+        { expiresIn: '7d' })
+
+}
 
 class authService {
-    generateJwt(id, name, email) {
-        return jwt.sign({
-            id,
-            name,
-            email
-        },
-            process.env.SECRET_KEY,
-            { expiresIn: '7d' })
-
-    }
-
-    getUserActivityRecord(userId) {
-        return {
-            _id: userId,
-            isActive: true
-        }
-    }
-
     checkIsPasswordCorrect(rightPassword, usersPassword) {
         let comparePassword = bcrypt.compareSync(usersPassword, rightPassword)
         if (!comparePassword)
             throw ApiError.Internal('Incorrent password')
     }
 
-    async createUserActivityRecord(userId) {
-        const requests = mongoClient.db('Messenger').collection('userRequests');
-        const record = this.getUserActivityRecord(userId)
-        await requests.insertOne(record)
-    }
-
     async login(email, password) {
-        const user = await User.findOne({ where: { email } })
+        const user = await userQueries.receiveUserByEmail(email)
         if (!user)
             throw ApiError.Internal('User not found')
 
         this.checkIsPasswordCorrect(user.password, password)
 
-        return this.generateJwt(user.id, user.email, user.role)
+        return generateJwt(user.id, user.email, user.role)
     }
 
-    async register(name, avatar, email, password) {
+    async register(login,email,password,name,avatar) {
         const hashPassword = await bcrypt.hash(password, 5)
 
-        const user = await User.create({ name, avatar, email, password: hashPassword })
+        const user = await userQueries.create(login,email,hashPassword,name,avatar)
 
-        await this.createUserActivityRecord(user.id)
-
-        return generateJwt(user.id, user.name, user.email)
+        return generateJwt(user.id, user.login, user.email)
     }
     
     async check() {

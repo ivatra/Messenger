@@ -1,88 +1,41 @@
+const contactsQueries = require('../database/postqre/queries/contactsQueries');
+const userQueries = require('../database/postqre/queries/userQueries');
 const ApiError = require('../error/ApiError');
-const { User, Contact } = require('../models')
-const { Sequelize } = require('sequelize')
+
 
 async function getContactInfo(userId) {
-  return await User.findOne(
-    {
-      where: { id: userId },
-      attributes: ['id','name', 'avatar', 'isActive', 'lastSeen']
-    })
+  return await userQueries.receiveUserById(userId)
 }
 
 async function findContacts(userId, status) {
-  return await Contact.findAll({
-    where: {
-      [Sequelize.Op.or]: [
-        { senderId: userId },
-        { recipientId: userId },
-      ],
-      status: status,
-    },
-    attributes: ['senderId', 'recipientId'],
-  })
+  return await contactsQueries.receiveContactsByUser(userId, status)
 }
 
 async function fetchContactsInfo(contacts, userId) {
   return await Promise.all(contacts.map(async (contact) => {
     return contact.senderId !== userId
-      ? await getContactInfo(contact.senderId)
-      : await getContactInfo(contact.recipientId);
+      ? await getContactInfo(contact.dataValues.senderId)
+      : await getContactInfo(contact.dataValues.recipientId);
   }));
 }
 
 async function isContactExists(senderId, recipientId) {
-  const contact = await Contact.findOne({
-    where: {
-      [Sequelize.Op.or]: [
-        { senderId: senderId, recipientId: recipientId },
-        { recipientId: senderId, senderId: recipientId }
-      ]
-    }
-  });
+  const contact = await contactsQueries.receiveContact(senderId, recipientId)
   return contact !== null;
 }
 
 async function updateContact(userId, contactId, status) {
-  const contact = await Contact.findOne(
-    {
-      where: {
-        [Sequelize.Op.or]: [
-          { recipientId: userId, senderId: contactId },
-          { senderId: userId, recipientId: contactId },
-        ],
-      },
-    }
-  );
-  contact.status = status
-  await contact.save()
+  return await contactsQueries.updateContactStatus(userId, contactId, status)
 }
 
-  async function checkContactStatus(userId, contactId) {
-    const contact = await Contact.findOne(
-      {
-        where: {
-          [Sequelize.Op.or]: [
-            { recipientId: userId, senderId: contactId },
-            { senderId: userId, recipientId: contactId },
-          ],
-          status:"pending"
-        },
-      }
-    );
-  
-  return contact;
+async function checkContactStatus(userId, contactId) {
+  const contact = await contactsQueries.receiveContact(userId,contactId)
+
+  return contact.status === "pending";
 }
 
 async function destroyContact(senderId, recipientId) {
-  await Contact.destroy({ 
-    where: { 
-      [Sequelize.Op.or]: [
-        { senderId: senderId, recipientId: recipientId },
-        { recipientId: senderId, senderId: recipientId }
-      ]
-    }
-  });
+  return await contactsQueries.destroyContact(senderId,recipientId)
 }
 
-module.exports = { getContactInfo, findContacts, fetchContactsInfo, isContactExists, destroyContact, updateContact,checkContactStatus }
+module.exports = { getContactInfo, findContacts, fetchContactsInfo, isContactExists, destroyContact, updateContact, checkContactStatus }

@@ -1,73 +1,47 @@
-const eventCreator = require('../events/eventCreator');
-const { ChatParticipant, Message } = require('../models');
-const mongoClient = require('../mongo');
+const eventsQueries = require('../database/mongo/queries/eventsQueries');
+const chatQueries = require('../database/postqre/queries/chatQueries');
+const messageQueries = require('../database/postqre/queries/messageQueries');
 const chatService = require('./chatService');
-const events = mongoClient.db('Messenger').collection('events');
 
 class eventService {
     async get(userId) {
-        return await events.find({ recipientId: "cca23be1-897c-42a3-bfc3-178d96a73cba" }).toArray()
+        return await eventsQueries.receiveEvents(userId)
     }
 
     async setTyping(userId, chatId) {
         const participants = await chatService.getChatParticipants(chatId)
 
-        await this.updateChatParticipant(userId)
+        chatQueries.updateParticipantTypingStatus(userId, true)
 
         for (var participant of participants) {
-            var event = eventCreator.createChatEvent(participant, chatId, 'Typing', userId)
-            await events.insertOne(event)
+            eventsQueries.createChatEvent(participant.dataValues.userId, chatId, 'Typing', userId, false)
         }
 
     }
 
     async setMessageRead(userId, messageId, chatId) {
-        await this.updateMessage(messageId)
         await this.updateMessageRead(userId, messageId)
-
-        const isMessageNoted = this.messageArleadyNotedRead(messageId)
-
+        const isMessageNoted = await this.messageArleadyNotedRead(messageId)
+        const participants = await chatQueries.receiveParticipantsByChat(chatId)
         if (!isMessageNoted) {
-            var event = eventCreator.createMessageEvent(userId, chatId, 'Message Read', userId)
-            await events.insertOne(event)
+            for (var participant of participants) {
+                eventsQueries.createMessageEvent(participant.user.id, chatId, 'any', true, 'Message Read',false)
+                await this.updateMessageRead(participant.user.id, messageId)
+            }
         }
 
     }
 
     async updateMessageRead(userId, messageId) {
-        events.updateOne({
-            recipientId: userId, "content.message.id": messageId
-        },
-            {
-                $set: {
-                    "content.isRead": true
-                }
-            })
+        eventsQueries.updateMessageReadStatus(userId, messageId)
+        messageQueries.updateMessage(messageId, { isRead: true })
     }
 
     async messageArleadyNotedRead(messageId) {
-        return await Message.findByPk(messageId, {
-            where: {
-                isRead: true
-            },
-        }) ? true : false
-
-    }
-    async updateChatParticipant(userId) {
-        ChatParticipant.update({ isTyping: true }, {
-            where: {
-                userId: userId
-            }
-        })
-    }
-
-    async updateMessage(messageId) {
-        Message.update({ isRead: true }, {
-            where: {
-                id: messageId
-            }
-        })
+        const message = await messageQueries.receiveMessage(messageId)
+        return message.dataValues.isRead
     }
 }
+
 
 module.exports = new eventService()

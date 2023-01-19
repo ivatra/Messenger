@@ -1,8 +1,7 @@
-const { User, InBox, Contact, Message, GroupChat, Chat, IndividualChat, ChatParticipant } = require('../models')
-const { getContactInfo, findContacts, fetchContactsInfo, isContactExists, destroyContact, updateContact, checkContactStatus } = require('./contactsService')
+const { getContactInfo, findContacts, fetchContactsInfo, isContactExists, destroyContact, updateContact} = require('./contactsService')
 const ApiError = require('../error/ApiError')
-const { Sequelize } = require('../db')
-const chatService = require('./chatService')
+const inboxQueries = require('../database/postqre/queries/inboxQueries')
+const contactsQueries = require('../database/postqre/queries/contactsQueries')
 
 
 class PagesService {
@@ -23,7 +22,7 @@ class PagesService {
     if (contactExists) {
       throw ApiError.badRequest("Contact arleady exists")
     }
-    const contact = await Contact.create({ senderId: userId, recipientId: contactId, status: "pending" })
+    const contact = await contactsQueries.createContact(userId,contactId)
     return contact
   }
 
@@ -39,8 +38,8 @@ class PagesService {
     // if(checkContactStatus(userId,contactId))
     //   throw ApiError.badRequest(`Contact ${userId} and ${contactId} has reviewed status`)
 
-    await updateContact(userId, contactId, status)
-    return `contact ${contactId} ${status}`
+    const result = await updateContact(userId, contactId, status) === [0]
+    return result ? `contact ${contactId} ${status}` : `something went wrong with changing ${contactId} status`
   }
 
   async removeContact(userId, contactId) {
@@ -53,40 +52,7 @@ class PagesService {
   }
 
   async getInbox(userId) {
-    return await InBox.findAll({
-      where: { userId: userId },
-      include: [
-        { model: Message, attributes: ['content', 'senderId'] },
-        {
-          model: Chat,
-          attributes: ['type'],
-          include: [
-            {
-              model: GroupChat,
-              attributes: ['name', 'avatar'],
-              required: false
-            },
-            {
-              model: IndividualChat,
-              attributes: ['isActive'],
-              required: false,
-            },
-            {
-              model: ChatParticipant,
-              attributes: ['userId'],
-              as: 'participants',
-              where: {
-                userId: { [Sequelize.Op.ne]: userId },
-              },
-              include: [
-                {
-                  model: User,
-                  attributes: ['avatar', 'name', 'lastSeen'],
-                }
-              ]
-            }]
-        }]
-    });
+    return await inboxQueries.receiveUserInboxes(userId)
   }
 
   async getNotifications(userId) {
