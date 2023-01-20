@@ -3,4 +3,4 @@ const models = require('require-all')({
     filter: /(.+Model)\.js$/,
   });
   
-  module.exports = models;
+module.exports = models;

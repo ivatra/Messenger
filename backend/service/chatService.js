@@ -64,7 +64,16 @@ class ChatService {
   }
 
   async fetchChatContent(chatId, userId) {
+    await this.checkForMemberingInChat(userId,chatId)
     return await chatQueries.receiveChatContent(chatId, userId)
+  }
+
+  async checkForMemberingInChat(userId, chatId) {
+    const participants = await this.getChatParticipants(chatId)
+    const participant = participants.find((participant) => participant.userId === userId);
+    if (!participant) {
+       throw ApiError.forbidden(`You are not participant of chat ${chatId}`)
+    }
   }
 
   async getChatParticipants(chatId) {

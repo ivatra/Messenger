@@ -1,5 +1,5 @@
 const Router = require('express')
-const contactsController = require('../../controllers/contactsController')
+const contactsController = require('../../controllers/pages/contactsController')
 const router = new Router()
 
 router.get('/',contactsController.getAll)
