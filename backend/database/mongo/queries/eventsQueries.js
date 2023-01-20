@@ -51,19 +51,8 @@ class eventQueries {
 
     }
 
-    async updateMessageReadStatus(userId,messageId){
-        return events.updateOne({
-            recipientId: userId, "content.message.id": messageId
-        },
-            {
-                $set: {
-                    "content.isRead": true
-                }
-            })
-    }
-
     async receiveEvents(userId){
-        return await events.find({ recipientId: '7b36b12e-ede3-494c-9581-54ddc232c4ef' }).toArray()
+        return await events.find({ recipientId: '7b36b12e-ede3-494c-9581-54ddc232c4ef',sent:false }).toArray()
         // return await events.find({ recipientId: userId }).toArray()
     }
 
@@ -74,6 +63,29 @@ class eventQueries {
             "content.isRead": false
           }).toArray()
     }
+
+    async updateMessageReadStatus(userId,messageId){
+        return await events.updateOne({
+            recipientId: userId, "content.message.id": messageId
+        },
+            {
+                $set: {
+                    "content.isRead": true
+                }
+            })
+    }
+
+    async updateEventsSentStatus(eventId){
+        return await events.updateMany({
+            id:eventId
+        },
+            {
+                $set: {
+                    "sent": true
+                }
+            })
+    }
+
 }
 
 module.exports = new eventQueries()

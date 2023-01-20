@@ -1,4 +1,3 @@
-const messageQueries = require('../queries/messageQueries');
 const inboxQueries = require('../queries/inboxQueries');
 const chatQueries = require('../queries/chatQueries');
 const eventsQueries = require('../../mongo/queries/eventsQueries');
@@ -50,7 +49,7 @@ const sendMessageReceivedEvent = async () => {
           await eventsQueries.createMessageEvent(id, messageWithAttachement, userMentioned)
       }, 1000)
 
-      inboxQueries.updateMessage(id, message.chatId, message.id)
+      await inboxQueries.updateMessage(id, message.chatId, message.id)
     });
     await Promise.all(promises);
   });

@@ -22,8 +22,8 @@ class messageQueries {
         })
     }
 
-    updateMessage(messageId, values) {
-        Message.update( values , {
+    async updateMessage(messageId, values) {
+        return await Message.update( values , {
             where: {
                 id: messageId
             }

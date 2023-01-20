@@ -46,8 +46,8 @@ class inBoxQueries {
     });
   }
 
-    updateMessage(userId, chatId, messageId) {
-    return InBox.update({ messageId: messageId },
+    async updateMessage(userId, chatId, messageId) {
+    return await InBox.update({ messageId: messageId },
       {
         where: {
           userId,

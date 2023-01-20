@@ -43,11 +43,20 @@ start()
 // output contact logic to contactservice file // DONE
 // sdelat norm error handling.contacts change status for example // DONE
 // change get chat content.if user is participant of chat // DONE
-// get notifications function
-// set sent status false when it sent
+// get notifications function // DONE
+// set sent status false when it sent // DONE
+// user avatar handling // DONE
+// check file extension  // DONE
+// sort in static by attachements , /userid/avatar , chat/avatar // DONE
+// change group chat name and avatar // DONE
+// change user name,avatar,login,password // DONE
 // middleware check for count of queries per 10 seconds for example
 // do email authorization
+// update tokens when user updates password
 // cloudfare test
+// test contacts logic 
 
 
-//test contacts logic / 
+
+//@POSSIBLE PROBLEMS :
+// it accepts gif images

@@ -10,7 +10,7 @@ class MessageService {
     async createMessage(content, attachement, senderId, chatId) {
         const message = await messageQueries.createMessage(chatId, content, senderId)
         if (attachement) {
-            const fileName = await fileService.saveAttachement(attachement, attachement.name)
+            const fileName = await fileService.saveFile(attachement, attachement.name,'attachements')
             const fileType = await fileService.getFileType(attachement.name)
             attachement = await attachementService.create(fileType, fileName, message.id)
         }

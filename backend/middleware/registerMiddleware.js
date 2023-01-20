@@ -1,24 +1,36 @@
+const e = require("express")
 const userQueries = require("../database/postqre/queries/userQueries")
+const fileService = require("../service/fileService")
 
 module.exports = async function (req, res, next) {
-    try {
-        const { name, avatar, email, password } = req.body
-        if (!email || !password)
-            return res.status(400).json({ message: "Incorrect email or password" })
+    const { name, email,login, password } = req.body
+    var avatar
 
-        if (email && password && !name)
-            return res.status(400).json({ message: 'Enter your name, please' })
+    if (req.files)
+        avatar = req.files.avatar
 
-        const candidate = await userQueries.receiveUserByEmail(email)
+    if (!email || !password)
+        return res.status(400).json({ message: "Incorrect email or password" })
 
-        if (candidate)
-            return res.status(400).json({ message: 'User with this email arleady exists' })
+    if (email && password && !name)
+        return res.status(400).json({ message: 'Enter your name, please' })
 
-        req.body.avatar = avatar || 'defaultPic.jpg';
+    const candidateByEmail = await userQueries.receiveUserByEmail(email)
 
-        next()
+    if (candidateByEmail)
+        return res.status(400).json({ message: 'User with this email arleady exists' })
 
-    } catch (e) {
-        return res.status(400).json({ message: 'Something went wrong with registration' })
+    const candidateByLogin = await userQueries.receiveUserByLogin(login)
+
+    if (candidateByLogin)
+        return res.status(400).json({ message: 'User with this login arleady exists' })
+
+    if (avatar) {
+        await fileService.checkForImage(avatar.name)
+        req.avatar = await fileService.saveFile(avatar, avatar.name, 'userAvatars')
     }
+    else
+        req.avatar = 'defaultPic.jpg';
+
+    next()
 }

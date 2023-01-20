@@ -2,7 +2,8 @@ const authService = require('../service/authService')
 
 class AuthController {
     async registration(req, res, next) {
-        const { name, login, avatar, email, password } = req.body
+        const { name, login, email, password } = req.body
+        const avatar = req.avatar
         const token = await authService.register(login, email, password, name, avatar)
         return res.json({ token })
     }

@@ -5,7 +5,8 @@ class EventsController{
     async get(req,res,next){
         const userId = req.user.id
         const events = await eventService.get(userId)
-        return res.json(events)
+        res.json(events)
+        // return await eventService.setEventsSent(events)
     }
 
     async setTyping(req,res){

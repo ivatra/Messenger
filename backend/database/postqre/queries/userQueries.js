@@ -4,12 +4,8 @@ const { User } = require("../models/userModel")
 const { Sequelize } = require("../postgre")
 
 class userQueries {
-    async receiveUserByEmail(email) {
-        return await User.findOne({ where: { email } })
-    }
 
     async create(login, email, hashPassword, name, avatar) {
-        console.log(avatar)
         return await User.create({ login, name, avatar: avatar, email, password: hashPassword })
     }
 
@@ -21,6 +17,14 @@ class userQueries {
             })
     }
 
+    async receiveUserByEmail(email) {
+        return await User.findOne({ where: { email } })
+    }
+
+    async receiveUserByLogin(login) {
+        return await User.findOne({ where: { login } })
+    }
+
     async receiveInActiveUsers(date) {
         return await User.findAll({
             where: {
@@ -29,16 +33,25 @@ class userQueries {
         });
     }
 
-    updateUserActivity(userId) {
-        return User.update({
+    async updateUserActivity(userId, isActive) {
+        return await User.update({
             lastSeen: Sequelize.literal('CURRENT_TIMESTAMP'),
-            isActive: true
+            isActive: isActive
         }, {
             where: {
                 id: userId
             }
         })
     }
+
+    async updateUser(userId, fields) {
+        return await User.update(fields, {
+            where: {
+                id: userId
+            }
+        })
+    }
+
 }
 
 

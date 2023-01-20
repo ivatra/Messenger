@@ -8,13 +8,19 @@ class eventService {
         return await eventsQueries.receiveEvents(userId)
     }
 
+    async setEventsSent(events) {
+        for (var event of events) {
+            await eventsQueries.updateEventsSentStatus(event.id)
+        }
+    }
+
     async setTyping(userId, chatId) {
         const participants = await chatService.getChatParticipants(chatId)
 
-        chatQueries.updateParticipantTypingStatus(userId, true)
+        await chatQueries.updateParticipantTypingStatus(userId, true)
 
         for (var participant of participants) {
-            eventsQueries.createChatEvent(participant.userId, chatId, 'Typing', userId, false)
+            await eventsQueries.createChatEvent(participant.userId, chatId, 'Typing', userId, false)
         }
 
     }
@@ -25,7 +31,7 @@ class eventService {
         const participants = await chatQueries.receiveParticipantsByChat(chatId)
         if (!isMessageNoted) {
             for (var participant of participants) {
-                eventsQueries.createMessageEvent(participant.user.id, chatId, 'any', true, 'Message Read',false)
+                eventsQueries.createMessageEvent(participant.user.id, chatId, 'any', true, 'Message Read', false)
                 await this.updateMessageRead(participant.user.id, messageId)
             }
         }
@@ -33,8 +39,8 @@ class eventService {
     }
 
     async updateMessageRead(userId, messageId) {
-        eventsQueries.updateMessageReadStatus(userId, messageId)
-        messageQueries.updateMessage(messageId, { isRead: true })
+        await eventsQueries.updateMessageReadStatus(userId, messageId)
+        await messageQueries.updateMessage(messageId, { isRead: true })
     }
 
     async messageArleadyNotedRead(messageId) {

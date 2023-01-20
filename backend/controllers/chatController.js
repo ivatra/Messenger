@@ -1,3 +1,4 @@
+const chatService = require('../service/chatService');
 const ChatService = require('../service/chatService')
 
 class ChatController {
@@ -17,19 +18,34 @@ class ChatController {
     return res.json(chatContent)
   }
 
+  async update(req, res) {
+    const { chatId } = req.params
+    const { name } = req.body
+    var avatar 
+   
+    if(req.files)
+      avatar = req.files.avatar
+      
+    const elements = await chatService.updateChat(chatId, name, avatar)
+
+    return res.json(`${elements}in chat ${chatId} succecsfuly updated.`)
+
+  }
+
   async addChatParticipant(req, res) {
     const { participantId } = req.body
-    const {chatId} =  req.params
-    await ChatService.addParticipantToChat(chatId, participantId,true)
+    const { chatId } = req.params
+    await ChatService.addParticipantToChat(chatId, participantId, true)
     return res.json(`Participant ${participantId} added to chat ${chatId}`)
   }
 
   async removeChatParticipant(req, res) {
     const { participantId } = req.body
-    const {chatId} =  req.params
+    const { chatId } = req.params
     await ChatService.destroyParticipantFromChat(chatId, participantId)
     return res.json(`Participant ${participantId} removed from chat ${chatId}`)
   }
+
 }
 
 module.exports = new ChatController()

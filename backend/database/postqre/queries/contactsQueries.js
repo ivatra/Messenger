@@ -26,7 +26,7 @@ class contactsQueries {
     }
 
     async updateContactStatus(firstUser, secondUser, status) {
-        return Contact.update({ status: status },
+        return await Contact.update({ status: status },
             {
                 where: {
                     [Sequelize.Op.or]: [

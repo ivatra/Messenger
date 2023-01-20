@@ -21,28 +21,8 @@ class chatQueries {
         });
     }
 
-    async createOrReceiveParticipant() {
-
-    }
-
     async receiveChatByPk(chatId) {
         return await Chat.findByPk(chatId)
-    }
-
-
-    async receiveParticipants(chatId) {
-        return await Chat.findOne({
-            where: { id: chatId },
-            include: {
-                model: ChatParticipant,
-                as: 'participants',
-                attributes: ['userId'],
-                include: {
-                    model: User,
-                    attributes: ['name']
-                }
-            }
-        })
     }
 
     async receiveInTypingParticipiants(date) {
@@ -87,7 +67,7 @@ class chatQueries {
             where: { chatId },
             include: {
                 model: User,
-                attributes: ['id', 'login','isActive']
+                attributes: ['id', 'login', 'isActive']
             }
         });
 
@@ -135,23 +115,35 @@ class chatQueries {
         })
     }
 
-    updateChatActiveStatus(chatId, status) {
-        IndividualChat.update({ isActive: status }, {
+    async updateChatActiveStatus(chatId, status) {
+        return await IndividualChat.update({ isActive: status }, {
             where: {
                 id: chatId
             }
         })
     }
-    updateParticipantTypingStatus(userId, status) {
-        return ChatParticipant.update({ isTyping: status }, {
+    async updateParticipantTypingStatus(userId, status) {
+        return await ChatParticipant.update({ isTyping: status }, {
             where: {
                 userId: userId
             }
         })
     }
 
+    async updateGroupChatName(chatId, name) {
+        return await GroupChat.update({ name: name }, {
+            where: { chatId: chatId }
+        })
+    }
+
+    async updateGroupChatAvatar(chatId,avatar) {
+        return await GroupChat.update({avatar: avatar }, {
+            where: { chatId: chatId }
+        })
+    }
+
     async destroyParticipant(chatId, participantId) {
-        return await await ChatParticipant.destroy({
+        return await ChatParticipant.destroy({
             where: {
                 chatId,
                 userId: participantId
