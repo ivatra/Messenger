@@ -14,7 +14,7 @@ class eventService {
         chatQueries.updateParticipantTypingStatus(userId, true)
 
         for (var participant of participants) {
-            eventsQueries.createChatEvent(participant.dataValues.userId, chatId, 'Typing', userId, false)
+            eventsQueries.createChatEvent(participant.userId, chatId, 'Typing', userId, false)
         }
 
     }
@@ -39,7 +39,7 @@ class eventService {
 
     async messageArleadyNotedRead(messageId) {
         const message = await messageQueries.receiveMessage(messageId)
-        return message.dataValues.isRead
+        return message.isRead
     }
 }
 

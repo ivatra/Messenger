@@ -41,13 +41,12 @@ start()
 // is typing event // DONE
 // set message readen // DONE
 // output contact logic to contactservice file // DONE
+// sdelat norm error handling.contacts change status for example // DONE
+// change get chat content.if user is participant of chat // DONE
 // get notifications function
 // set sent status false when it sent
-// убрать нахуй .datavalues отовсюду
 // middleware check for count of queries per 10 seconds for example
-// change get chat content.if user is participant of chat // DONE
 // do email authorization
-// sdelat norm error handling.contacts change status for example // DONE
 // cloudfare test
 
 

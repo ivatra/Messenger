@@ -54,8 +54,8 @@ class contactsService {
   async fetchContactsInfo(contacts, userId) {
     return await Promise.all(contacts.map(async (contact) => {
       return contact.senderId !== userId
-        ? await userQueries.receiveUserById(contact.dataValues.senderId)
-        : await userQueries.receiveUserById(contact.dataValues.recipientId)
+        ? await userQueries.receiveUserById(contact.senderId)
+        : await userQueries.receiveUserById(contact.recipientId)
     }));
   }
 

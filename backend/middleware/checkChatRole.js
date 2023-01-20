@@ -6,7 +6,7 @@ module.exports = function (role) {
     const { participantId } = req.body
     const { id } = req.params
     const participant = chatQueries.receiveParticipant(participantId,req.params.chatId)
-    // if (participant.dataValues.role != "ADMIN") {
+    // if (participant.role != "ADMIN") {
     //   throw ApiError.forbidden(`User ${req.user.id} doesn't have privileges for chat ${id}`)
     // }
     next()
