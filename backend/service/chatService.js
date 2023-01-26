@@ -87,7 +87,7 @@ class ChatService {
     if (name) {
       await chatQueries.updateGroupChatName(chatId, name)
 
-      message += 'name [' + name + ' ], '
+      message += 'name [' + name + ' ],'
     }
 
     return message
