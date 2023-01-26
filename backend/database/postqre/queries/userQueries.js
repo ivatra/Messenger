@@ -13,7 +13,7 @@ class userQueries {
         return await User.findOne(
             {
                 where: { id: userId },
-                attributes: ['id', 'name', 'avatar', 'isActive', 'lastSeen']
+                attributes: ['id', 'name', 'avatar', 'isActive', 'lastSeen', 'requestsCountPerMinute']
             })
     }
 
@@ -50,6 +50,17 @@ class userQueries {
                 id: userId
             }
         })
+    }
+
+    async incrementUserRequestCount(userId) {
+        return await User.increment('requestsCountPerMinute', {
+            where:
+                { id: userId }
+        })
+    }
+
+    async resetUsersRequestsCount() {
+        return await User.update({ requestsCountPerMinute: 0 }, { where: {} });
     }
 
 }
