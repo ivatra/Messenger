@@ -59,7 +59,7 @@ start()
 // sort in static by attachements , /userid/avatar , chat/avatar // DONE
 // change group chat name and avatar // DONE
 // change user name,avatar,login,password // DONE
-// middleware check for count of queries per 10 seconds for example // DONE
+// middleware check for count1 of queries per 10 seconds for example // DONE
 //destroy an account if it was not activated for a day || sheduler
 // destroy expired tokens || sheduler
 // return captcha if too many requests
