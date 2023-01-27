@@ -1,7 +1,7 @@
 const eventsQueries = require('../database/mongo/queries/eventsQueries');
 const chatQueries = require('../database/postqre/queries/chatQueries');
 const messageQueries = require('../database/postqre/queries/messageQueries');
-const chatService = require('./chatService');
+const chatService = require('./chat/chatService');
 
 class eventService {
     async get(userId) {

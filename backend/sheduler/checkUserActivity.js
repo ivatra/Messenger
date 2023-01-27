@@ -1,8 +1,10 @@
 const userQueries = require('../database/postqre/queries/userQueries');
-const countDate = require('./dateCounter');
+const dateService = require('../service/misc/dateService');
 
 async function checkUserActivity() {
-    const inActiveUsers = await userQueries.receiveInActiveUsers(countDate(2))
+    const timeSwamp = dateService.countDate(2)
+    
+    const inActiveUsers = await userQueries.receiveInActiveUsers(timeSwamp)
     const promises = inActiveUsers.map(async (user) => {
         await userQueries.updateUserActivity(user.id,false)
     })

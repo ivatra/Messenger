@@ -8,7 +8,7 @@ class tokenQueries {
             userId: userId,
             token: token,
             device: device,
-            expiresIn: 0
+            createdAt: Date.now()
         }
 
         await tokens.insertOne(refreshToken)

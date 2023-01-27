@@ -1,11 +1,10 @@
-const chatService = require('../service/chatService');
-const ChatService = require('../service/chatService')
+const chatService = require('../service/chat/chatService');
 
 class ChatController {
   async createOrGet(req, res) {
     const { participantId, type } = req.body;
     const chatType = type || "individual";
-    var [chat] = await ChatService.findChat(req.user.id, participantId, chatType)
+    var [chat] = await chatService.findChat(req.user.id, participantId, chatType)
     if (!chat)
       chat = await ChatService.createChat(req.user.id, participantId, chatType);
     // res.redirect(chat.id);
@@ -28,7 +27,7 @@ class ChatController {
       
     const elements = await chatService.updateChat(chatId, name, avatar)
 
-    return res.json(`${elements}in chat ${chatId} succecsfuly updated.`)
+    return res.json(`${elements} in chat ${chatId} succecsfuly updated.`)
 
   }
 

@@ -1,7 +1,7 @@
 const userQueries = require("../database/postqre/queries/userQueries")
 const bcrypt = require('bcrypt')
 const ApiError = require("../error/ApiError")
-const fileService = require("./fileService")
+const fileService = require("./misc/fileService")
 
 
 class userService {

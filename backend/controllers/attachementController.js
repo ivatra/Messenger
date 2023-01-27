@@ -1,5 +1,5 @@
 const ApiError = require("../error/ApiError")
-const attachementService = require("../service/attachementService")
+const attachementService = require("../service/chat/attachementService")
 const messageController = require("./messageController")
 
 class attachementController {

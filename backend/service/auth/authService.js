@@ -5,7 +5,8 @@ const useragent = require('useragent');
 
 const userQueries = require("../../database/postqre/queries/userQueries")
 const mailService = require('./mailService')
-const tokenService = require('./tokenService')
+const tokenService = require('./tokenService');
+const activationQueries = require('../../database/mongo/queries/activationQueries');
 
 
 function comparePassword(rightPassword, usersPassword) {
@@ -22,13 +23,14 @@ function parseDevice(userAgent) {
 }
 
 async function authenticateUser(userId,userAgent){
-    const { accessToken, refreshToken } = tokenService.generateTokens(userId)
-
     const device = parseDevice(userAgent)
 
-    await tokenService.saveRefreshToken(userId, refreshToken, device)
+    const { accessToken, refreshToken } = tokenService.generateTokens(userId,device)
 
-    return accessToken
+
+    await tokenService.saveRefreshToken(userId, device, refreshToken)
+
+    return { accessToken: accessToken, refreshToken: refreshToken }
 }
 
 class authService {
@@ -47,14 +49,16 @@ class authService {
     async register(login, email, password, name, avatar, userAgent) {
         const hashPassword = await bcrypt.hash(password, 5)
 
-        const user = await userQueries.create(login, email, hashPassword, name, avatar)
+        // const user = await userQueries.create(login, email, hashPassword, name, avatar)
 
-        const activationLink = uuid.v4()
+        const generatedUuid = uuid.v4()
+        const activationLink = process.env.API_URL + '/api/activate/' + generatedUuid 
         await mailService.sendActivationMail(email, activationLink)
+        await activationQueries.createLink(1,generatedUuid)
 
-        const accessToken = await authenticateUser(user.id,userAgent) 
+        const tokens = await authenticateUser(1,userAgent) 
 
-        return accessToken
+        return tokens
     }
 
     async activateAccount() {

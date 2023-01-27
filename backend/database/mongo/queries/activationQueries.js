@@ -3,7 +3,7 @@ const activation = mongoClient.db('Messenger').collection('activationLinks');
 
 
 class activationQueries {
-    async createActivationLink(userId, link) {
+    async createLink(userId, link) {
         const activationRecord = {
             userId: userId,
             link: link,
@@ -12,6 +12,10 @@ class activationQueries {
         }
 
         await activation.insertOne(activationRecord)
+    }
+
+    async receiveLink(userId,link){
+        return await activation.findOne({userId:userId,link:link})
     }
 }
 

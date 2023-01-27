@@ -1,5 +1,5 @@
 const { Attachement } = require('../models/attachementModel')
-const fileService = require('../../../service/fileService')
+const fileService = require('../../../service/misc/fileService')
 
 
 async function deleteFileHook() {

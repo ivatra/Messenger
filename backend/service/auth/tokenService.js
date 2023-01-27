@@ -1,30 +1,30 @@
 const jwt = require('jsonwebtoken')
 const tokensQueries = require('../../database/mongo/queries/tokensQueries')
 
-function generateAccess(userId) {
+function generateAccess(userId,device) {
     return jwt.sign({
         userId,
         device
     },
-        process.env.JWT_ACCESS_TOKEN,
+        process.env.JWT_ACCESS_SECRET,
         { expiresIn: '7d' })
 
 }
 
-function generateRefresh(userId) {
+function generateRefresh(userId,device) {
     return jwt.sign({
         userId,
         device
     },
-        process.env.JWT_REFRESH_TOKEN,
+        process.env.JWT_REFRESH_SECRET,
         { expiresIn: '30d' })
 
 }
 
 class tokenService {
-    generateTokens(userId, name, email) {
-        const accessToken = generateAccess(userId, name, email)
-        const refreshToken = generateRefresh(userId)
+    generateTokens(userId,device) {
+        const accessToken = generateAccess(userId,device)
+        const refreshToken = generateRefresh(userId,device)
 
         return { accessToken, refreshToken }
     }

@@ -1,4 +1,4 @@
-const messageService = require("../service/messageService")
+const messageService = require("../service/chat/messageService")
 class messageController {
     async getAll(req, res) {
         const chatId = req.params.chatId

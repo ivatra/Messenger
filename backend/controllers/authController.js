@@ -6,16 +6,20 @@ class AuthController {
         const avatar = req.avatar
         const userAgent = req.headers['user-agent']
 
-        const token = await authService.register(login, email, password, name, avatar, userAgent)
-        return res.json({ token })
+        const tokens = await authService.register(login, email, password, name, avatar, userAgent)
+
+        res.cookie('refreshToken',tokens.refreshToken,{maxAge})
+        return res.json(tokens.accessToken)
     }
 
     async login(req, res, next) {
         const { email, password } = req.body
         const userAgent = req.headers['user-agent']
 
-        const token = await authService.login(email, password, userAgent)
-        return res.json({ token })
+        const tokens = await authService.login(email, password, userAgent)
+
+        res.cookie('refreshToken',tokens.refreshToken,{})
+        return res.json(tokens.accessToken)
     }
 
     async activate(req, res, next) {

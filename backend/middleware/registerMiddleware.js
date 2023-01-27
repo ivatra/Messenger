@@ -1,6 +1,6 @@
-const e = require("express")
+const validator = require('validator')
 const userQueries = require("../database/postqre/queries/userQueries")
-const fileService = require("../service/fileService")
+const fileService = require("../service/misc/fileService")
 
 module.exports = async function (req, res, next) {
     const { name, email,login, password } = req.body
@@ -9,10 +9,15 @@ module.exports = async function (req, res, next) {
     if (req.files)
         avatar = req.files.avatar
 
-    if (!email || !password)
-        return res.status(400).json({ message: "Incorrect email or password" })
+    if (!password)
+        return res.status(400).json({ message: "Enter your password,please" })
 
-    if (email && password && !name)
+    const isCorrectEmail = validator.isEmail(email)
+
+    if (!isCorrectEmail)
+        return res.status(400).json({ message: "Incorrect email" })
+
+    if (!name)
         return res.status(400).json({ message: 'Enter your name, please' })
 
     const candidateByEmail = await userQueries.receiveUserByEmail(email)
