@@ -3,6 +3,7 @@ require('express-async-errors')
 const express = require('express')
 const cors = require('cors')
 const fileupload = require('express-fileupload')
+const cookieParser = require('cookie-parser')
 const path = require('path')
 
 const PORT = process.env.PORT || 5000
@@ -12,30 +13,21 @@ const sequelize = require('./database/postqre/postgre')
 const models = require('./database/postqre/models/index')
 const modelHooks = require('./database/postqre/hooks/index')
 
-const authRoutes = require('./routes/authRoutes/index')
-const generalRoutes = require('./routes/generalRoutes/index')
-
-const checkAuth = require('./middleware/start/checkAuth')
-const checkRequestsCount = require('./middleware/start/checkRequestsCount')
-const updateUserActivity = require('./middleware/start/updateUserActivity')
-
+const routes = require('./routes/index')
 
 const errorHandler = require('./middleware/errorHandling')
 
 const runSheduler = require('./sheduler/runSheduler')
+
 const app = express()
+
 app.use(cors())
 app.use(express.json())
 app.use(express.static(path.resolve(__dirname, 'static')))
 app.use(fileupload({}))
+// app.use(cookieParser())
 
-app.use('/api/auth', authRoutes)
-
-app.use('/api',
-    checkAuth,
-    checkRequestsCount,
-    updateUserActivity,
-    generalRoutes)
+app.use('/api', routes)
 
 app.use(errorHandler)
 
@@ -68,6 +60,9 @@ start()
 // change group chat name and avatar // DONE
 // change user name,avatar,login,password // DONE
 // middleware check for count of queries per 10 seconds for example // DONE
+//destroy an account if it was not activated for a day || sheduler
+// destroy expired tokens || sheduler
+// return captcha if too many requests
 // do email authorization
 // update tokens when user updates password
 // cloudfare test
@@ -77,3 +72,4 @@ start()
 
 //@POSSIBLE PROBLEMS :
 // it accepts gif images
+// middleware check for counts of queries is dependent on sheduler time check

@@ -7,6 +7,7 @@ const registerMiddleware = require('../../middleware/registerMiddleware')
 
 router.post('/registration',registerMiddleware,authController.registration)
 router.post('/login',authController.login)
-router.get('/auth',checkAuth,authController.check)
+router.post('/activate/:link',authController.activate)
+router.get('/refresh',checkAuth,authController.refresh)
 
 module.exports = router

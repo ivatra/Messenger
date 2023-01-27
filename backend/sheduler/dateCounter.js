@@ -6,4 +6,4 @@ function minutesToTimeSwamp(minutes) {
     return 1000 * 60 * minutes
 }
 
-module.exports = countDate
+module.exports = countDate,minutesToTimeSwamp

@@ -1,5 +1,7 @@
+const tokensQueries = require("../database/mongo/queries/tokensQueries");
 const userService = require("../service/userService")
 
+const useragent = require('useragent');
 
 class userController {
     async update(req, res, next) {
@@ -8,7 +10,7 @@ class userController {
 
         if (req.files)
             avatar = req.files.avatar
-        const elements = await userService.updateUserInfo(req.user.id,name,login,password,avatar)
+        const elements = await userService.updateUserInfo(req.user.id, name, login, password, avatar)
         return res.json(`${elements} succecsfully changed.`)
 
     }
