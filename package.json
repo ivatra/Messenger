@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "nodemailer": "^6.9.1",
-    "validator": "^13.7.0"
-  }
-}
