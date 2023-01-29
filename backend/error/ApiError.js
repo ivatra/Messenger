@@ -20,6 +20,10 @@ class ApiError extends Error{
     static tooManyRequests(message) {
         return new ApiError(429,message)
     }
+
+    static unAuthorized(message) {
+        return new ApiError(401,message)
+    }
 }
 
 module.exports = ApiError

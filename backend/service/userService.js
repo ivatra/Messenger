@@ -2,10 +2,11 @@ const userQueries = require("../database/postqre/queries/userQueries")
 const bcrypt = require('bcrypt')
 const ApiError = require("../error/ApiError")
 const fileService = require("./misc/fileService")
+const tokensQueries = require("../database/mongo/queries/tokensQueries")
 
 
 class userService {
-    async updateUserInfo(userId, name, login, password, avatar) {
+    async updateUserInfo(userId, name, login, password, avatar, userAgent) {
         var message = ''
         if (!name && !login && !password && !avatar) {
             throw ApiError.badRequest('There is nothing to change in profile');
@@ -24,12 +25,13 @@ class userService {
         if (password) {
             password = await bcrypt.hash(password, 5);
             message += 'password [ **** ], '
+
+            await tokensQueries.expireRefreshTokensByUser(userId)
         }
 
         if (name) {
             message += 'name [' + name + '],'
         }
-
         const updatedFields = { name, login, password, avatar };
         await userQueries.updateUser(userId, updatedFields);
 

@@ -7,6 +7,7 @@ const userQueries = require("../../database/postqre/queries/userQueries")
 const mailService = require('./mailService')
 const tokenService = require('./tokenService');
 const activationQueries = require('../../database/mongo/queries/activationQueries');
+const tokensQueries = require('../../database/mongo/queries/tokensQueries');
 
 
 function comparePassword(rightPassword, usersPassword) {
@@ -22,26 +23,32 @@ function parseDevice(userAgent) {
     return { browser: browser, os: os }
 }
 
-async function authenticateUser(userId,userAgent){
+async function authenticateUser(userId, userAgent) {
     const device = parseDevice(userAgent)
 
-    const { accessToken, refreshToken } = tokenService.generateTokens(userId,device)
-
+    const { accessToken, refreshToken } = tokenService.generateTokens(userId, device)
 
     await tokenService.saveRefreshToken(userId, device, refreshToken)
 
     return { accessToken: accessToken, refreshToken: refreshToken }
 }
 
+async function createAndSendActivationLink(email, userId) {
+    const generatedUuid = uuid.v4()
+    const activationLink = process.env.API_URL + '/api/auth/activate/' + generatedUuid
+    await mailService.sendActivationMail(email, activationLink)
+    await activationQueries.createLink(userId, generatedUuid)
+}
+
 class authService {
-    async login(email, password,userAgent) {
+    async login(email, password, userAgent) {
         const user = await userQueries.receiveUserByEmail(email)
         if (!user)
             throw ApiError.Internal('User not found')
 
         comparePassword(user.password, password)
 
-        const accessToken = await authenticateUser(user.id,userAgent) 
+        const accessToken = await authenticateUser(user.id, userAgent)
 
         return accessToken
     }
@@ -49,24 +56,47 @@ class authService {
     async register(login, email, password, name, avatar, userAgent) {
         const hashPassword = await bcrypt.hash(password, 5)
 
-        // const user = await userQueries.create(login, email, hashPassword, name, avatar)
+        const user = await userQueries.create(login, email, hashPassword, name, avatar)
 
-        const generatedUuid = uuid.v4()
-        const activationLink = process.env.API_URL + '/api/activate/' + generatedUuid 
-        await mailService.sendActivationMail(email, activationLink)
-        await activationQueries.createLink(1,generatedUuid)
+        await createAndSendActivationLink(email, user.id)
 
-        const tokens = await authenticateUser(1,userAgent) 
+        const tokens = await authenticateUser(user.id, userAgent)
 
         return tokens
     }
 
-    async activateAccount() {
+    async logout(refreshToken) {
+        if (!refreshToken)
+            throw ApiError.badRequest('Cookies not found')
 
+        return await tokensQueries.expireRefreshToken(refreshToken)
     }
 
-    async refreshToken(userId,device) {
+    async refreshActivation(userId) {
+        const user = await userQueries.receiveUserServiceInfoById(userId)
 
+        if (user.isActivated)
+            throw ApiError.badRequest('User is arleady activated')
+
+        await activationQueries.expireLink(userId)
+
+        return await createAndSendActivationLink(user.email, user.id)
+    }
+
+    async activateAccount(userId) {
+        return await userQueries.updateUser(userId, { isActivated: true })
+    }
+
+    async refreshToken(refreshToken) {
+        if (!refreshToken)
+            throw ApiError.badRequest('There was no refresh token')
+            
+        const validToken = await tokensQueries.receiveValidToken(refreshToken)
+
+        if (!validToken)
+            throw ApiError.badRequest('Token isn"t valid.Relogin')
+
+        return tokenService.generateAccess(validToken.userId,validToken.device)
 
     }
 }

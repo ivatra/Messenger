@@ -14,8 +14,24 @@ class activationQueries {
         await activation.insertOne(activationRecord)
     }
 
-    async receiveLink(userId,link){
-        return await activation.findOne({userId:userId,link:link})
+    async receiveLink(link) {
+        return await activation.findOne({ link: link })
+    }
+
+    async destroyExpiredLinks() {
+        return await activation.destroy({ expired: true })
+    }
+
+    async updateLinksToExpired() {
+        return await activation.updateAll({
+            createdAt: { $lt: oneHourAgo }
+        }, {
+            $set: { isExpired: true }
+        })
+    }
+
+    async expireLink(userId) {
+        return await activation.updateOne({ userId: userId }, { $set: { expired: true } })
     }
 }
 

@@ -1,16 +1,13 @@
-const jwt = require('jsonwebtoken')
+const tokenService = require('../../service/auth/tokenService')
 
-module.exports = function(req,res,next){
+module.exports = async function(req,res,next){
     if (req.method === "OPTIONS"){
         next()
     }
     try{
         const token = req.headers.authorization.split(' ')[1]
-        if (!token)
-            return res.status(401).json({message:"The user is not logged in"})
+        req.user = tokenService.verifyJwtToken(token)
 
-        const decoded = jwt.verify(token,process.env.JWT_ACCESS_SECRET)
-        req.user = decoded
         next()
 
     }catch(e){

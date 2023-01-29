@@ -4,7 +4,7 @@ const router = new Router()
 const attachementRouter = require('./attachementsRouter')
 const messageRouter = require('./messageRouter')
 const participantsRouter = require('./participantsRouter')
-const ChatController = require('../../../controllers/chatController')
+const ChatController = require('../../../controllers/chat/chatController')
 
 const checkChatRole = require('../../../middleware/checkChatRole')
 

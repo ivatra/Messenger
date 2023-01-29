@@ -2,14 +2,15 @@ const chatQueries = require('../database/postqre/queries/chatQueries');
 const dateService = require('../service/misc/dateService');
 
 
-async function checkTypingStatus() {
+async function deactivateTypingParticipants() {
     const timeSwamp = dateService.countDate(1)
 
     const inTypingUsers = await chatQueries.receiveInTypingParticipiants(timeSwamp)
     const promises = inTypingUsers.map(async (participant) => {
         await chatQueries.updateParticipantTypingStatus(participant.userId,false)
     })
+    
     await Promise.all(promises)
 }
 
-module.exports = checkTypingStatus
+module.exports = deactivateTypingParticipants

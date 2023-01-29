@@ -3,7 +3,7 @@ const ApiError = require("../../error/ApiError")
 
 module.exports = async function (req, res, next) {
     try {
-        const user = await userQueries.receiveUserById(req.user.id)
+        const user = await userQueries.receiveUserServiceInfoById(req.user.id)
         if (user.requestsCountPerMinute > 30)
             return res.status(429).json({message:'Too many requests'})
 

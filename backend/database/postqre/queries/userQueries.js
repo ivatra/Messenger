@@ -13,7 +13,14 @@ class userQueries {
         return await User.findOne(
             {
                 where: { id: userId },
-                attributes: ['id', 'name', 'avatar', 'isActive', 'lastSeen', 'requestsCountPerMinute']
+                attributes: ['id', 'name', 'avatar', 'isActive', 'lastSeen']
+            })
+    }
+    async receiveUserServiceInfoById(userId) {
+        return await User.findOne(
+            {
+                where: { id: userId },
+                attributes: ['id', 'email', 'lastSeen', 'requestsCountPerMinute', 'isActivated']
             })
     }
 
@@ -29,6 +36,13 @@ class userQueries {
         return await User.findAll({
             where: {
                 lastSeen: { [Sequelize.Op.lt]: date }
+            }
+        });
+    }
+    async receiveNotActivatedUsers() {
+        return await User.findAll({
+            where: {
+                isActivated: false
             }
         });
     }
@@ -50,6 +64,10 @@ class userQueries {
                 id: userId
             }
         })
+    }
+    
+    async destroyUser(user){
+        return await user.destroy({cascade:true,truncate:true})
     }
 
     async incrementUserRequestCount(userId) {

@@ -60,13 +60,17 @@ start()
 // change group chat name and avatar // DONE
 // change user name,avatar,login,password // DONE
 // middleware check for count1 of queries per 10 seconds for example // DONE
-//destroy an account if it was not activated for a day || sheduler
+// do email authorization // DONE
+// update tokens when user updates password // DONE
+// destroy an account if it was not activated for a day || sheduler // DONE
 // destroy expired tokens || sheduler
+// set tokens expired in for example 1 hour || sheduler
+// destroy activation collection every day || sheduler
 // return captcha if too many requests
-// do email authorization
-// update tokens when user updates password
 // cloudfare test
 // test contacts logic
+
+//validate activation set frontend url
 
 
 

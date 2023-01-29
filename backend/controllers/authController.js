@@ -1,4 +1,13 @@
+const tokensQueries = require('../database/mongo/queries/tokensQueries')
 const authService = require('../service/auth/authService')
+const dateService = require('../service/misc/dateService')
+
+function sendTokens(res, tokens) {
+    const timeSwamp = dateService.daysToTimeSwamp(process.env.JWT_REFRESH_LIFECYCLE)
+
+    res.cookie('refreshToken', tokens.refreshToken, { maxAge: timeSwamp, httpOnly: true })
+    return res.json(tokens.accessToken)
+}
 
 class AuthController {
     async registration(req, res, next) {
@@ -8,8 +17,7 @@ class AuthController {
 
         const tokens = await authService.register(login, email, password, name, avatar, userAgent)
 
-        res.cookie('refreshToken',tokens.refreshToken,{maxAge})
-        return res.json(tokens.accessToken)
+        return sendTokens(res, tokens)
     }
 
     async login(req, res, next) {
@@ -18,16 +26,34 @@ class AuthController {
 
         const tokens = await authService.login(email, password, userAgent)
 
-        res.cookie('refreshToken',tokens.refreshToken,{})
-        return res.json(tokens.accessToken)
+        return sendTokens(res, tokens)
+    }
+
+    async logout(req, res, next) {
+        const { refreshToken } = req.cookies
+        await authService.logout(refreshToken)
+        res.clearCookie('refreshToken')
+        return res.json('There has been a successful logout')
+
     }
 
     async activate(req, res, next) {
-        res.json({ message: 'everytihng works' })
+        const { link } = req.params
+
+        await authService.activateAccount(req.userId, link)
+        return res.json('An account succesfuly activated. Enjoy using website!')
     }
 
-    async refresh(req, res, next) {
-        res.json({ message: 'everytihng works' })
+    async refreshActivation(req, res, next) {
+        await authService.refreshActivation(req.user.id)
+        return res.json('New link succesfuly sent.')
+    }
+
+    async refreshToken(req, res, next) {
+        const {refreshToken} = req.cookies
+
+        const token = await authService.refreshToken(refreshToken,req.user.id,req.user.device)
+        return res.json(token)
     }
 }
 

@@ -1,6 +1,6 @@
 const express = require('express');
 const paginationMiddleware = require('../../../middleware/paginationMiddleware');
-const attachementController = require('../../../controllers/attachementController');
+const attachementController = require('../../../controllers/chat/attachementController');
 const router = express.Router({ mergeParams: true });
 
 router.get('/',paginationMiddleware,attachementController.getAll)
