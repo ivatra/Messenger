@@ -1,5 +1,4 @@
 const userQueries = require("../../database/postqre/queries/userQueries")
-const ApiError = require("../../error/ApiError")
 
 module.exports = async function (req, res, next) {
     try {

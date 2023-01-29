@@ -63,10 +63,10 @@ start()
 // do email authorization // DONE
 // update tokens when user updates password // DONE
 // destroy an account if it was not activated for a day || sheduler // DONE
-// destroy expired tokens || sheduler
-// set tokens expired in for example 1 hour || sheduler
-// destroy activation collection every day || sheduler
-// return captcha if too many requests
+// destroy expired tokens || sheduler // DONE
+// set tokens expired in for example 1 hour || sheduler // DONE
+// destroy activation collection every day || sheduler // DONE
+// return captcha if too many requests // DONE
 // cloudfare test
 // test contacts logic
 
@@ -77,3 +77,6 @@ start()
 //@POSSIBLE PROBLEMS :
 // it accepts gif images
 // middleware check for counts of queries is dependent on sheduler time check
+
+
+//@ Хотелось бы в будущем : обработка ошибок с data и месседжом.Откладка каждого запроса!

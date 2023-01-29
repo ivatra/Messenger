@@ -26,39 +26,42 @@ class tokenQueries {
 
     async receiveValidToken(token) {
         return await tokens.findOne({
-            token:token,
-            expired:false
+            token: token,
+            expired: false
         })
 
     }
 
     async updateRefreshToken(userId, device, token) {
-        await tokens.updateOne({ userId: userId, device: device }, {
+        return await tokens.updateOne({ userId: userId, device: device }, {
             $set: {
                 "token": token,
-                "expired":false
+                "expired": false
             }
         })
 
     }
 
     async expireRefreshToken(token) {
-        await tokens.updateOne({ token:token }, {
+        return await tokens.updateOne({ token: token }, {
             $set: {
-                "expired":true
+                "expired": true
             }
         })
 
     }
 
     async expireRefreshTokensByUser(userId) {
-        console.log(userId)
-        await tokens.updateMany({ userId:userId }, {
+        return await tokens.updateMany({ userId: userId }, {
             $set: {
-                "expired":true
+                "expired": true
             }
         })
 
+    }
+
+    async destroyExpiredTokens() {
+        return await tokens.deleteMany({ expired: true })
     }
 }
 

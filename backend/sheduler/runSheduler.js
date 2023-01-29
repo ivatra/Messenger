@@ -6,20 +6,28 @@ const destroyNotActivatedAccounts = require('./destroyNotActivatedAccounts');
 
 const activationQueries = require('../database/mongo/queries/activationQueries');
 const userQueries = require('../database/postqre/queries/userQueries');
+const tokensQueries = require('../database/mongo/queries/tokensQueries');
+const captchaQueries = require('../database/mongo/queries/captchaQueries');
 
 module.exports = async function runSheduler() {
-    cron.schedule('* */1 * * * *', async() => { // every minute
+    cron.schedule('* */1 * * * *', async () => { // every minute
         await deactivateInactiveUsers();
         await deactivateTypingParticipants()
         await userQueries.resetUsersRequestsCount()
     })
 
-    cron.schedule('* */1 * * * *', async() => { // every hour
+    cron.schedule('* */1 * * * *', async () => { // every hour
         await activationQueries.updateLinksToExpired()
     })
 
-    cron.schedule('59 59 23 * * *', async() => { // every day
+    cron.schedule('59 59 23 * * *', async () => { // every day
         await destroyNotActivatedAccounts()
         await activationQueries.destroyExpiredLinks()
+        await captchaQueries.destroyCaptcha()
     })
+
+    cron.schedule('* * * 1 * *', async () => { // every month
+        await tokensQueries.destroyExpiredTokens()
+    })
+    
 }

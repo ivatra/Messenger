@@ -1,11 +1,31 @@
 const svgCaptcha = require('svg-captcha')
+const captchaQueries = require('../database/mongo/queries/captchaQueries')
+const uuid = require('uuid')
+const ApiError = require('../error/ApiError')
+class captchaService {
+    async createCaptcha() {
+        const captcha = svgCaptcha.create()
+        const generatedId = uuid.v4()
 
-class captchaService{
-    async createCaptcha(){
-        return svgCaptcha.create()
+        await captchaQueries.createCaptcha(generatedId, captcha.text)
+
+        captcha.id = generatedId
+        console.log(captcha.id)
+
+        delete captcha.text
+
+        return captcha
     }
 
-    async compareCaptcha(captchaId,answer){
+    async compareCaptcha(captchaId, answer) {
+        const captcha = await captchaQueries.receiveCaptcha(captchaId)
+        if (!captcha)
+            throw ApiError.Internal('Something went wrong with captcha. Try again')
+
+        if (answer !== captcha.answer) {
+            throw ApiError.badRequest('Captcha is wrong. Try again')
+        }
+        return 'Captcha is right.'
 
     }
 }

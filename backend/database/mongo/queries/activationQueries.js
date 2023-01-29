@@ -19,7 +19,7 @@ class activationQueries {
     }
 
     async destroyExpiredLinks() {
-        return await activation.destroy({ expired: true })
+        return await activation.deleteMany({ expired: true })
     }
 
     async updateLinksToExpired() {
