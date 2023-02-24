@@ -36,7 +36,7 @@ async function authenticateUser(userId, userAgent) {
 async function createAndSendActivationLink(email, userId) {
     const generatedUuid = uuid.v4()
     const activationLink = process.env.API_URL + '/api/auth/activate/' + generatedUuid
-    await mailService.sendActivationMail(email, activationLink)
+    // await mailService.sendActivationMail(email, activationLink)
     await activationQueries.createLink(userId, generatedUuid)
 }
 

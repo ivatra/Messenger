@@ -1,5 +1,5 @@
 const { Attachement } = require("../models/attachementModel")
-const { Message } = require("../models/messageModel")
+const { Message,MessageVector } = require("../models/messageModel")
 
 
 class messageQueries {
@@ -10,6 +10,15 @@ class messageQueries {
             senderId: senderId,
         })
     }
+
+    async createMessageVector(messageId,contentCopy){
+        return await MessageVector.create({
+            messageId:messageId,
+            contentCopy:contentCopy
+        })
+    }
+
+
 
     async receiveMessage(messageId) {
         return await Message.findOne({

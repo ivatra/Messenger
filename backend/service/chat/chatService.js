@@ -12,13 +12,16 @@ class ChatService {
     if (chatType !== "group" && chatType !== "individual") {
       return ApiError.badRequest("Incorrect chat type ")
     }
-
     if (chatType === "individual" && !userId2)
       return ApiError.badRequest("Second user is absent")
 
+
     const chat = await chatQueries.createChat(chatType)
 
-    const chatModel = chatType === "group" ? GroupChat : IndividualChat
+    const chatModel =  chatType === "group"
+                      ? GroupChat 
+                      : IndividualChat
+
     await chatQueries.createChatModel(chatModel, chat.id)
 
     await this.createSubTables(chat.id, userId, userId2)
@@ -36,10 +39,10 @@ class ChatService {
   }
 
   async addParticipantToChat(chatId, participantId, eventNeeded = false) {
-    const groupChat = await this.checkForGroupChat(chatId)
+    // const groupChat = await this.checkForGroupChat(chatId)
 
-    if (!groupChat)
-      throw ApiError.badRequest('Individual chat cannot have additional participants.')
+    // if (!groupChat)
+    //   throw ApiError.badRequest('Individual chat cannot have additional participants.')
 
     const [participant, created] = await chatQueries.createParticipant(chatId, participantId)
 
@@ -81,7 +84,7 @@ class ChatService {
       const avatarName = await fileService.saveFile(avatar, avatar.name, 'chatAvatars')
       await chatQueries.updateGroupChatAvatar(chatId, avatarName)
 
-      message +=  'avatar [' + avatar.name + ' ], '
+      message += 'avatar [' + avatar.name + ' ], '
     }
 
     if (name) {

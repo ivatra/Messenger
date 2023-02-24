@@ -50,7 +50,7 @@ class contactsQueries {
     }
 
     async createContact(senderId,contactId){
-        return await Contact.create({ senderId: senderId, recipientId: contactId, status: "pending" })
+        return await Contact.create({ senderId: senderId, recipientId: contactId, status: "accepted" })
     }
 }
 

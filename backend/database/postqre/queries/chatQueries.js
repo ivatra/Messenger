@@ -1,7 +1,8 @@
+const { Sequelize } = require("sequelize");
 const { Chat, IndividualChat, GroupChat, ChatParticipant } = require("../models/chatModel");
 const { User } = require("../models/userModel");
 
-const { Sequelize } = require("../postgre");
+const { Seq, Sequelizeuelize } = require("../postgre");
 
 class chatQueries {
     async createChat(chatType) {
@@ -74,21 +75,28 @@ class chatQueries {
     }
 
     async receiveChatByParticipants(firstUser, secondUser, chatType) {
-        return await Chat.findAll({
-            where: {
-                '$participants.userId$': firstUser,
-                '$participants.userId$': secondUser,
-                type: chatType
-            },
-            attributes: ['id'],
+        // firstUser = '459588ab-7e33-4d05-88ab-b1e40f533209'
+        const result = await Chat.findAll({
             include: [
                 {
                     model: ChatParticipant,
                     as: 'participants',
-                    attributes: ['userId']
+                    attributes: ['userId', 'chatId'],
+                    where: {
+                        userId: [firstUser, secondUser]
+                    }
                 }
             ],
+            where: {
+                type: chatType
+            },
         });
+
+        const chat = result
+            .filter(chat => chat.participants.some(p => p.userId === firstUser))
+            .filter(chat => chat.participants.some(p => p.userId === secondUser))
+
+        return chat
     }
 
     async receiveChatWhereUserIn(userId) {
@@ -136,8 +144,8 @@ class chatQueries {
         })
     }
 
-    async updateGroupChatAvatar(chatId,avatar) {
-        return await GroupChat.update({avatar: avatar }, {
+    async updateGroupChatAvatar(chatId, avatar) {
+        return await GroupChat.update({ avatar: avatar }, {
             where: { chatId: chatId }
         })
     }

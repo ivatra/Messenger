@@ -8,6 +8,8 @@ const path = require('path')
 
 const PORT = process.env.PORT || 5000
 
+const TIME = Date.now()
+
 const mongoCl = require('./database/mongo/mongo')
 const sequelize = require('./database/postqre/postgre')
 const models = require('./database/postqre/models/index')
@@ -30,20 +32,31 @@ app.use(cookieParser())
 app.use('/api', routes)
 
 app.use(errorHandler)
-
 const start = async () => {
-    try {
+    try{
         await sequelize.authenticate()
         await sequelize.sync()
         await mongoCl.connect()
         await runSheduler()
-        app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
+
+        app.listen(PORT, () => {
+            console.log(`Server started on port ${PORT}`)
+            console.log(`TIME SPENT OF LAUNCH : ${(Date.now() - TIME) / 1000} SEC`)}
+        )
+
+        // const fillDb = require('./fillingDB/index')
+
+        // await fillDb.fillMessages()
+
     } catch (e) {
         console.log(e)
     }
 }
 
 start()
+
+
+// БЛЯТЬ ОНО ВСЕ КРИВОЕ НЕ МОГУ ПОЛУЧИТЬ ИНБОКСЫ ЧАТ КОНТЕНТ ЕЩЕ И НЕ МОГУ БЛЯТЬ СОЗДАТЬ ЧАТЬ НО КРИВОЕ
 
 // @TODO: FINISH GET INBOX,  /// DONE
 // event : u were added to chat/kicked // DONE
@@ -67,6 +80,7 @@ start()
 // set tokens expired in for example 1 hour || sheduler // DONE
 // destroy activation collection every day || sheduler // DONE
 // return captcha if too many requests // DONE
+// do search for all messages/for conversation/for contacts
 // cloudfare test
 // test contacts logic
 
@@ -80,3 +94,6 @@ start()
 
 
 //@ Хотелось бы в будущем : обработка ошибок с data и месседжом.Откладка каждого запроса!
+
+
+//refactor this code I

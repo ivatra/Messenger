@@ -21,7 +21,7 @@ module.exports = async function runSheduler() {
     })
 
     cron.schedule('59 59 23 * * *', async () => { // every day
-        await destroyNotActivatedAccounts()
+        // await destroyNotActivatedAccounts()
         await activationQueries.destroyExpiredLinks()
         await captchaQueries.destroyCaptcha()
     })

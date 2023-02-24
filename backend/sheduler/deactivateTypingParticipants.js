@@ -7,9 +7,9 @@ async function deactivateTypingParticipants() {
 
     const inTypingUsers = await chatQueries.receiveInTypingParticipiants(timeSwamp)
     const promises = inTypingUsers.map(async (participant) => {
-        await chatQueries.updateParticipantTypingStatus(participant.userId,false)
+        await chatQueries.updateParticipantTypingStatus(participant.userId, false)
     })
-    
+
     await Promise.all(promises)
 }
 

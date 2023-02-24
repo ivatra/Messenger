@@ -1,9 +1,9 @@
-const { DataTypes, Sequelize } = require('sequelize')
+const { DataTypes} = require('sequelize')
 const sequelize = require('../postgre')
 
-const {User} = require('./userModel')
-const {Chat}= require('./chatModel')
-const {Attachement} = require('./attachementModel')
+const { User } = require('./userModel')
+const { Chat } = require('./chatModel')
+const { Attachement } = require('./attachementModel')
 
 const Message = sequelize.define('message', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
@@ -11,13 +11,22 @@ const Message = sequelize.define('message', {
     isRead: { type: DataTypes.BOOLEAN, defaultValue: false }
 })
 
-Chat.hasMany(Message,{as:'messages'})
-Message.belongsTo(Chat,{allowNull:false})
-Message.belongsTo(User,{as:'sender',allowNull:false})
+const MessageVector = sequelize.define('messages_vector', {
+    contentCopy: { type: DataTypes.STRING }
+}, {
+    timestamps: false
+})
 
-Message.hasOne(Attachement,{hooks:true,allowNull:true})
-Attachement.belongsTo(Message,{hooks:true})
+Chat.hasMany(Message, { as: 'messages' })
+Message.belongsTo(Chat, { allowNull: false })
+Message.belongsTo(User, { as: 'sender', allowNull: false })
+
+MessageVector.belongsTo(Message)
+
+Message.hasOne(Attachement, { hooks: true, allowNull: true })
+Attachement.belongsTo(Message, { hooks: true })
 
 module.exports = {
     Message,
+    MessageVector
 }
