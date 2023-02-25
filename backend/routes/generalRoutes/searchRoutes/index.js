@@ -5,6 +5,6 @@ const searchController = require('../../../controllers/searchController')
 
 router.get('/inbox',searchController.getInbox)
 router.get('/contacts', searchController.getContacts)
-router.get('/chat/:id',searchController.getChatMessages)
+router.get('/chat/:chatId',searchController.getChatMessages)
 
 module.exports = router

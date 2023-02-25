@@ -4,10 +4,20 @@ const ApiError = require('../../error/ApiError');
 
 class contactsService {
   async getContacts(userId, status) {
-    status = "pending"
     const contacts = await contactsQueries.receiveContactsByUser(userId, status)
     const contactsInfo = await this.fetchContactsInfo(contacts, userId)
-    return contactsInfo
+
+    const contactsInfoWithStatus = contactsInfo.map(contact => {
+      const contactWithStatus = { ...contact.dataValues };
+      const matchingContact = contacts.find(c => c.dataValues.recipientId === contactWithStatus.id ||
+        c.dataValues.senderId === contactWithStatus.id);
+      if (matchingContact) {
+        contactWithStatus.status = matchingContact.dataValues.status;
+      }
+      return contactWithStatus;
+    });
+
+    return contactsInfoWithStatus
   }
 
   async getContact(userId) {
@@ -28,7 +38,7 @@ class contactsService {
       throw ApiError.badRequest("Incorrect status ")
     }
 
-    const isPending = await checkRewievedContactStatus(userId, contactId)
+    const isPending = await this.checkRewievedContactStatus(userId, contactId)
 
     if (!isPending)
       throw ApiError.badRequest(`Contact ${userId} and ${contactId} has reviewed status`)
@@ -40,15 +50,15 @@ class contactsService {
       `Something went wrong with changing ${contactId} status`
   }
 
-  async removeContact(userId, contactId) {
-    await this.checkForContact(userId, contactId, true)
+  async removeContact(senderId, recipientId) {
+    await this.checkForContact(senderId, recipientId, true)
 
     const isDestroyed = await contactsQueries.destroyContact(senderId, recipientId) !== [0]
 
     return isDestroyed ?
-      `contact ${contactId} removed` :
-      `Something went wrong with removing ${contactId}`
-    
+      `contact ${recipientId} removed` :
+      `Something went wrong with removing ${recipientId}`
+
   }
 
   async fetchContactsInfo(contacts, userId) {

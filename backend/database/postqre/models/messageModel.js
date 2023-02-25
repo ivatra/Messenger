@@ -21,7 +21,8 @@ Chat.hasMany(Message, { as: 'messages' })
 Message.belongsTo(Chat, { allowNull: false })
 Message.belongsTo(User, { as: 'sender', allowNull: false })
 
-MessageVector.belongsTo(Message)
+
+Message.hasOne(MessageVector, { foreignKey: 'messageId' });
 
 Message.hasOne(Attachement, { hooks: true, allowNull: true })
 Attachement.belongsTo(Message, { hooks: true })

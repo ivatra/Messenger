@@ -21,9 +21,9 @@ class ChatController {
         const {chatId} = req.params
         const {name} = req.body
         var avatar
-
-        if (req.files)
+        if (req.files){
             avatar = req.files.avatar
+        }
 
         const elements = await chatService.updateChat(chatId, name, avatar)
 

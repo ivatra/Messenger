@@ -1,8 +1,22 @@
 const eventsQueries = require('../database/mongo/queries/eventsQueries');
 const chatQueries = require('../database/postqre/queries/chatQueries');
 const messageQueries = require('../database/postqre/queries/messageQueries');
+const ApiError = require('../error/ApiError');
 const chatService = require('./chat/chatService');
 
+
+async function validateOnReadMessage(chatId,messageId){
+    const message = await messageQueries.receiveMessage(messageId)
+
+    if (!message){
+        throw ApiError.badRequest('Message doesnt exist')
+    }
+
+    if(message.chatId !== chatId){
+        throw ApiError.forbidden('No access to make this message read')
+    }
+
+}
 class eventService {
     async get(userId) {
         return await eventsQueries.receiveEvents(userId)
@@ -15,7 +29,13 @@ class eventService {
     }
 
     async setTyping(userId, chatId) {
-        const participants = await chatService.getChatParticipants(chatId)
+        if (!chatId || !userId){
+            throw ApiError.badRequest('There is no userId or chatId passed in')
+        }``
+
+        const participants = await chatQueries.receiveParticipantsByChat(chatId)
+
+        await chatService.checkForMemberingInChat(userId,chatId)
 
         await chatQueries.updateParticipantTypingStatus(userId, true)
 
@@ -26,6 +46,9 @@ class eventService {
     }
 
     async setMessageRead(userId, messageId, chatId) {
+        await validateOnReadMessage(chatId,messageId)
+        await chatService.checkForMemberingInChat(userId, chatId)
+        
         await this.updateMessageRead(userId, messageId)
         const isMessageNoted = await this.messageArleadyNotedRead(messageId)
         const participants = await chatQueries.receiveParticipantsByChat(chatId)

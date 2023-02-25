@@ -5,8 +5,9 @@ const {User} = require('./userModel')
 
 const Contact = sequelize.define('contact',{
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    status: Sequelize.ENUM('pending', 'accepted', 'declined')}
-)
+    status: {type : DataTypes.ENUM('pending', 'accepted', 'declined'),defaultValue:'pending',allowNull:false}
+})
+
 
 Contact.belongsTo(User, {as:'sender'});
 Contact.belongsTo(User, {as:'recipient'});

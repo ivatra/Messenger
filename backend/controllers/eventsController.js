@@ -1,3 +1,4 @@
+const chatService = require("../service/chat/chatService")
 const eventService = require("../service/eventService")
 
 
@@ -12,6 +13,7 @@ class EventsController{
     async setTyping(req,res){
         const {chatId} = req.body
         const userId = req.user.id
+
         await eventService.setTyping(userId,chatId)
         return res.json(`Event is typing successfully sent to chat ${chatId}`)
     }

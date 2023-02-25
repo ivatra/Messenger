@@ -2,8 +2,8 @@ const contactsService = require("../../service/pages/contactsService")
 
 class contactsController {
         async getAll(req, res) {
-                const { isPending } = req.body
-                const contacts = await contactsService.getContacts(req.user.id, isPending || "accepted")
+                const { status } = req.body
+                const contacts = await contactsService.getContacts(req.user.id,status)
                 return res.json(contacts)
         }
         async getOne(req, res) {

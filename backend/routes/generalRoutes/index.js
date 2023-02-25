@@ -11,6 +11,11 @@ router.use('/profile', userRoutes)
 router.use('/pages', pagesRouter)
 router.use('/chat', chatRouter)
 router.use('/events', eventsRouter)
-router.use('/search', searchRoutes)
+router.use('/search', (req, res, next) => {
+    const { message } = req.body
+    if (message.length > 2)
+        next()
+    else res.json([])
+}, searchRoutes)
 
 module.exports = router

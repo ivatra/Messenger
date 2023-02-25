@@ -6,7 +6,7 @@ const User = sequelize.define('user', {
     login: { type: DataTypes.STRING, allowNull: false, unique: true },
     name: { type: DataTypes.STRING, allowNull: false },
     avatar: { type: DataTypes.STRING, allowNull: true },
-    email: { type: DataTypes.STRING, unique: true   },
+    email: { type: DataTypes.STRING, unique: true },
     password: { type: DataTypes.STRING },
     isActive: { type: DataTypes.BOOLEAN, defaultValue: false },
     lastSeen: { type: DataTypes.TIME },
@@ -14,7 +14,18 @@ const User = sequelize.define('user', {
     isActivated: { type: DataTypes.BOOLEAN, defaultValue: false },
 })
 
+const UserVector = sequelize.define('users_vectors', {
+    loginCopy: { type: DataTypes.STRING, allowNull: false, unique: true },
+    nameCopy: { type: DataTypes.STRING, allowNull: false }
+},{
+    timestamps: false
+    })
+
+User.hasOne(UserVector, { foreignKey: "userId" })
+UserVector.belongsTo(User, { foreignKey: 'userId' });
+
 module.exports = {
-    User
+    User,
+    UserVector
 }
 

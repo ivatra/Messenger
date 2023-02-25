@@ -8,8 +8,6 @@ const path = require('path')
 
 const PORT = process.env.PORT || 5000
 
-const TIME = Date.now()
-
 const mongoCl = require('./database/mongo/mongo')
 const sequelize = require('./database/postqre/postgre')
 const models = require('./database/postqre/models/index')
@@ -22,6 +20,8 @@ const errorHandler = require('./middleware/errorHandling')
 const runSheduler = require('./sheduler/runSheduler')
 
 const app = express()
+
+const startedTIME = Date.now()
 
 app.use(cors())
 app.use(express.json())
@@ -41,13 +41,8 @@ const start = async () => {
 
         app.listen(PORT, () => {
             console.log(`Server started on port ${PORT}`)
-            console.log(`TIME SPENT OF LAUNCH : ${(Date.now() - TIME) / 1000} SEC`)}
+            console.log(`TIME SPENT OF LAUNCH : ${(Date.now() - startedTIME) / 1000} SEC`)}
         )
-
-        // const fillDb = require('./fillingDB/index')
-
-        // await fillDb.fillMessages()
-
     } catch (e) {
         console.log(e)
     }

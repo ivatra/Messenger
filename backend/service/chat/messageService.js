@@ -1,9 +1,11 @@
 const messageQueries = require("../../database/postqre/queries/messageQueries");
 const attachementService = require("../chat/attachementService")
-const fileService = require("../misc/fileService")
+const fileService = require("../misc/fileService");
+const chatService = require("./chatService");
 
 class MessageService {
-    async fetchMessages(chatId, limit, offset) {
+    async fetchMessages(userId, chatId, limit, offset) {
+        await chatService.checkForMemberingInChat(userId,chatId)
         return await messageQueries.receiveByChat(chatId, limit, offset)
     }
 

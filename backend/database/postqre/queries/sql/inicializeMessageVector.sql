@@ -9,11 +9,11 @@
 -- ON messages_vectors USING gin("contentCopy" gin_trgm_ops);
 
 -- select * from messages_vectors limit 1;
--- select email from users where login = 'Michael';
+-- select id from users where login = 'Michael';
+-- select "chatId" from inboxes
+-- where "userId" = '00227f96-f152-450f-a57d-eabc7bc7a43a';
 
-SELECT "chatId"
-FROM "chatParticipants"
-WHERE "userId" =
-        ( SELECT id
-         FROM users
-         WHERE login = 'Michael' );
+-- select name,login from users
+-- LEFT JOIN "chatParticipants" ON "chatParticipants"."userId" = users.id
+-- where "chatId" = 3267 OR "chatId" = 6875;
+select count(*) from users_vectors;

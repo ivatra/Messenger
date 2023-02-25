@@ -4,6 +4,7 @@ class captchaController {
     async getCaptcha(req, res, next) {
         const captcha = await captchaService.createCaptcha()
         res.type('svg')
+        console.log(captcha.id)
         return res.send(captcha.data)
 
     }

@@ -1,5 +1,6 @@
 
-const { User } = require("../models/userModel")
+const { ChatParticipant } = require("../models/chatModel");
+const { User, UserVector } = require("../models/userModel")
 
 const { Sequelize } = require("../postgre")
 
@@ -8,12 +9,15 @@ class userQueries {
     async create(login, email, hashPassword, name, avatar) {
         return await User.create({ login, name, avatar: avatar, email, password: hashPassword })
     }
+    async createUserVector(userId,name,login){
+        return await UserVector.create({ userId: userId, name, login });
 
+    }
     async receiveUserById(userId) {
         return await User.findOne(
             {
                 where: { id: userId },
-                attributes: ['id', 'name', 'avatar', 'isActive', 'lastSeen']
+                attributes: ['id', 'name', 'avatar', 'isActive', 'lastSeen'],
             })
     }
     async receiveUserServiceInfoById(userId) {
@@ -46,6 +50,42 @@ class userQueries {
             }
         });
     }
+    async receiveUsersWhichSatisfyCriteria(likeMessage, plainMessage) {
+        return await User.findAll({
+            attributes: ['id', 'name', 'avatar', 'isActive', 'lastSeen'],
+            include:
+            {
+                model: UserVector,
+                attributes: [],
+                where: {
+                    [Sequelize.Op.or]: [
+                        {
+                            nameCopy: {
+                                [Sequelize.Op.like]: likeMessage
+                            }
+                        },
+                        {
+                            loginCopy: {
+                                [Sequelize.Op.like]: likeMessage
+                            }
+                        }
+                    ]
+                }
+            },
+            order: [
+                [
+                    Sequelize.literal(`ts_rank(to_tsvector("user"."name"), 
+  plainto_tsquery('${plainMessage}'))`),
+                    'DESC'
+                ],
+                [
+                    Sequelize.literal(`ts_rank(to_tsvector("user"."login"), 
+  plainto_tsquery('${plainMessage}'))`),
+                    'DESC'
+                ],
+            ],
+        })
+    }
 
     async updateUserActivity(userId, isActive) {
         return await User.update({
@@ -59,9 +99,15 @@ class userQueries {
     }
 
     async updateUser(userId, fields) {
-        return await User.update(fields, {
+        const user = await User.findByPk(userId)
+        return await user.update(fields)
+    }
+
+    
+    async updateUserVector(userId,name,login){
+        await UserVector.update({ nameCopy: name, loginCopy: login }, {
             where: {
-                id: userId
+                userId: userId
             }
         })
     }

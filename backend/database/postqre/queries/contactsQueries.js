@@ -2,16 +2,16 @@ const { Contact } = require("../models/contactModel");
 const { Sequelize } = require("../postgre");
 
 class contactsQueries {
-    async receiveContactsByUser(userId, status) {
+    async receiveContactsByUser(userId, status = null) {
         return await Contact.findAll({
             where: {
                 [Sequelize.Op.or]: [
                     { senderId: userId },
                     { recipientId: userId },
                 ],
-                status: status,
+                ...(status ? { status: status } : {}),
             },
-            attributes: ['senderId', 'recipientId'],
+            attributes: ['senderId', 'recipientId','status'],
         })
     }
     async receiveContact(firstUser, secondUser) {
@@ -49,8 +49,8 @@ class contactsQueries {
         });
     }
 
-    async createContact(senderId,contactId){
-        return await Contact.create({ senderId: senderId, recipientId: contactId, status: "accepted" })
+    async createContact(senderId, contactId) {
+        return await Contact.create({ senderId: senderId, recipientId: contactId })
     }
 }
 

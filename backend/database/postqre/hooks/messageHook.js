@@ -5,6 +5,7 @@ const eventsQueries = require('../../mongo/queries/eventsQueries');
 const { Message } = require('../models/messageModel');
 const attachementsQueries = require('../queries/attachementsQueries');
 const messageQueries = require('../queries/messageQueries');
+const stringService = require('../../../service/misc/stringService');
 
 const checkForMention = async (message, userLogins) => {
   let mentionedUsers = [];
@@ -52,14 +53,19 @@ async function sendMessageReceivedEvent(message) {
   await Promise.all(promises);
 }
 
-async function createMessagesVector(message) {
-  await messageQueries.createMessageVector(message.id, message.content)
+async function createMessagesVector(messageId,filteredMessage) {
+  await messageQueries.createMessageVector(messageId,filteredMessage)
 
 }
 const declareMessageTrigger = async () => {
   Message.addHook('afterCreate', async (message) => {
     await sendMessageReceivedEvent(message)
-    await createMessagesVector(message)
+
+    const filteredMessage = stringService.
+      removePunctuation(message.content).
+      toLowerCase()
+
+    await createMessagesVector(message.id,filteredMessage)
   });
 }
 

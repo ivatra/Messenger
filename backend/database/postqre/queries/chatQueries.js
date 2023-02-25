@@ -2,8 +2,6 @@ const { Sequelize } = require("sequelize");
 const { Chat, IndividualChat, GroupChat, ChatParticipant } = require("../models/chatModel");
 const { User } = require("../models/userModel");
 
-const { Seq, Sequelizeuelize } = require("../postgre");
-
 class chatQueries {
     async createChat(chatType) {
         return await Chat.create({ type: chatType })
@@ -44,11 +42,7 @@ class chatQueries {
                 include: [{
                     model: User,
                     attributes: ['id', 'name', 'avatar', 'isActive', 'lastSeen'],
-                    where: {
-                        id: {
-                            [Sequelize.Op.ne]: userId
-                        }
-                    }
+                    required:true
                 }],
                 attributes: ['role']
             },
@@ -75,8 +69,7 @@ class chatQueries {
     }
 
     async receiveChatByParticipants(firstUser, secondUser, chatType) {
-        // firstUser = '459588ab-7e33-4d05-88ab-b1e40f533209'
-        const result = await Chat.findAll({
+        return await Chat.findAll({
             include: [
                 {
                     model: ChatParticipant,
@@ -90,20 +83,13 @@ class chatQueries {
             where: {
                 type: chatType
             },
-        });
-
-        const chat = result
-            .filter(chat => chat.participants.some(p => p.userId === firstUser))
-            .filter(chat => chat.participants.some(p => p.userId === secondUser))
-
-        return chat
+        })
     }
 
-    async receiveChatWhereUserIn(userId) {
+    async receiveChatsWhereUserIn(userId) {
         return await Chat.findAll({
             where: {
                 '$participants.userId$': userId,
-                type: "individual"
             },
             include: {
                 model: ChatParticipant,
@@ -155,7 +141,8 @@ class chatQueries {
             where: {
                 chatId,
                 userId: participantId
-            }, individualHooks: true
+            },
+            individualHooks: true
         });
     }
 }

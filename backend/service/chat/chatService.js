@@ -7,6 +7,13 @@ const eventsQueries = require('../../database/mongo/queries/eventsQueries');
 const inboxQueries = require('../../database/postqre/queries/inboxQueries');
 const fileService = require('../misc/fileService');
 
+
+async function filterChatParticipants(chat,firstUser,secondUser){
+  return chat
+    .filter(chat => chat.participants.some(p => p.userId === firstUser))
+    .filter(chat => chat.participants.some(p => p.userId === secondUser))
+}
+
 class ChatService {
   async createChat(userId, userId2, chatType) {
     if (chatType !== "group" && chatType !== "individual") {
@@ -61,12 +68,8 @@ class ChatService {
   }
 
   async findChat(userId1, userId2, chatType) {
-    return await chatQueries.receiveChatByParticipants(userId1, userId2, chatType)
-  }
-
-  async getChatParticipants(chatId) {
-    const participants = await chatQueries.receiveParticipantsByChat(chatId)
-    return participants
+    const chats = await chatQueries.receiveChatByParticipants(userId1, userId2, chatType)
+    return filterChatParticipants(chats,userId1,userId2)
   }
 
   async updateChat(chatId, name, avatar) {
@@ -80,6 +83,7 @@ class ChatService {
       throw ApiError.badRequest(`No name or avatar has been sent for chat ${chatId} `)
 
     if (avatar) {
+      console.log(avatar)
       await fileService.checkForImage(avatar.name)
       const avatarName = await fileService.saveFile(avatar, avatar.name, 'chatAvatars')
       await chatQueries.updateGroupChatAvatar(chatId, avatarName)
@@ -112,7 +116,7 @@ class ChatService {
   }
 
   async checkForMemberingInChat(userId, chatId) {
-    const participants = await this.getChatParticipants(chatId)
+    const participants = await chatQueries.receiveParticipantsByChat(chatId)
     const participant = participants.find((participant) => participant.userId === userId);
     if (!participant) {
       throw ApiError.forbidden(`You are not participant of chat ${chatId}`)

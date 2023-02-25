@@ -8,10 +8,10 @@ class captchaService {
         const generatedId = uuid.v4();
     
         await captchaQueries.createCaptcha(generatedId, captcha.text);
-    
+        console.log(captcha.text)
         return { 
             id: generatedId, 
-            data: captcha 
+            data: captcha.data
         };
     }
 
@@ -23,6 +23,7 @@ class captchaService {
         if (answer !== captcha.answer) {
             throw ApiError.badRequest('Captcha is wrong. Try again')
         }
+        
         return 'Captcha is right.'
 
     }

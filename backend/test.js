@@ -1,39 +1,38 @@
 require('dotenv').config()
-const { QueryTypes } = require("sequelize");
 const sequelize = require('./database/postqre/postgre')
-const fs = require('fs')
 
-const prompt = msg => {
-  fs.writeSync(1, String(msg));
-  let s = '', buf = Buffer.alloc(1);
-  while (buf[0] - 10 && buf[0] - 13)
-    s += buf, fs.readSync(0, buf, 0, 1, 0);
-  return s.slice(1);
-};
+const chatQueries = require('./database/postqre/queries/chatQueries');
+const inboxQueries = require('./database/postqre/queries/inboxQueries');
+const messageQueries = require('./database/postqre/queries/messageQueries');
+const stringService = require('./service/misc/stringService');
 
-
-const message = 'такая'
-const keywords = message.toLowerCase().split(' ')
-const tsquery = keywords
-
-const query = `
- SELECT messages.id,
-       messages.content,
-FROM messages
-LEFT JOIN messages_vector ON messages.id = messages_vector.content_id
-WHERE to_tsvector(messages_vector.content2) @@ to_tsquery(:tsquery)
-ORDER BY ts_rank(to_tsvector(messages_vector.content2), plainto_tsquery(:tsquery)) DESC
-LIMIT 10;
-`;
-
-const result = async () => {
+const searchMessageByContent = async (userId, message) => {
   await sequelize.authenticate()
   await sequelize.sync()
-  const result = await sequelize.query(query, {
-    replacements: { tsquery },
-    type: QueryTypes.SELECT,
-  })
+
+  const likeString = stringService.convertToLikeStructure(message)
+
+  const chatsWhereUserIn = await chatQueries.receiveChatWhereUserIn(userId)
+  const chatIds = chatsWhereUserIn.map(chat => chat.id);
+
+  const messages = await messageQueries.receiveMessageThatSatisfyMessage(chatIds, likeString, message)
+
+  const inboxes = await inboxQueries.receiveInboxesWhichSatisfyMessage(chatIds, message, likeString)
+  const inboxesId = inboxes.
+    filter(inbox => inbox.user != null).
+    map(inbox => inbox.id);
+
+  const augmentedInboxes = await inboxQueries.receiveUserInboxesByInboxesList(userId,inboxesId)
+
+  const result = [...messages, ...augmentedInboxes].map(message => ({
+    ...message.toJSON(),
+    type: inboxesId.includes(message.id) ? 'inbox' : 'user'
+  }));
+
   console.log(result)
 }
 
-result()
+const messageContent = "postgre"
+const userId = "00227f96-f152-450f-a57d-eabc7bc7a43a"
+
+searchMessageByContent(userId, messageContent)
