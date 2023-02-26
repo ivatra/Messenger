@@ -51,36 +51,10 @@ const start = async () => {
 start()
 
 
-// БЛЯТЬ ОНО ВСЕ КРИВОЕ НЕ МОГУ ПОЛУЧИТЬ ИНБОКСЫ ЧАТ КОНТЕНТ ЕЩЕ И НЕ МОГУ БЛЯТЬ СОЗДАТЬ ЧАТЬ НО КРИВОЕ
 
-// @TODO: FINISH GET INBOX,  /// DONE
-// event : u were added to chat/kicked // DONE
-// is typing event // DONE
-// set message readen // DONE
-// output contact logic to contactservice file // DONE
-// sdelat norm error handling.contacts change status for example // DONE
-// change get chat content.if user is participant of chat // DONE
-// get notifications function // DONE
-// set sent status false when it sent // DONE
-// user avatar handling // DONE
-// check file extension  // DONE
-// sort in static by attachements , /userid/avatar , chat/avatar // DONE
-// change group chat name and avatar // DONE
-// change user name,avatar,login,password // DONE
-// middleware check for count1 of queries per 10 seconds for example // DONE
-// do email authorization // DONE
-// update tokens when user updates password // DONE
-// destroy an account if it was not activated for a day || sheduler // DONE
-// destroy expired tokens || sheduler // DONE
-// set tokens expired in for example 1 hour || sheduler // DONE
-// destroy activation collection every day || sheduler // DONE
-// return captcha if too many requests // DONE
-// do search for all messages/for conversation/for contacts
-// cloudfare test
-// test contacts logic
 
-//validate activation set frontend url
-
+// @TODO : Validate activation set frontend url
+// @TODO : Group chat creator got to be a admin
 
 
 //@POSSIBLE PROBLEMS :
@@ -89,6 +63,3 @@ start()
 
 
 //@ Хотелось бы в будущем : обработка ошибок с data и месседжом.Откладка каждого запроса!
-
-
-//refactor this code I
