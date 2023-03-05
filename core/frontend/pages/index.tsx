@@ -1,18 +1,11 @@
-import Head from 'next/head'
-import Image from 'next/image'
+import App from "next/app"
 
-export default function Home() {
+
+
+const Home = () => {
   return (
-    <>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <main>
-        <div>
-          {'Hello world!'}
-        </div>
-      </main>
-    </>
+    <div>
+      <App/>
+    </div>
   )
 }
