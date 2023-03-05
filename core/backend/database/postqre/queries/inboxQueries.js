@@ -14,14 +14,15 @@ class inBoxQueries {
   async receiveUserInboxes(userId) {
     return await InBox.findAll({
       where: { userId: userId },
+      attributes: ['id', 'countUnreadMsgs', 'isPinned'],
       include: [
         {
           model: Message,
-          attributes: ['content', 'senderId', 'createdAt']
+          attributes: ['id','content', 'senderId', 'createdAt']
         },
         {
           model: Chat,
-          attributes: ['type'],
+          attributes: ['id','type'],
           include: [
             {
               model: GroupChat,
@@ -33,7 +34,7 @@ class inBoxQueries {
             },
             {
               model: ChatParticipant,
-              attributes: ['userId'],
+
               as: 'participants',
               required: false,
               where: {
@@ -43,9 +44,10 @@ class inBoxQueries {
               include: [
                 {
                   model: User,
-                  attributes: ['avatar', 'name', 'lastSeen'],
+                  attributes: ['id','avatar', 'name', 'lastSeen'],
                 }
-              ]
+              ],
+              attributes: ['role', 'isTyping'],
             }]
         }],
       order: [[{ model: Message }, 'createdAt', 'DESC']]

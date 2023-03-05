@@ -18,7 +18,7 @@ class attachementsQueries {
             },
             limit: limit,
             offset: offset,
-            attributes: ['id', 'createdAt', 'senderId']
+            attributes: ['id', 'content','createdAt', 'senderId','isRead']
         })
     }
 

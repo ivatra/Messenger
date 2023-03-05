@@ -52,7 +52,6 @@ class eventQueries {
     }
 
     async receiveEvents(userId){
-        // return await events.find({ recipientId: '7b36b12e-ede3-494c-9581-54ddc232c4ef',sent:false }).toArray()
         return await events.find({ recipientId: userId }).toArray()
     }
 

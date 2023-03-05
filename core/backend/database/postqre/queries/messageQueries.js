@@ -47,7 +47,7 @@ class messageQueries {
             },
             include: {
                 model: Attachement,
-                attributes: ['type', 'url']
+                attributes: ['id','type', 'url']
             },
             limit: limit,
             offset: offset,
