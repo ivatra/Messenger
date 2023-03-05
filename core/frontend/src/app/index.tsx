@@ -1,20 +1,11 @@
-import Head from 'next/head'
-import Image from 'next/image'
 
-const App = () => {
+
+
+export default function App() {
   return (
-    <>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <main>
-        <div>
-          {'Hello world!'}
-        </div>
-      </main>
-    </>
+    <div>
+      {'Hello world!'}
+    </div>
   )
 }
 
-export default App

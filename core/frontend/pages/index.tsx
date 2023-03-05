@@ -1,11 +1,16 @@
-import App from "next/app"
+import Head from 'next/head'
+import App from '@/src/app'
 
-
-
-const Home = () => {
+export default () => {
   return (
-    <div>
-      <App/>
-    </div>
+    <>
+      <Head>
+        <title>Messenger</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <main>
+        <App />
+      </main>
+    </>
   )
 }
