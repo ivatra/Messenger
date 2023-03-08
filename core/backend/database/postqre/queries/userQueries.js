@@ -17,7 +17,7 @@ class userQueries {
         return await User.findOne(
             {
                 where: { id: userId },
-                attributes: ['id', 'name', 'avatar', 'isActive', 'lastSeen'],
+                attributes: ['id', 'name', 'login','avatar', 'isActive', 'lastSeen'],
             })
     }
     async receiveUserServiceInfoById(userId) {
@@ -52,7 +52,7 @@ class userQueries {
     }
     async receiveUsersWhichSatisfyCriteria(likeMessage, plainMessage) {
         return await User.findAll({
-            attributes: ['id', 'name', 'avatar', 'isActive', 'lastSeen'],
+            attributes: ['id', 'name', 'avatar', 'login','isActive', 'lastSeen'],
             include:
             {
                 model: UserVector,

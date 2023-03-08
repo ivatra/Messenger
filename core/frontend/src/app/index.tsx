@@ -1,11 +1,18 @@
+import Head from "next/head"
+import { App } from "./ui/app";
 
 
 
-export default function App() {
+export default function Index() {
   return (
-    <div>
-      {'Hello world!'}
-    </div>
+    <>
+      <Head>
+        <title>Messenger</title>
+      </Head>
+      <main>
+          <App />
+      </main>
+    </>
   )
 }
 
