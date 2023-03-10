@@ -34,14 +34,14 @@ class eventQueries {
         await events.insertOne(event)
     }
 
-    async createChatEvent(recipientId, chat, status, userId = null, notify = true) {
+    async createChatEvent(recipientId, chatId, status, facilicatorId = null, notify = true) {
         const event = {
             recipientId: recipientId,
             type: "Chat",
             content: {
+                chatId: chatId,
                 status: status,
-                userId: userId,
-                chat: chat
+                facilicatorId: facilicatorId,
             },
             notify: notify,
             sent: false

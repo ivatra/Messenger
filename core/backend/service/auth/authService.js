@@ -94,7 +94,7 @@ class authService {
         const validToken = await tokensQueries.receiveValidToken(refreshToken)
 
         if (!validToken)
-            throw ApiError.badRequest('Token isn"t valid.Relogin')
+            throw ApiError.badRequest('Token isn"t valid. Relogin, please.')
 
         return tokenService.generateAccess(validToken.userId,validToken.device)
 

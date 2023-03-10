@@ -41,8 +41,8 @@ class chatQueries {
                 as: 'participants',
                 include: [{
                     model: User,
-                    attributes: ['id', 'name', 'avatar', 'isActive', 'lastSeen'],
-                    required:true
+                    attributes: ['id', 'name', 'login', 'avatar', 'isActive', 'lastSeen'],
+                    required: true
                 }],
                 attributes: ['role']
             },

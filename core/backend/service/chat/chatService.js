@@ -45,11 +45,11 @@ class ChatService {
     }
   }
 
-  async addParticipantToChat(chatId, participantId, eventNeeded = false) {
-    // const groupChat = await this.checkForGroupChat(chatId)
+  async addParticipantToChat(chatId, participantId, eventNeeded = false,invitedId = null) {
+    const groupChat = await this.checkForGroupChat(chatId)
 
-    // if (!groupChat)
-    //   throw ApiError.badRequest('Individual chat cannot have additional participants.')
+    if (!groupChat)
+      throw ApiError.badRequest('Individual chat cannot have additional participants.')
 
     const [participant, created] = await chatQueries.createParticipant(chatId, participantId)
 
@@ -58,7 +58,7 @@ class ChatService {
 
     if (eventNeeded) {
       await this.notifyAllUsersAboutNewParticipant(chatId, participantId)
-      await eventsQueries.createChatEvent(participantId, chatId, { status: 'Invited' })
+      await eventsQueries.createChatEvent(participantId, chatId, 'Invited', inviterId = null)
     }
   }
 
@@ -100,7 +100,7 @@ class ChatService {
     return message
   }
 
-  async destroyParticipantFromChat(chatId, participantId) {
+  async destroyParticipantFromChat(chatId, participantId,destroyedId) {
     const groupChat = await this.checkForGroupChat(chatId)
 
     if (!groupChat)
@@ -112,7 +112,7 @@ class ChatService {
       throw ApiError.badRequest(`Participant ${participantId} doesn't exist in chat ${chatId}`);
     }
 
-    await eventsQueries.createChatEvent(participantId, chatId, { status: 'Kicked' })
+    await eventsQueries.createChatEvent(participantId, chatId, 'Kicked', destroyedId)
   }
 
   async checkForMemberingInChat(userId, chatId) {

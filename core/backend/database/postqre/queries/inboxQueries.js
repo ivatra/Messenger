@@ -34,7 +34,6 @@ class inBoxQueries {
             },
             {
               model: ChatParticipant,
-
               as: 'participants',
               required: false,
               where: {
@@ -47,7 +46,7 @@ class inBoxQueries {
                   attributes: ['id','avatar', 'name', 'lastSeen'],
                 }
               ],
-              attributes: ['role', 'isTyping'],
+              attributes: ['id','role', 'isTyping'],
             }]
         }],
       order: [[{ model: Message }, 'createdAt', 'DESC']]

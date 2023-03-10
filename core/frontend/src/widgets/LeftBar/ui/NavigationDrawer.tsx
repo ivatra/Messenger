@@ -1,7 +1,7 @@
 import { useMantineTheme, Drawer, MantineTheme, ModalBaseOverlayProps } from "@mantine/core";
 import { Dispatch, SetStateAction } from "react";
 
-import IUser from '../../../entities'
+import { IUser } from '../../../shared'
 
 interface IDrawer {
     opened: boolean;
@@ -17,13 +17,12 @@ const OverlayProps = (theme: MantineTheme): ModalBaseOverlayProps => {
 };
 
 
-
-export const NavigationDrawer = ({ opened, setOpened }: IDrawer):JSX.Element => {
+export const NavigationDrawer = ({ opened, setOpened }: IDrawer): JSX.Element => {
     const theme = useMantineTheme();
     return (
         <Drawer
             size='16rem'
-            withCloseButton = {false}
+            withCloseButton={false}
             overlayProps={OverlayProps(theme)}
             position="left"
             opened={opened}
@@ -34,6 +33,6 @@ export const NavigationDrawer = ({ opened, setOpened }: IDrawer):JSX.Element => 
     );
 };
 
-const Header = (User:IUser) => {
+const Header = (User: IUser) => {
 
 }

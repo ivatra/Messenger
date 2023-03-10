@@ -32,6 +32,7 @@ class userService {
         if (name) {
             message += 'name [' + name + '],'
         }
+        
         const updatedFields = { name, login, password, avatar };
         await userQueries.updateUser(userId, updatedFields);
 

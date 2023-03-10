@@ -54,6 +54,7 @@ start()
 
 
 // @TODO : Validate activation set frontend url
+// @TODO 
 // @TODO : Group chat creator got to be a admin
 
 

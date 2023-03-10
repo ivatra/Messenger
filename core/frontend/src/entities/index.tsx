@@ -1,3 +1,3 @@
-import IUser from "./User";
+import IUser from "./Profile";
 
 export default IUser
