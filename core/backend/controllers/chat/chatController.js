@@ -33,6 +33,7 @@ class ChatController {
   async addChatParticipant(req, res) {
     const { participantId } = req.body
     const { chatId } = req.params
+    console.log('chat id = ',chatId)
     await chatService.addParticipantToChat(chatId, participantId, true)
     return res.json(`Participant ${participantId} added to chat ${chatId}`)
   }
@@ -40,6 +41,7 @@ class ChatController {
   async removeChatParticipant(req, res) {
     const { participantId } = req.body
     const { chatId } = req.params
+    console.log('chat id = ', chatId)
     await chatService.destroyParticipantFromChat(chatId, participantId)
     return res.json(`Participant ${participantId} removed from chat ${chatId}`)
   }
