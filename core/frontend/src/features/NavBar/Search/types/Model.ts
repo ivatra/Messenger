@@ -1,4 +1,7 @@
-export interface ISearch {
-    type: 'inbox' | 'contact'
-    data: IInbox | IContact
-}
+// export interface ISearch {
+//     type: 'inbox' | 'contact'
+//     data: IInbox | IContact
+// }
+// @TODO:
+
+export {}

@@ -1,3 +1,4 @@
-import IUser from "./Profile";
+import useUserStore from "./User";
 
-export default IUser
+
+export {useUserStore}

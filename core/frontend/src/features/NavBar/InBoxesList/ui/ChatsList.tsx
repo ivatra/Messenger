@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Group, Indicator, Avatar, Text, Stack } from "@mantine/core";
-import { IconCircleFilled } from "@tabler/icons-react";
+import { IconCircleFilled } from "@tabler/icons-react"
 
 type Props = {
     chats: number[];

@@ -10,6 +10,6 @@ router.post('/login',authController.login)
 router.post('/logout',authController.logout)
 router.post('/activate/:link',validateActivation,authController.activate)
 router.get('/refreshActivation',checkAuth,authController.refreshActivation)
-router.get('/refreshToken',checkAuth,authController.refreshToken)
+router.get('/refreshToken',authController.refreshToken)
 
 module.exports = router

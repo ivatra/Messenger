@@ -1,11 +1,12 @@
 import { MantineProvider } from "@mantine/core"
+import React from "react";
 
 
 interface StylesProps {
     children: React.ReactNode;
 }
 
-export const Styles:React.FC<StylesProps> = ({ children }): JSX.Element => {
+const Styles:React.FC<StylesProps> = ({ children }): JSX.Element => {
     return (
         <MantineProvider
             theme={{
@@ -22,3 +23,4 @@ export const Styles:React.FC<StylesProps> = ({ children }): JSX.Element => {
         </MantineProvider>
     )
 }
+export default Styles

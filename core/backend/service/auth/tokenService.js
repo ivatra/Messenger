@@ -58,9 +58,6 @@ class tokenService {
     }
 
     verifyJwtToken(token){
-        if (!token)
-            return res.status(401).json({message:"The user is not logged in"})
-            
         return jwt.verify(token,process.env.JWT_ACCESS_SECRET)
 
     }

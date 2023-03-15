@@ -1,5 +1,5 @@
-import { appFontUrl } from '@/src/shared/consts';
 import { Global } from '@mantine/core';
+import { appFontUrl } from '../../shared';
 
 
 export function CustomFonts() {

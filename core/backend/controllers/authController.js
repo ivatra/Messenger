@@ -16,7 +16,6 @@ class AuthController {
         const userAgent = req.headers['user-agent']
 
         const tokens = await authService.register(login, email, password, name, avatar, userAgent)
-
         return sendTokens(res, tokens)
     }
 
@@ -51,8 +50,10 @@ class AuthController {
 
     async refreshToken(req, res, next) {
         const {refreshToken} = req.cookies
-
-        const token = await authService.refreshToken(refreshToken,req.user.id,req.user.device)
+        
+        const token = await authService.refreshToken(refreshToken)
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
+        res.setHeader('Access-Control-Allow-Credentials', 'true');
         return res.json(token)
     }
 }

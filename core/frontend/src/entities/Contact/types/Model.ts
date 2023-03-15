@@ -1,4 +1,5 @@
-import IUser from "@/src/shared"
+import { IUser } from "../../../shared"
+
 
 export interface IContact extends IUser {
     id: string

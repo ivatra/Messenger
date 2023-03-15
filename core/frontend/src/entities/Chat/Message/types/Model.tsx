@@ -1,4 +1,4 @@
-import { IMessage } from "@/src/shared"
+import { IMessage } from "../../../../shared"
 
 interface IAttachement {
     id: string

@@ -1,4 +1,4 @@
-import { IMessage,IChat } from "@/src/shared"
+import { IMessage,IChat } from "../../../shared"
 
 export interface IInbox{
     id:string

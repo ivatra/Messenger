@@ -1,16 +1,22 @@
-interface IMessageEventContent {
-    status: string
-    message: IMessage
-    isRead: boolean
-    isMentioned: boolean
-}
+// import { IMessage } from "../../../shared"
 
-interface IContactEventContent {
-    status: 'accepted' | 'declined' | 'pending'
-    contact: IContact
-}
+// interface IMessageEventContent {
+//     status: string
+//     message: IMessage
+//     isRead: boolean
+//     isMentioned: boolean
+// }
 
-interface IChatEventContent {
-    chat: IChat
-    status: 'Invited' | 'Kicked'
-}
+// interface IContactEventContent {
+//     status: 'accepted' | 'declined' | 'pending'
+//     contact: IContact
+// }
+
+// interface IChatEventContent {
+//     chat: IChat
+//     status: 'Invited' | 'Kicked'
+// }
+
+// @TODO:
+
+export {}
