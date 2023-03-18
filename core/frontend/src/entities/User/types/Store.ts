@@ -1,17 +1,26 @@
 import { IProfile } from "./Model";
 
-interface IUserStore extends IAuthStore {
-    profile: IProfile
-    setProfile: (user: IProfile) => void
-    updateProfile: (
-        updateFields: Partial<IProfile> & { password?: string } ) => Promise<void>
-    
+
+type ProfileField = keyof IProfile | 'password'
+
+interface UpdateProfileParams {
+    field: ProfileField
+    value: string
 }
 
-interface IAuthStore{
+interface IUserStore extends IAuthStore {
+    profile: IProfile;
+    setProfile: (user: IProfile) => void;
+    updateProfile: (
+        field: ProfileField,
+        value: string
+    ) => Promise<void>;
+}
+
+interface IAuthStore {
     isAuth: boolean
-    isSessionExpired:boolean
-    setSessionExpired:(value:boolean) => void
+    isSessionExpired: boolean
+    setSessionExpired: (value: boolean) => void
     register: (name: string, log: string, email: string, pass: string, avatar: ImageBitmap) => void
     login: (email: string, pass: string) => void
     logout: () => void
@@ -19,4 +28,4 @@ interface IAuthStore{
     refreshActivation: () => void
 }
 
-export default IUserStore
+export type { IUserStore, UpdateProfileParams, ProfileField as ProfileFields }

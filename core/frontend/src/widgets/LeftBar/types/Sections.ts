@@ -1,0 +1,1 @@
+export type sections = 'Chats' | 'Contacts' | 'Notifications'

@@ -23,10 +23,11 @@ export const refreshToken = async (request: Request, response: Response) => {
 };
 
 export const showAlertMessage = async (response: Response) => {
-    const errMessage = await response.json(); 
+    const responseBody = await response.text(); // Read the response body as a string
+    const error = JSON.parse(responseBody); // Parse the response body into a JSON object
     notifications.show({
         ...AlertStyles[response.status],
-        message: errMessage.message,
+        message: error.message,
     });
 };
 

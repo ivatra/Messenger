@@ -1,4 +1,4 @@
 import useUserStore from "./store/UserStore";
 
-
-export default useUserStore
+export {useUserStore} 
+export type { IProfile } from "./types/Model";

@@ -6,9 +6,9 @@ import { IconReload } from "@tabler/icons-react";
 
 export const ReloadButton = ({ isLoading, reloadCaptcha }: { isLoading: boolean; reloadCaptcha: () => void; }) => (
     isLoading ? (
-        <Loader size="sm" />
+        <Loader size="xs" />
     ) : (
-        <ActionIcon onClick={reloadCaptcha}>
+        <ActionIcon size={'sm'} onClick={reloadCaptcha}>
             <IconReload />
         </ActionIcon>
     )

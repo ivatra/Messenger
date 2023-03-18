@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Modal, Stack,} from "@mantine/core";
+import { Group, Modal, Stack} from "@mantine/core";
 
 import useCaptchaStore from "../../store/CaptchaStore";
 import { ReloadButton } from "./ReloadButton";
@@ -12,24 +12,20 @@ interface IVerification {
 
 const modalProps = {
     opened: true,
+    size:'15.2rem',
+    display:'flex',
     centered: true,
     closeOnClickOutside: false,
     radius: "md",
     keepMounted: false,
     padding: 0,
-    size: "xs",
     withCloseButton: false,
 };
 
-export const textInputProps = {
-    w: "80%",
-    placeholder: "Type the text",
-    variant: "default",
-};
 
 const closeButtonProps = {
-    size: "md",
-    mr: "0.3rem",
+    mt: "0.1rem",
+    mr: "0.1rem",
     sx: { alignSelf: "self-end" },
 };
 
@@ -61,21 +57,23 @@ const Verification: React.FC<IVerification> = ({ setCaptcha }) => {
 
     return (
         <Modal onClose={() => setCaptcha(false)} {...modalProps}>
-            <Stack spacing={0} p="sm">
+            <Stack spacing={0} m={'xs'}>
                 <Modal.CloseButton {...closeButtonProps} />
-                <Stack m="sm" spacing="md">
+                <Stack m="sm" spacing="xs" >
                     <CaptchaSvg svgData={svgData} />
-                    <CaptchaInput
-                        input={input}
-                        inputErr={inputErr}
-                        setInput={setInput}
-                        captchaInputRef={captchaInputRef}
-                    />
-                    <ReloadButton isLoading={isLoading} reloadCaptcha={reloadCaptcha} />
+                    <Group noWrap spacing="xs" align="center">
+                        <ReloadButton isLoading={isLoading} reloadCaptcha={reloadCaptcha} />
+                        <CaptchaInput
+                            input={input}
+                            inputErr={inputErr}
+                            setInput={setInput}
+                            captchaInputRef={captchaInputRef}
+                        />
+                    </Group>
                 </Stack>
             </Stack>
         </Modal>
     );
-};
+}
 
 export default Verification;

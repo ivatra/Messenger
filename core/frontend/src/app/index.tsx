@@ -1,4 +1,4 @@
+import api from "./lib/api/api";
 import App from "./ui/App";
 
-
-export default App
+export {api,App}

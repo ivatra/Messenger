@@ -1,24 +1,43 @@
-import { Group, Navbar, Stack, NavbarProps } from "@mantine/core";
-import { Search } from "../../../features/NavBar/Search/ui/Search";
-import { Navigation } from "./Navigation";
+import { Group, Navbar, NavbarProps } from "@mantine/core";
+import { useState } from "react";
 
-const navbarProps = {
-    hiddenBreakpoint: 'xs',
-    w: { xs: '100%', sm: '40%' }
+import { NavigationBar } from "./NavBar/NavigationBar";
+import { profile } from "../mixtures/User";
+import { sections } from "../types/Sections";
+import { SectionContent } from "./Content/SectionContent";
+import { useDrawer } from "../hooks/EditUserContext";
+import { EditUserDrawer } from "../../../entities/User/ui/EditUserDrawer";
+
+
+const navbarProps: NavbarProps = {
+    children: '',
+    hiddenBreakpoint: '38rem',
+    display: 'flex',
+    w: { "38rem": '35%',md:'30%' },
+    bg: 'dark.7'
 }
 
 export const LeftBar = () => {
+    const [section, setSection] = useState<sections>('Chats')
+    const { drawerOpen, toggleDrawer } = useDrawer()
+
     return (
-        <Navbar {...navbarProps} >
-            <Navbar.Section grow>
-                <Group>
-                    <Navigation />
-                    <Stack m='sm'>
-                        <Search />
-                    </Stack>
-                </Group>
-            </Navbar.Section>
-        </Navbar>
+        drawerOpen ?
+            <EditUserDrawer
+                opened={drawerOpen}
+                closeDrawer={toggleDrawer}
+            />
+            :
+            <Navbar {...navbarProps}>
+                <Navbar.Section grow display={'flex'}>
+                    <Group w={'100%'} noWrap align="inherit" spacing={0}>
+                        <NavigationBar
+                            profile={profile}
+                            section={section}
+                            setSection={setSection} />
+                        <SectionContent section={section} />
+                    </Group>
+                </Navbar.Section>
+            </Navbar>
     )
 }
-

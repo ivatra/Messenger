@@ -23,4 +23,4 @@ const Styles:React.FC<StylesProps> = ({ children }): JSX.Element => {
         </MantineProvider>
     )
 }
-export default Styles
+export { Styles}

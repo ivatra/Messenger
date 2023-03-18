@@ -1,7 +1,9 @@
 import { create } from "zustand";
 import { ICaptcha } from "../types/Store";
-import { IStoreFeedback, api } from "../../../../shared";
+import { IStoreFeedback } from "../../../../shared";
 import { devtools } from "zustand/middleware";
+import api from "../../../../app/lib/api/api";
+import handleRequest from "../../../../shared/lib/handleRequest";
 
 const initialState = {
     id: '',
@@ -9,7 +11,7 @@ const initialState = {
     isCaptcha: false,
     svgData: '',
     isLoading: false,
-    error: ''
+    isError: false
 }
 
 interface ICaptchaResponse {
@@ -20,27 +22,27 @@ interface ICaptchaResponse {
 const useCaptchaStore = create<ICaptcha & IStoreFeedback>()(devtools((set, get) => ({
     ...initialState,
     receiveCaptcha: async () => {
-        set({ isLoading: true })
+        const request = () => api.get('captcha')
+        const response = await handleRequest(request, set)()
 
-        const response: ICaptchaResponse = await api.get('captcha').json()
+        if (get().isError) return
 
-        set({ id: response.id, svgData: response.data, isLoading: false })
+        const strResponse: ICaptchaResponse = await response.json()
+
+        set({ id: strResponse.id, svgData: strResponse.data })
     },
     verifyAnswer: async (answer) => {
-        set({ isLoading: true })
 
-        const response = await api.post('captcha', {
+        const request = () => api.post('captcha', {
             json: {
                 id: get().id,
                 answer: answer
             }
         })
 
-        set({ isLoading: false })
+        await handleRequest(request, set)()
 
-        if (response.ok) {
-            set(initialState)
-        }
+        if (!get().isError) set(initialState)
     },
     setCaptcha: (value) => set({ isCaptcha: value })
 })))

@@ -1,6 +1,7 @@
 import { IconAlertTriangle } from "@tabler/icons-react";
 import { Button, Modal, Text, Stack, Group, Box } from "@mantine/core";
 import { useUserStore } from '../../../../entities';
+import { useEffect } from "react";
 
 
 const modalProps = {
@@ -14,7 +15,6 @@ const modalProps = {
 
 export default function SessionExpiredModal(): JSX.Element {
     const { isSessionExpired, setSessionExpired, logout } = useUserStore()
-
     const reSign = () => {
         logout()
         setSessionExpired(false)
@@ -25,7 +25,7 @@ export default function SessionExpiredModal(): JSX.Element {
         <Modal
             opened={isSessionExpired}
             {...modalProps}>
-            <Stack>
+            <Stack m={'xs'}>
                 <Group noWrap spacing={'xl'} mr={'3rem'}>
                     <Box mb='0.5rem'>
                         <IconAlertTriangle size='3rem' color='#FFD43B' />

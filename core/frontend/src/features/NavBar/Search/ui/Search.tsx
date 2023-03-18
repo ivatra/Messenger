@@ -1,19 +1,17 @@
 import { TextInput, Burger, Group, TextInputProps } from "@mantine/core";
 import { useState } from "react";
 import { IconSearch } from "@tabler/icons-react";
-import { api } from "../../../../shared";
-
+import { api } from "../../../../app";
 
 
 const textInputProps: TextInputProps = {
-    w: '100%',
     placeholder: "Search...",
-    icon: < IconSearch size={20} />,
-    sx:{alignSelf:'flex-start'}
+    size:'xs',
+    icon: <IconSearch size={20} />,
 }
 export const Search = () => {
     return (
-        <TextInput {...textInputProps}  />
+        <TextInput {...textInputProps} />
     );
 };
 

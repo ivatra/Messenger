@@ -4,7 +4,7 @@ const uuid = require('uuid')
 const ApiError = require('../error/ApiError')
 class captchaService {
     async createCaptcha() {
-        const captcha = svgCaptcha.create({background:'#FFFFFF',size:'5',color:false,width:270,height:90});
+        const captcha = svgCaptcha.create({background:'#FFFFFF',size:'5',color:false,width:200,height:70});
         const generatedId = uuid.v4();
     
         await captchaQueries.createCaptcha(generatedId, captcha.text);

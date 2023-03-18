@@ -2,8 +2,12 @@ import {
     TextInput,
     Group
 } from "@mantine/core";
-import { textInputProps } from "./Verification";
 
+
+const textInputProps = {
+    placeholder: "Type the text",
+    variant: "default",
+};
 export const CaptchaInput = ({
     input, inputErr, setInput, captchaInputRef,
 }: {
@@ -12,13 +16,11 @@ export const CaptchaInput = ({
     setInput: (value: string) => void;
     captchaInputRef: React.RefObject<HTMLInputElement>;
 }) => (
-    <Group noWrap spacing="xs">
-        <TextInput
-            value={input}
-            error={inputErr}
-            onChange={(e) => setInput(e.currentTarget.value)}
-            ref={captchaInputRef}
-            data-autofocus
-            {...textInputProps} />
-    </Group>
+    <TextInput
+        value={input}
+        error={inputErr}
+        onChange={(e) => setInput(e.currentTarget.value)}
+        ref={captchaInputRef}
+        data-autofocus
+        {...textInputProps} />
 );

@@ -35,4 +35,4 @@ const AlertStyles:AlertStyleProps = {
     }
 
 }
-export default AlertStyles
+export { AlertStyles}

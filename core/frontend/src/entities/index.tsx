@@ -1,4 +1,2 @@
-import useUserStore from "./User";
-
-
-export {useUserStore}
+import { useUserStore, IProfile } from "./User";
+export { useUserStore, type IProfile }
