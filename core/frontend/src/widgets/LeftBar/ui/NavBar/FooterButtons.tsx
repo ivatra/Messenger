@@ -1,7 +1,8 @@
 import { Stack, StackProps } from "@mantine/core";
-import { NavButton } from "./NavButton";
+
 import { IconLogout, IconUserEdit } from "@tabler/icons-react";
 import { useDrawer } from "../../hooks/EditUserContext";
+import { NavButton } from "./NavButton";
 
 const stackProps: StackProps = {
     align: "center",

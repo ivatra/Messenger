@@ -7,6 +7,7 @@ const modalProps = {
     centered: true,
     withCloseButton: false,
     radius: "md",
+    zIndex: 800,
     closeOnClickOutside: false,
     keepMounted: false,
     padding: "0.5rem",

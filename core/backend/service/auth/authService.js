@@ -48,9 +48,9 @@ class authService {
 
         comparePassword(user.password, password)
 
-        const accessToken = await authenticateUser(user.id, userAgent)
+        const tokens = await authenticateUser(user.id, userAgent)
 
-        return accessToken
+        return { tokens: tokens, user: user.dataValues }
     }
 
     async register(login, email, password, name, avatar, userAgent) {
@@ -62,7 +62,7 @@ class authService {
 
         const tokens = await authenticateUser(user.id, userAgent)
 
-        return tokens
+        return { tokens: tokens, user: user.dataValues }
     }
 
     async logout(refreshToken) {
@@ -90,13 +90,13 @@ class authService {
     async refreshToken(refreshToken) {
         if (!refreshToken)
             throw ApiError.badRequest('There was no refresh token')
-            
+
         const validToken = await tokensQueries.receiveValidToken(refreshToken)
 
         if (!validToken)
             throw ApiError.badRequest('Token isn"t valid. Relogin, please.')
 
-        return tokenService.generateAccess(validToken.userId,validToken.device)
+        return tokenService.generateAccess(validToken.userId, validToken.device)
 
     }
 }

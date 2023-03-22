@@ -1,8 +1,9 @@
 import ky from "ky";
 import { notifications } from "@mantine/notifications";
+
 import { AlertStyles, API_URL } from "../../../shared";
 import { tokenName } from "../../../shared/consts/consts";
-import useCaptchaStore from "../../../features"
+import {useCaptchaStore} from "../../../features"
 import { useUserStore } from "../../../entities";
 
 export const setHeader = (request: Request) => {
@@ -11,23 +12,32 @@ export const setHeader = (request: Request) => {
 };
 
 export const refreshToken = async (request: Request, response: Response) => {
-    const token = await ky.get(API_URL + 'auth/refreshToken', { throwHttpErrors: false, credentials: "include", }).text();
+    try {
+        const token: string = await ky.get(
+            API_URL + 'auth/refreshToken', {
+            credentials: "include",
+        }).json()
 
-    if (token) {
         localStorage.setItem('accessToken', token);
         return ky(request);
+    } catch (e) {
+        useUserStore.getState().setSessionExpired(true)
+        return response;
     }
-
-    useUserStore.getState().setSessionExpired(true)
-    return response;
 };
 
 export const showAlertMessage = async (response: Response) => {
-    const responseBody = await response.text(); // Read the response body as a string
-    const error = JSON.parse(responseBody); // Parse the response body into a JSON object
+    const error = await response.json();
     notifications.show({
         ...AlertStyles[response.status],
         message: error.message,
+    });
+};
+
+export const showInternal = async() => {
+    notifications.show({
+        ...AlertStyles[500],
+        message: 'Could access to server. Try again later.'
     });
 };
 

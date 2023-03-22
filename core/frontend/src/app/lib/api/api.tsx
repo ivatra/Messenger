@@ -1,6 +1,6 @@
 import ky from "ky";
 import { API_URL } from "../../../shared";
-import { setHeader, refreshToken, showAlertMessage, showCaptcha } from "./middlewares";
+import { setHeader, refreshToken, showAlertMessage, showCaptcha, showInternal } from "./middlewares";
 
 export const alertStatusCodes = [500, 403, 400];
 
@@ -17,15 +17,15 @@ class Api {
                 beforeRequest: [setHeader],
                 afterResponse: [
                     async (request, options, response) => {
-                        if (response.ok) return response;
-                        else if (alertStatusCodes.includes(response.status)) {
-                           await showAlertMessage(response);
-                        } 
-                        else if (response.status === 401) {
+                        if (response.ok)
+                            return response;
+                        else if (alertStatusCodes.includes(response.status))
+                            await showAlertMessage(response);
+                        else if (response.status === 401)
                             return await refreshToken(request, response);
-                        } else if (response.status === 429) {
+                        else if (response.status === 429)
                             showCaptcha();
-                        }
+
                         return response;
                     },
                 ],

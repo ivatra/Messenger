@@ -7,7 +7,7 @@ import { api } from "../../../../app";
 const textInputProps: TextInputProps = {
     placeholder: "Search...",
     size:'xs',
-    icon: <IconSearch size={20} />,
+    icon: <IconSearch size={15} />,
 }
 export const Search = () => {
     return (

@@ -1,4 +1,5 @@
 import { Stack } from "@mantine/core"
+
 import { Search } from "../../../../features/NavBar/Search/ui/Search"
 import { ChatsList, ContactsList, NotificationsList } from "../../mixtures/Lists";
 import { sections } from "../../types/Sections";

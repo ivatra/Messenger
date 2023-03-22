@@ -1,11 +1,13 @@
-import { EditInputProps } from "../model/EditInputProps";
-import { EditInput } from "./EditInput";
-import { UpdateProfileParams, ProfileFields } from "../types/Store";
-import { Stack } from "@mantine/core";
-import { useUserStore } from "..";
 import { useState } from "react";
+
+import { Stack } from "@mantine/core";
 import { useDidUpdate } from "@mantine/hooks";
+
+import { EditInputProps } from "../model/EditInputProps";
+import { UpdateProfileParams, ProfileFields } from "../types/Store";
+import { useUserStore } from "..";
 import { errorIcon, loaderIcon, successIcon } from "../../../shared";
+import { BaseEditInput } from "./BaseEditInput";
 
 
 type IOutcomeIcons = {
@@ -13,9 +15,9 @@ type IOutcomeIcons = {
 };
 
 export const EditInputsList = () => {
-    const { profile, updateProfile, isError, isLoading } = useUserStore();
+    const { profile,updateProfile, isError, isLoading } = useUserStore();
     const [fieldUpdated, setFieldUpdated] = useState<string>("");
-    const [outcomeIcons, setOutcomeIcons] = useState <IOutcomeIcons>({});
+    const [outcomeIcons, setOutcomeIcons] = useState<IOutcomeIcons>({});
 
     const editUserField = async ({ field, value }: UpdateProfileParams) => {
         setFieldUpdated(field);
@@ -24,7 +26,7 @@ export const EditInputsList = () => {
 
     useDidUpdate(() => {
         var iconOnUpdate: JSX.Element;
-
+        console.log(isError + 'iserror')
         if (isError) iconOnUpdate = errorIcon;
         else if (isLoading) iconOnUpdate = loaderIcon;
         else iconOnUpdate = successIcon;
@@ -38,21 +40,15 @@ export const EditInputsList = () => {
 
     return (
         <Stack>
-            {EditInputProps.map((Input) => {
-                const placeholder: ProfileFields = Input.field in profile
-                    ? (profile as Record<typeof Input.field, any>)[Input.field]
-                    : Input.customPlaceHolder;
-
-                return (
-                    <EditInput
-                        key={Input.field}
-                        {...Input}
-                        onSubmit={editUserField}
-                        placeholder={placeholder}
-                        outcomeIcon={outcomeIcons[Input.field]} // pass the corresponding icon
-                    />
-                );
-            })}
+            {EditInputProps.map((Input) => (
+                <BaseEditInput
+                    key={Input.field}
+                    props = {Input}
+                    profile={profile}
+                    onSubmit={editUserField}
+                    outcomeIcon={outcomeIcons[Input.field]}
+                />
+            ))}
         </Stack>
     );
 };

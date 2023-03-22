@@ -6,7 +6,8 @@ import { profile } from "../mixtures/User";
 import { sections } from "../types/Sections";
 import { SectionContent } from "./Content/SectionContent";
 import { useDrawer } from "../hooks/EditUserContext";
-import { EditUserDrawer } from "../../../entities/User/ui/EditUserDrawer";
+import EditUserDrawer from "../../../entities/User/ui/EditUserDrawer";
+import { useUserStore } from "../../../entities";
 
 
 const navbarProps: NavbarProps = {
@@ -19,6 +20,7 @@ const navbarProps: NavbarProps = {
 
 export const LeftBar = () => {
     const [section, setSection] = useState<sections>('Chats')
+    // const profile = useUserStore(state => state.profile)
     const { drawerOpen, toggleDrawer } = useDrawer()
 
     return (

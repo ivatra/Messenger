@@ -1,8 +1,8 @@
 import { Stack, StackProps } from "@mantine/core";
-import { NavButton } from "./NavButton";
 import { ILinks } from "../../mixtures/Links";
 import { sections } from "../../types/Sections";
 import { CenterLinks } from "../../mixtures/Links";
+import { NavButton } from "./NavButton";
 
 const stackProps: StackProps = {
     align: "center",

@@ -1,38 +1,42 @@
-import { IconEditCircle, IconPencil, IconLock, IconClockEdit } from "@tabler/icons-react";
+import { IconEditCircle, IconPencil, IconLock, IconClockEdit, IconFileExport, IconFileUpload, IconPhoto, IconPhotoEdit, IconEdit } from "@tabler/icons-react";
 
-import { ProfileFields} from "../types/Store";
-import { iconBaseProps } from "../../../shared";
+import { ProfileFields } from "../types/Store";
+import { HTMLInputTypeAttribute } from "react";
 
-interface IEditInputs {
+export interface IEditInputs {
     field: ProfileFields
-    label: string
-    customPlaceHolder?:string
+    type:HTMLInputTypeAttribute
+    customPlaceHolder?: string
     PlaceholderIcon: React.ElementType
     SubmitInitialIcon: React.ElementType
-}
-
-function wrapInitialIcon(Icon: React.ElementType) {
-    return <Icon { ...iconBaseProps } />
 }
 
 export const EditInputProps: IEditInputs[] = [
     {
         field: "name",
-        label: "Name",
+        type: 'text',
         PlaceholderIcon: IconPencil,
-        SubmitInitialIcon: IconEditCircle,
+        SubmitInitialIcon: IconEdit,
     },
     {
         field: "login",
-        label: "Login",
+        type: 'text',
         PlaceholderIcon: IconPencil,
-        SubmitInitialIcon: IconEditCircle,
+        SubmitInitialIcon: IconEdit,
     },
     {
         field: "password",
-        label: "Password",
-        customPlaceHolder: '...',
+        type: 'password',
+        customPlaceHolder: '.......',
         PlaceholderIcon: IconLock,
-        SubmitInitialIcon: IconEditCircle,
+        SubmitInitialIcon: IconEdit,
     },
+    {
+        field: "avatar",
+        type: "file",
+        customPlaceHolder:'your-image.png',
+        PlaceholderIcon: IconPhoto,
+        SubmitInitialIcon: IconPhotoEdit
+    },
+
 ]

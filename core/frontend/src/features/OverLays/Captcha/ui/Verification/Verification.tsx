@@ -12,6 +12,7 @@ interface IVerification {
 
 const modalProps = {
     opened: true,
+    zIndex:800,
     size:'15.2rem',
     display:'flex',
     centered: true,

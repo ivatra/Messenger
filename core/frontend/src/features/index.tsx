@@ -1,5 +1,7 @@
 import useCaptchaStore from "./OverLays/Captcha/store/CaptchaStore";
+import Captcha from "./OverLays/Captcha/ui/Captcha";
 import SessionExpiredModal from "./OverLays/SessionExpired";
 
 export {SessionExpiredModal}
-export default useCaptchaStore
+export {useCaptchaStore}
+export {Captcha}

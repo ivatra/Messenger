@@ -6,7 +6,7 @@ interface StylesProps {
     children: React.ReactNode;
 }
 
-const Styles:React.FC<StylesProps> = ({ children }): JSX.Element => {
+const StylesProvider:React.FC<StylesProps> = ({ children }): JSX.Element => {
     return (
         <MantineProvider
             theme={{
@@ -23,4 +23,4 @@ const Styles:React.FC<StylesProps> = ({ children }): JSX.Element => {
         </MantineProvider>
     )
 }
-export { Styles}
+export default StylesProvider

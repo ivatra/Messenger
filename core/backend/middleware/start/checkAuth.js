@@ -8,7 +8,6 @@ module.exports = async function(req,res,next){
         const token = req.headers.authorization.split(' ')[1]
         
         req.user = tokenService.verifyJwtToken(token)
-
         next()
 
     }catch(e){

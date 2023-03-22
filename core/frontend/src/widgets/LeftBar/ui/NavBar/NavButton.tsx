@@ -1,5 +1,6 @@
-import { ActionIcon,Tooltip, TooltipProps } from "@mantine/core";
+import { ActionIcon,Tooltip} from "@mantine/core";
 import { TablerIconsProps } from "@tabler/icons-react";
+import { CustomToolTip } from "../../../../shared/ui/CustomToolTip";
 
 interface INavButtonProps {
     title: string;
@@ -20,21 +21,11 @@ export const NavButton: React.FC<INavButtonProps> = ({
         color: active ? '#1864ab' : 'white'
     }
 
-    const toolTipProps:TooltipProps = {
-        children:'',
-        label: title,
-        position: "right-end",
-        color: "dark.5",
-        withArrow: true,
-        arrowSize: 3,
-        transitionProps: { transition: 'rotate-left', duration: 120 }
-    }
-
     return (
-        <Tooltip {...toolTipProps} style={{fontSize:'0.55rem'}}>
+        <CustomToolTip label = {title}>
             <ActionIcon size='1.3rem' onClick={onClick}>
                 <Icon  {...iconProps} />
             </ActionIcon>
-        </Tooltip>
+        </CustomToolTip>
     );
 };

@@ -5,7 +5,7 @@ type ProfileField = keyof IProfile | 'password'
 
 interface UpdateProfileParams {
     field: ProfileField
-    value: string
+    value: string | File
 }
 
 interface IUserStore extends IAuthStore {
@@ -13,7 +13,7 @@ interface IUserStore extends IAuthStore {
     setProfile: (user: IProfile) => void;
     updateProfile: (
         field: ProfileField,
-        value: string
+        value: string | File
     ) => Promise<void>;
 }
 

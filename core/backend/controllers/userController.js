@@ -11,8 +11,8 @@ class userController {
         if (req.files)
             avatar = req.files.avatar
 
-        const elements = await userService.updateUserInfo(req.user.id, name, login, password, avatar,userAgent)
-        return res.json(`${elements} succecsfully changed.`)
+        const profile = await userService.updateUserInfo(req.user.id, name, login, password, avatar,userAgent)
+        return res.json(profile)
 
     }
 }

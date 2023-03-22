@@ -23,9 +23,9 @@ const useCaptchaStore = create<ICaptcha & IStoreFeedback>()(devtools((set, get) 
     ...initialState,
     receiveCaptcha: async () => {
         const request = () => api.get('captcha')
-        const response = await handleRequest(request, set)()
+        const response = await handleRequest(request, set)
 
-        if (get().isError) return
+        if (!response) return
 
         const strResponse: ICaptchaResponse = await response.json()
 
@@ -40,7 +40,7 @@ const useCaptchaStore = create<ICaptcha & IStoreFeedback>()(devtools((set, get) 
             }
         })
 
-        await handleRequest(request, set)()
+        await handleRequest(request, set)
 
         if (!get().isError) set(initialState)
     },

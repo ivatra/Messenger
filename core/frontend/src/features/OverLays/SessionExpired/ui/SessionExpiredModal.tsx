@@ -10,10 +10,11 @@ const modalProps = {
     centered: true,
     shadow: 'xl',
     radius: 'md',
-    padding: 'xl,'
+    padding: 'xl',
+    zIndex: 900
 }
 
-export default function SessionExpiredModal(): JSX.Element {
+const SessionExpiredModal: React.FC = ():JSX.Element => {
     const { isSessionExpired, setSessionExpired, logout } = useUserStore()
     const reSign = () => {
         logout()
@@ -45,3 +46,4 @@ export default function SessionExpiredModal(): JSX.Element {
         </Modal>
     );
 }
+export default SessionExpiredModal

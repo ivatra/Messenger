@@ -2,11 +2,11 @@ const tokensQueries = require('../database/mongo/queries/tokensQueries')
 const authService = require('../service/auth/authService')
 const dateService = require('../service/misc/dateService')
 
-function sendTokens(res, tokens) {
+function sendTokens(res, tokens, user) {
     const timeSwamp = dateService.daysToTimeSwamp(process.env.JWT_REFRESH_LIFECYCLE)
 
     res.cookie('refreshToken', tokens.refreshToken, { maxAge: timeSwamp, httpOnly: true })
-    return res.json(tokens.accessToken)
+    return res.json({ token: tokens.accessToken, user: user })
 }
 
 class AuthController {
@@ -15,17 +15,24 @@ class AuthController {
         const avatar = req.avatar
         const userAgent = req.headers['user-agent']
 
-        const tokens = await authService.register(login, email, password, name, avatar, userAgent)
-        return sendTokens(res, tokens)
+        const result = await authService.register(login, email, password, name, avatar, userAgent)
+        
+        const timeSwamp = dateService.daysToTimeSwamp(process.env.JWT_REFRESH_LIFECYCLE)
+
+        res.cookie('refreshToken', res.tokens.refreshToken, { maxAge: timeSwamp, httpOnly: true })
+        return res.json({ token: result.accessToken, user: result.user })
     }
 
     async login(req, res, next) {
         const { email, password } = req.body
         const userAgent = req.headers['user-agent']
 
-        const tokens = await authService.login(email, password, userAgent)
+        const result = await authService.login(email, password, userAgent)
 
-        return sendTokens(res, tokens)
+        const timeSwamp = dateService.daysToTimeSwamp(process.env.JWT_REFRESH_LIFECYCLE)
+
+        res.cookie('refreshToken', result.tokens.refreshToken, { maxAge: timeSwamp, httpOnly: true })
+        return res.json({ token: result.tokens.accessToken, profile: result.user })
     }
 
     async logout(req, res, next) {
@@ -49,11 +56,9 @@ class AuthController {
     }
 
     async refreshToken(req, res, next) {
-        const {refreshToken} = req.cookies
-        
+        const { refreshToken } = req.cookies
+
         const token = await authService.refreshToken(refreshToken)
-        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
-        res.setHeader('Access-Control-Allow-Credentials', 'true');
         return res.json(token)
     }
 }

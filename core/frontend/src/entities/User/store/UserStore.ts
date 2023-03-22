@@ -5,18 +5,20 @@ import { immer } from 'zustand/middleware/immer'
 import { IUserStore } from "../types/Store";
 import { IStoreFeedback } from "../../../shared"
 import handleRequest from "../../../shared/lib/handleRequest";
-import ky from "ky";
 import { api } from "../../../app";
+import { IProfile } from "../types/Model";
+import { extractCommonFields } from "../../../shared/lib/extractCommonFields";
 
 const initialState = {
     profile: { id: '', name: '', avatar: '', login: '' },
     isAuth: false,
     isSessionExpired: false,
     isLoading: false,
-    isError: false,
+    isError: false
 }
 
 type StoreType = IUserStore & IStoreFeedback
+
 
 const useUserStore = create<StoreType>()(
     persist(
@@ -29,19 +31,19 @@ const useUserStore = create<StoreType>()(
                 const formData = new FormData();
                 formData.append(field, value);
 
-                const request = () => api.post("content/profile/update",
-                    {
-                        body: formData
-                    })
-
-                await handleRequest(request, set)();
-
-                if (get().isError) return
-
-                set((state) => {
-                    if (field != 'password')
-                        state.profile[field] = value
+                const request = () => api.post("content/profile/update", {
+                    body: formData
                 })
+
+                const response = await handleRequest(request, set);
+
+                if (!response || get().isError) return
+ 
+                const apiResponse = await response.json()
+
+                const [updatedProfile, isCommon] = extractCommonFields<IProfile>(initialState.profile, apiResponse)
+
+                if (isCommon) set({ profile: updatedProfile as IProfile }) // I claim it's safe!
             },
 
             activate: (link) => { },

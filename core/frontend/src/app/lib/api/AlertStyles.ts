@@ -16,7 +16,7 @@ const AlertStyles:AlertStyleProps = {
     },
     403:{
         withCloseButton: true,
-        title: "There was an internal error",
+        title: "There was an forbidden error",
         color: 'red',
         loading: false,
 
@@ -27,12 +27,6 @@ const AlertStyles:AlertStyleProps = {
         color: 'red',
         loading: false,
     },
-    401:{
-        withCloseButton: true,
-        title: "Your session is expired",
-        color: 'dark',
-        loading: false,
-    }
 
 }
 export { AlertStyles}
