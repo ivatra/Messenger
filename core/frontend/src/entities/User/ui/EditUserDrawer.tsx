@@ -6,10 +6,11 @@ import { EditInputsList } from "./EditInputsList";
 interface IEditUserProps {
     opened: boolean;
     closeDrawer: () => void;
+    width:string
 }
 
-const EditUserDrawer: React.FC<IEditUserProps> = ({ opened, closeDrawer }) => {
-    const mediaQueryValue = useMediaQuery("(min-width: 38rem)");
+const EditUserDrawer: React.FC<IEditUserProps> = ({ opened, closeDrawer,width }) => {
+    const mediaQueryValue = useMediaQuery(`(min-width: ${width})`);
     const [isLargeScreen, setIsLargeScreen] = React.useState<boolean | undefined>(mediaQueryValue);
 
     useEffect(() => {

@@ -4,6 +4,7 @@ interface ProveButtonProps {
     userChoice: string;
     onPass: () => void;
 }
+
 export const ProveButton: React.FC<ProveButtonProps> = ({ userChoice, onPass }) => (
     userChoice === "human" ? (
         <Button

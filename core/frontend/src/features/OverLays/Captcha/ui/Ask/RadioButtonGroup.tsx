@@ -4,6 +4,7 @@ interface RadioButtonGroupProps {
     userChoice: string;
     setUserChoice: (choice: string) => void;
 }
+
 export const RadioButtonGroup: React.FC<RadioButtonGroupProps> = ({
     userChoice, setUserChoice,
 }) => (

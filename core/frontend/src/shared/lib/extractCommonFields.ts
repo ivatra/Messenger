@@ -10,5 +10,7 @@ export function extractCommonFields<T extends object>(subject: T, subject2: obje
     }
     const subjectLength = Object.keys(subject).length;
 
-    return [commonFields, countOfItems === subjectLength];
+    const areSubjectsSame = countOfItems === subjectLength
+
+    return [commonFields, areSubjectsSame];
 }

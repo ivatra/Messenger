@@ -1,4 +1,4 @@
-import { showInternal } from "../../app/lib/api/middlewares";
+import { showInternal } from "../../app/api/lib/middlewares";
 import { IStoreFeedback } from "../types";
 
 type SetStateFunc<T> = (state: T | ((prevState: T) => T)) => void;
@@ -16,7 +16,7 @@ const handleRequest = async <T extends IStoreFeedback>(
     try {
         response = await requestFunc();
 
-        if(!response.ok) set((state) => ({ ...state, isError: true }));  // Handling common error
+        if(!response.ok) set((state) => ({ ...state, isError: true }));  // Handling common error (200,201... codes)
 
     } catch (e) {
         set((state) => ({ ...state, isError: true })); // Handling internal error
@@ -26,4 +26,5 @@ const handleRequest = async <T extends IStoreFeedback>(
     }
     return response;
 };
+
 export default handleRequest

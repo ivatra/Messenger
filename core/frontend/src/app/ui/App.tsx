@@ -1,23 +1,13 @@
-import { Notifications } from "@mantine/notifications"
-
-import StylesProvider from '../config/StylesProvider'
-import { EditUserProvider, LeftBar } from '../../widgets'
-
-import { SessionExpiredModal, Captcha } from '../../features'
+import { ChattingPage } from "../../pages/Chatting"
+import StylesProvider from "./StylesProvider"
 
 
 // @TODO: Remember on which message was user when he enters another chat
 const App = (): JSX.Element => {
     return (
         <StylesProvider>
-            <Notifications />
-            <SessionExpiredModal />
-            <Captcha />
-            <EditUserProvider>
-                <LeftBar />
-            </EditUserProvider>
+            <ChattingPage/>
         </StylesProvider>
-
     )
 }
 

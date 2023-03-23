@@ -1,7 +1,7 @@
 import { IconAlertTriangle } from "@tabler/icons-react";
-import { Button, Modal, Text, Stack, Group, Box } from "@mantine/core";
+import { Modal, Text, Stack, Group, Box } from "@mantine/core";
 import { useUserStore } from '../../../../entities';
-import { useEffect } from "react";
+import { ResignButton } from "./ResignButton";
 
 
 const modalProps = {
@@ -14,8 +14,10 @@ const modalProps = {
     zIndex: 900
 }
 
-const SessionExpiredModal: React.FC = ():JSX.Element => {
+
+const SessionExpiredModal: React.FC = (): JSX.Element => {
     const { isSessionExpired, setSessionExpired, logout } = useUserStore()
+
     const reSign = () => {
         logout()
         setSessionExpired(false)
@@ -25,7 +27,8 @@ const SessionExpiredModal: React.FC = ():JSX.Element => {
     return (
         <Modal
             opened={isSessionExpired}
-            {...modalProps}>
+            {...modalProps}
+        >
             <Stack m={'xs'}>
                 <Group noWrap spacing={'xl'} mr={'3rem'}>
                     <Box mb='0.5rem'>
@@ -36,12 +39,7 @@ const SessionExpiredModal: React.FC = ():JSX.Element => {
                         <Text>Please log in again to continue using the app.</Text>
                     </Stack>
                 </Group>
-                <Button
-                    variant='outline'
-                    sx={{ alignSelf: 'flex-end' }}
-                    onClick={reSign}>
-                    Log in
-                </Button>
+                <ResignButton resignFunc={reSign}/>
             </Stack>
         </Modal>
     );

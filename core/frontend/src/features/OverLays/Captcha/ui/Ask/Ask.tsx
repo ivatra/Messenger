@@ -1,7 +1,8 @@
-import { Group, Modal, Stack, Text } from "@mantine/core";
+import { Modal, Stack } from "@mantine/core";
 import { useState } from "react";
 import { RadioButtonGroup } from "./RadioButtonGroup";
 import { ProveButton } from "./ProveButton";
+import { AskTitle } from "./AskTitle";
 
 const modalProps = {
     centered: true,
@@ -13,16 +14,6 @@ const modalProps = {
     padding: "0.5rem",
     size: "xs",
 };
-
-const ModalTitle: React.FC = () => (
-    <Group position="apart">
-        <Modal.Title>
-            <Text size="xl">Who are you?</Text>
-        </Modal.Title>
-        <Modal.CloseButton size="md" />
-    </Group>
-);
-
 
 interface IAsk {
     setCaptcha: (value: boolean) => void;
@@ -45,12 +36,14 @@ const Ask: React.FC<IAsk> = ({ setCaptcha, passAsk }) => {
             {...modalProps}
         >
             <Stack m="md" spacing="lg">
-                <ModalTitle />
+                <AskTitle />
                 <RadioButtonGroup
                     userChoice={userChoice}
                     setUserChoice={setUserChoice}
                 />
-                <ProveButton userChoice={userChoice} onPass={onPass} />
+                <ProveButton
+                    userChoice={userChoice}
+                    onPass={onPass} />
             </Stack>
         </Modal>
     );

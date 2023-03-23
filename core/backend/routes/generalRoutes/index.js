@@ -15,7 +15,7 @@ router.use('/search', (req, res, next) => {
     const { message } = req.body
     if (message.length > 2)
         next()
-    else res.json([])
+    else res.status(200).json({message:'Deviser didnt make validation for a search'})
 }, searchRoutes)
 
 module.exports = router

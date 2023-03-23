@@ -2,7 +2,7 @@ import ky from "ky";
 import { notifications } from "@mantine/notifications";
 
 import { AlertStyles, API_URL } from "../../../shared";
-import { tokenName } from "../../../shared/consts/consts";
+import { tokenName } from "../../../shared/consts";
 import {useCaptchaStore} from "../../../features"
 import { useUserStore } from "../../../entities";
 

@@ -1,4 +1,4 @@
-import ChatsList from "./ui/ChatsList";
+import InboxesList from "./ui/InboxesList";
 
 
-export default ChatsList
+export default InboxesList

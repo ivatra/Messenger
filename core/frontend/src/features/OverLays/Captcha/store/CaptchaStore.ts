@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { ICaptcha } from "../types/Store";
 import { IStoreFeedback } from "../../../../shared";
 import { devtools } from "zustand/middleware";
-import api from "../../../../app/lib/api/api";
+import api from "../../../../app/api/api";
 import handleRequest from "../../../../shared/lib/handleRequest";
 
 const initialState = {

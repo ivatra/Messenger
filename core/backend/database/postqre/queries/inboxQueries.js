@@ -10,11 +10,14 @@ class inBoxQueries {
   async createInbox(chatId, userId) {
     return await InBox.create({ chatId: chatId, userId: userId })
   }
-
+  
+  async receiveInboxById(inboxId){
+    return await InBox.findByPk(inboxId)
+  }
   async receiveUserInboxes(userId) {
     return await InBox.findAll({
       where: { userId: userId },
-      attributes: ['id', 'countUnreadMsgs', 'isPinned'],
+      attributes: ['id', 'countUnreadMsgs', 'isPinned',],
       include: [
         {
           model: Message,
@@ -156,7 +159,8 @@ class inBoxQueries {
           chatId
         }
       })
-  }
+    }
+
 }
 
 module.exports = new inBoxQueries()
