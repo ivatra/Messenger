@@ -1,16 +1,15 @@
-import { Notifications } from "@mantine/notifications"
-import { SessionExpiredModal, Captcha } from "../../../features"
-import { EditUserProvider, LeftBar } from "../../../widgets"
+
+import { Content } from "./Content"
+import { OverLays } from "./OverLays"
 
 export const ChattingPage = (): JSX.Element => {
     return (
         <>
-            <Notifications />
-            <SessionExpiredModal />
-            <Captcha />
-            <EditUserProvider>
-                <LeftBar />
-            </EditUserProvider>
+            <OverLays />
+            <Content />
         </>
     )
 }
+
+
+

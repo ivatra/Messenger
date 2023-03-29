@@ -1,27 +1,28 @@
 import { Stack, StackProps } from "@mantine/core";
 import { SectionButtons } from "./SectionButtons";
 import { sections } from "../../types/Sections";
-import { IProfile } from "../../../../entities";
+import { IProfile, useUserStore } from "../../../../entities";
 import { FooterButtons } from "./FooterButtons";
 import { UserAvatar } from "./UserAvatar";
+import { useMediaQuery } from "@mantine/hooks";
 
 const stackProps: StackProps = {
-    justify: "space-between",
     align: "center",
+    justify: "space-between",
     p: "0.5rem",
     bg: 'dark.8',
-    py: 'sm'
+    py: 'sm',
 };
 
 interface INavigationProps {
     section: sections;
-    profile: IProfile
     setSection: (section: sections) => void;
 }
 
 
-export const NavigationBar: React.FC<INavigationProps> = ({ section, setSection, profile }) => {
-
+export const NavBar: React.FC<INavigationProps> = ({ section, setSection }) => {
+    const profile = useUserStore((state) => state.profile)
+    
     return (
         <Stack {...stackProps}>
             <UserAvatar

@@ -1,5 +1,8 @@
+import IUser from "./User"
+
 interface IChatParticipant {
     id: string
+    user:IUser
     role: 'ADMIN' | 'USER'
     isTyping: boolean
 }
@@ -9,8 +12,8 @@ interface IIndividualChat {
 }
 
 interface IGroupChat {
-    name: string | null
-    avatar: string | null
+    name: string
+    avatar: string
     countOfParticipants: number
 }
 

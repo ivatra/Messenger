@@ -1,10 +1,11 @@
 import ky from "ky";
 import { notifications } from "@mantine/notifications";
 
-import { AlertStyles, API_URL } from "../../../shared";
+import { API_URL } from "../../../shared";
 import { tokenName } from "../../../shared/consts";
-import {useCaptchaStore} from "../../../features"
+import { useCaptchaStore } from "../../../features"
 import { useUserStore } from "../../../entities";
+import { AlertStyles } from "../types/AlertStyles";
 
 export const setHeader = (request: Request) => {
     const token = localStorage.getItem('accessToken');
@@ -34,7 +35,7 @@ export const showAlertMessage = async (response: Response) => {
     });
 };
 
-export const showInternal = async() => {
+export const showInternal = async () => {
     notifications.show({
         ...AlertStyles[500],
         message: 'Could access to server. Try again later.'

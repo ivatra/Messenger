@@ -1,2 +1,5 @@
+import { useInboxStore,IInbox,Inbox } from "./InBox";
 import { useUserStore, IProfile } from "./User";
-export { useUserStore, type IProfile }
+
+export { useUserStore,Inbox, type IProfile }
+export { useInboxStore,type IInbox }

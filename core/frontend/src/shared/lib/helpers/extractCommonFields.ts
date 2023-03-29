@@ -5,7 +5,8 @@ export function extractCommonFields<T extends object>(subject: T, subject2: obje
     for (const key in subject) {
         if (key in subject2) {
             countOfItems++;
-            commonFields[key as keyof T] = (subject2 as Record<keyof T, unknown>)[key as keyof T] as T[keyof T];
+            commonFields[key as
+                 keyof T] = (subject2 as Record<keyof T, unknown>)[key as keyof T] as T[keyof T];
         }
     }
     const subjectLength = Object.keys(subject).length;

@@ -8,7 +8,8 @@ const ChatController = require('../../../controllers/chat/chatController')
 
 const checkChatRole = require('../../../middleware/checkChatRole')
 
-router.get('/',ChatController.createOrGet)
+router.get('/individual',ChatController.createOrGetIndividualChat)
+router.post('/group', ChatController.createGroupChat)
 router.get('/:chatId',ChatController.getChatContent)
 router.post('/:chatId/update',checkChatRole('ADMIN'),ChatController.update)
 router.use('/:chatId/participants',checkChatRole('ADMIN'),participantsRouter)

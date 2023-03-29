@@ -10,22 +10,52 @@ class inBoxQueries {
   async createInbox(chatId, userId) {
     return await InBox.create({ chatId: chatId, userId: userId })
   }
-  
-  async receiveInboxById(inboxId){
+
+  async receiveInboxById(inboxId) {
     return await InBox.findByPk(inboxId)
   }
-  async receiveUserInboxes(userId) {
+
+  async receivePinnedInboxes(userId) {
+    const inboxes = await InBox.findAll({
+      where: { userId: userId, isPinned: true, messageId: { [Sequelize.Op.ne]: null } },
+      attributes: ['id'],
+    });
+
+    const inboxIds = inboxes.map((inbox) => inbox.id);
+
+    return await this.receiveInboxesByIds(inboxIds, userId)
+  }
+
+  async receiveInboxes(userId, limit, offset) {
+    var { count, rows: inboxes } = await InBox.findAndCountAll({
+      where: { userId: userId, isPinned: false, messageId: { [Sequelize.Op.ne]: null } },
+      include: { model: Message, attributes: ['updatedAt'] },
+      attributes: ['id'],
+      offset: offset,
+      limit: limit,
+      order: [[{ model: Message }, 'updatedAt', 'DESC']],
+    });
+
+    const inboxIds = inboxes.map((inbox) => inbox.id);
+
+    const completedInboxes = await this.receiveInboxesByIds(inboxIds, userId)
+
+    return { inboxes: completedInboxes, count: count };
+  }
+
+  async receiveInboxesByIds(inboxes, userId) {
     return await InBox.findAll({
-      where: { userId: userId },
-      attributes: ['id', 'countUnreadMsgs', 'isPinned',],
+      where: { id: { [Sequelize.Op.in]: inboxes } },
+      attributes: ['id', 'countUnreadMsgs', 'isPinned'],
       include: [
         {
           model: Message,
-          attributes: ['id','content', 'senderId', 'createdAt']
+          as: 'message',
+          attributes: ['id', 'content', 'senderId', 'updatedAt']
         },
         {
           model: Chat,
-          attributes: ['id','type'],
+          attributes: ['id', 'type'],
           include: [
             {
               model: GroupChat,
@@ -46,24 +76,28 @@ class inBoxQueries {
               include: [
                 {
                   model: User,
-                  attributes: ['id','avatar', 'name', 'lastSeen'],
+                  attributes: ['id', 'avatar', 'name', 'lastSeen'],
                 }
               ],
-              attributes: ['id','role', 'isTyping'],
+              attributes: ['id', 'role', 'isTyping'],
             }]
         }],
-      order: [[{ model: Message }, 'createdAt', 'DESC']]
-    });
+      order: [[{ model: Message }, 'updatedAt', 'DESC']],
+    })
+
   }
 
-  async receiveUserInboxesByInboxesList(userId,inboxesIds) {
+
+
+
+  async receiveUserInboxesByInboxesList(userId, inboxesIds) {
     return await InBox.findAll({
       where: {
         id: {
           [Sequelize.Op.in]: inboxesIds
         },
-        userId:{
-          [Sequelize.Op.ne]:userId
+        userId: {
+          [Sequelize.Op.ne]: userId
         }
       },
       include: [
@@ -101,7 +135,7 @@ class inBoxQueries {
         }]
     });
   }
-  async receiveInboxesWhichSatisfyMessage(chatsWhereUserIn, plainMessage, likeMessage){
+  async receiveInboxesWhichSatisfyMessage(chatsWhereUserIn, plainMessage, likeMessage) {
     return await InBox.findAll({
       where: {
         chatId: {
@@ -150,7 +184,7 @@ class inBoxQueries {
       limit: 10,
     });
   }
-  
+
   async updateMessage(userId, chatId, messageId) {
     return await InBox.update({ messageId: messageId },
       {
@@ -159,7 +193,7 @@ class inBoxQueries {
           chatId
         }
       })
-    }
+  }
 
 }
 

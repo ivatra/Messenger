@@ -1,23 +1,25 @@
-import { Avatar, Stack, Tooltip, Text, TooltipProps } from "@mantine/core";
-import { CustomToolTip } from "../../../../shared/ui/CustomToolTip";
+import { Stack, Text } from "@mantine/core";
+import { CustomToolTip, CustomAvatar } from "../../../../shared";
+import { useRef } from "react";
 
 interface IUserAvatarProps {
     name: string
     login: string
-    avatar: string | null
+    avatar: string
 }
 
 export const UserAvatar: React.FC<IUserAvatarProps> = ({ name, login, avatar }) => {
+    const ref = useRef<HTMLDivElement>(null);
 
     const Popover =
         <Stack spacing='0.1rem' m={0}>
-            <Text size={'0.55rem'}>{name}</Text>
-            <Text size={'0.55rem'}>@{login}</Text>
+            <Text>{name}</Text>
+            <Text>@{login}</Text>
         </Stack>
 
     return (
         <CustomToolTip label={Popover}>
-            <Avatar size={"1.3rem"} radius="lg" src={avatar} />
+            <CustomAvatar size='md' avatarSrc={avatar} ref={ref} />
         </CustomToolTip>
-        );
+    );
 }

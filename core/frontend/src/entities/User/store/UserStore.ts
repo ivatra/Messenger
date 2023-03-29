@@ -3,11 +3,9 @@ import { persist } from "zustand/middleware"
 import { immer } from 'zustand/middleware/immer'
 
 import { IUserStore } from "../types/Store";
-import { IStoreFeedback } from "../../../shared"
-import handleRequest from "../../../shared/lib/handleRequest";
+import { IStoreFeedback, handleRequest, extractCommonFields } from "../../../shared"
 import { api } from "../../../app";
 import { IProfile } from "../types/Model";
-import { extractCommonFields } from "../../../shared/lib/extractCommonFields";
 
 const initialState = {
     profile: { id: '', name: '', avatar: '', login: '' },
@@ -18,7 +16,6 @@ const initialState = {
 }
 
 type StoreType = IUserStore & IStoreFeedback
-
 
 const useUserStore = create<StoreType>()(
     persist(
@@ -35,13 +32,11 @@ const useUserStore = create<StoreType>()(
                     body: formData
                 })
 
-                const response = await handleRequest(request, set);
+                const complementedProfile = await handleRequest(request, set)
 
-                if (!response || get().isError) return
- 
-                const apiResponse = await response.json()
+                if (!complementedProfile) return
 
-                const [updatedProfile, isCommon] = extractCommonFields<IProfile>(initialState.profile, apiResponse)
+                const [updatedProfile, isCommon] = extractCommonFields<IProfile>(initialState.profile, complementedProfile)
 
                 if (isCommon) set({ profile: updatedProfile as IProfile }) // I claim it's safe!
             },

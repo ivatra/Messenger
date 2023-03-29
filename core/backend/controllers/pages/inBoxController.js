@@ -2,8 +2,14 @@ const inBoxService = require('../../service/pages/inBoxService')
 
 class inBoxController {
     async getAll(req, res, next) {
-        const inbox = await inBoxService.getInbox(req.user.id)
+        const { limit, offset } = req
+        const inbox = await inBoxService.getInbox(req.user.id, limit, offset)
         return res.json(inbox)
+    }
+
+    async getPinned(req, res, next) {
+        const pinnedInboxes = await inBoxService.getPinnedInboxes(req.user.id)
+        return res.json(pinnedInboxes)
     }
 
     async pinInbox(req, res) {

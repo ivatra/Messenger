@@ -6,59 +6,68 @@ const chatQueries = require('../../database/postqre/queries/chatQueries');
 const eventsQueries = require('../../database/mongo/queries/eventsQueries');
 const inboxQueries = require('../../database/postqre/queries/inboxQueries');
 const fileService = require('../misc/fileService');
+const messageService = require('./messageService');
+const messageQueries = require('../../database/postqre/queries/messageQueries');
 
 
-async function filterChatParticipants(chat,firstUser,secondUser){
+async function filterChatParticipants(chat, firstUser, secondUser) {
   return chat
     .filter(chat => chat.participants.some(p => p.userId === firstUser))
     .filter(chat => chat.participants.some(p => p.userId === secondUser))
 }
 
 class ChatService {
-  async createChat(userId, userId2, chatType) {
-    if (chatType !== "group" && chatType !== "individual") {
-      return ApiError.badRequest("Incorrect chat type ")
+  async createIndividualChat(userId, userId2) {
+    if (!userId2) {
+      return ApiError.badRequest("Second user is absent");
     }
-    if (chatType === "individual" && !userId2)
-      return ApiError.badRequest("Second user is absent")
+    const chat = await chatQueries.createChat("individual");
+    await chatQueries.createIndividuaChat(chat.id);
+    await this.createSubTables(chat.id, userId, userId2);
 
+    return chat;
+  }
 
-    const chat = await chatQueries.createChat(chatType)
+  async createGroupChat(userId, participants, chatAvatar, chatName) {
+    if (!participants)
+      return ApiError.badRequest("Should be at least 1 participant ");
 
-    const chatModel =  chatType === "group"
-                      ? GroupChat 
-                      : IndividualChat
+    if (!chatName)
+      return ApiError.badRequest("Chat should have a name");
 
-    await chatQueries.createChatModel(chatModel, chat.id)
-
-    await this.createSubTables(chat.id, userId, userId2)
-
-    return chat
+    const chat = await chatQueries.createChat("group");
+    await chatQueries.createGroupChat(chat.id, chatAvatar, chatName);
+    await this.addParticipantToChat(chat.id, userId, false, null, 'ADMIN')
+    await participants.forEach(async (participant) => this.addParticipantToChat(chat.id, participant.id, true, userId, 'USER'))
+    await messageQueries.createMessage(chat.id, 'I have just created a chat. Hello guys!', userId)
+    return chat;
   }
 
   async createSubTables(chatId, userId, userId2) {
-    await this.addParticipantToChat(chatId, userId)
+    await this.addParticipantToChat(chatId, userId, false, null, 'ADMIN')
     await inboxQueries.createInbox(chatId, userId)
     if (userId2) {
       await inboxQueries.createInbox(chatId, userId2)
-      await this.addParticipantToChat(chatId, userId2, true)
+      await this.addParticipantToChat(chatId, userId2, true, userId, 'USER')
     }
   }
 
-  async addParticipantToChat(chatId, participantId, eventNeeded = false,invitedId = null) {
+  async addParticipantToChat(chatId, participantId, eventNeeded = false, invitedId = null, role = 'USER') {
     const groupChat = await this.checkForGroupChat(chatId)
 
     if (!groupChat)
       throw ApiError.badRequest('Individual chat cannot have additional participants.')
 
-    const [participant, created] = await chatQueries.createParticipant(chatId, participantId)
+    const [participant, created] = await chatQueries.createParticipant(chatId, participantId, role)
 
     if (!created)
       throw ApiError.badRequest(`Participant ${participantId} arleady exists in ${chatId} or chat doesn't exist`);
 
+    await inboxQueries.createInbox(chatId, participantId)
+
     if (eventNeeded) {
       await this.notifyAllUsersAboutNewParticipant(chatId, participantId)
-      await eventsQueries.createChatEvent(participantId, chatId, 'Invited', inviterId = null)
+      await eventsQueries.createChatEvent(participantId, chatId, 'Invited', invitedId, true)
     }
   }
 
@@ -69,7 +78,7 @@ class ChatService {
 
   async findChat(userId1, userId2, chatType) {
     const chats = await chatQueries.receiveChatByParticipants(userId1, userId2, chatType)
-    return filterChatParticipants(chats,userId1,userId2)
+    return filterChatParticipants(chats, userId1, userId2)
   }
 
   async updateChat(chatId, name, avatar) {
@@ -100,7 +109,7 @@ class ChatService {
     return message
   }
 
-  async destroyParticipantFromChat(chatId, participantId,destroyedId) {
+  async destroyParticipantFromChat(chatId, participantId, destroyedId) {
     const groupChat = await this.checkForGroupChat(chatId)
 
     if (!groupChat)

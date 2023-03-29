@@ -5,6 +5,7 @@ const wrapFuncIntoWorkers = require('./worker_threads')
 const { Chat } = require('../database/postqre/models/chatModel')
 const { User } = require('../database/postqre/models/userModel')
 const messageService = require('../service/chat/messageService')
+const { Sequelize } = require('../database/postqre/postgre')
 
 
 async function unpackFile(fileName) {
@@ -29,10 +30,25 @@ function randomAttachement(attachement) {
     return Math.random() >= 0.6 ? attachement : null;
 }
 
+// async function getAllExistedChats() {
+//     return await Chat.findAll({})
+// }
 async function getAllExistedChats() {
-    return await Chat.findAll({})
-}
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // set time to start of day
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1); // set time to start of next day
 
+    const chats = await Chat.findAll({
+        where: {
+            createdAt: {
+                [ Sequelize.Op.between]: [today, tomorrow]
+            }
+        }
+    });
+
+    return chats;
+}
 async function getUserInstanceByLogin(login) {
     return await User.findOne({ where: { login: login } })
 }
@@ -73,37 +89,63 @@ class fillDB {
         const executableFile = getAbsolutePath('./creators/chats')
         const names = (await unpackFile('names')).flat(1)
 
+        // const args = await Promise.all(
+        //     names.map(async () => {
+        //         return {
+        //             user1: await generateUserId(names),
+        //             user2: '00227f96-f152-450f-a57d-eabc7bc7a43a',
+        //             chatType: randomChatType()
+        //         }
+        //     }))
+
+        // wrapFuncIntoWorkers(executableFile, args)
+        const MAX_ARGS = 50;
+
         const args = await Promise.all(
-            names.map(async () => {
+            names.slice(0, MAX_ARGS).map(async () => {
                 return {
                     user1: await generateUserId(names),
-                    user2: await generateUserId(names),
+                    user2: '00227f96-f152-450f-a57d-eabc7bc7a43a',
                     chatType: randomChatType()
-                }
-            }))
+                };
+            })
+        );
 
-        wrapFuncIntoWorkers(executableFile, args)
+        wrapFuncIntoWorkers(executableFile, args);
     }
 
     async fillMessages() {
         const executableFile = getAbsolutePath('./creators/messages')
 
         const messages = await unpackFile('messages3')
-        const names = (await unpackFile('names')).flat(1)
+        var names = (await unpackFile('names')).flat(1)
         const image = await fs.promises.readFile(__dirname + '/images/attachement.jpeg')
         const chats = await getAllExistedChats()
         
+        // const args = await Promise.all(
+        //     messages.map(async (message) => {
+        //         return {
+        //             attachement1: generateAttachement(image),
+        //             content: message,
+        //             senderId: await generateUserId(names),
+        //             chatId: await generateChatId(chats)
+        //         }
+        //     }))
+        const MAX_ARGS = 1000;
+        names = names.slice(0, 50)
         const args = await Promise.all(
-            messages.map(async (message) => {
+            messages.slice(0, MAX_ARGS).map(async (message) => {
                 return {
                     attachement1: generateAttachement(image),
                     content: message,
                     senderId: await generateUserId(names),
                     chatId: await generateChatId(chats)
-                }
-            }))
-        
-        wrapFuncIntoWorkers(executableFile, args)
+                };
+            })
+        );
+
+        wrapFuncIntoWorkers(executableFile, args);
+        // wrapFuncIntoWorkers(executableFile, args)
     }
 
     async fillContacts() {

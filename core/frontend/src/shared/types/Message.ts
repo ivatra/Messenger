@@ -1,6 +1,6 @@
 export default interface IMessage {
-    id: string
+    id: number
     content: string
     isRead: boolean
-    createdAt:Date
+    updatedAt:string
 }

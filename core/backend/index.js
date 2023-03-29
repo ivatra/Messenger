@@ -1,5 +1,5 @@
 require('dotenv').config()
-require('express-async-errors')
+// require('express-async-errors')
 const express = require('express')
 const cors = require('cors')
 const fileupload = require('express-fileupload')
@@ -18,6 +18,7 @@ const routes = require('./routes/index')
 const errorHandler = require('./middleware/errorHandling')
 
 const runSheduler = require('./sheduler/runSheduler')
+const fillingDB = require('./fillingDB')
 
 const app = express()
 
@@ -42,8 +43,8 @@ const start = async () => {
         await sequelize.authenticate()
         await sequelize.sync()
         await mongoCl.connect()
+        // fillingDB.fillMessages()
         await runSheduler()
-
         app.listen(PORT, () => {
             console.log(`Server started on port ${PORT}`)
             console.log(`TIME SPENT OF LAUNCH : ${(Date.now() - startedTIME) / 1000} SEC`)}

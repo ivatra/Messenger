@@ -1,5 +1,8 @@
+import { NavigationBar, sections } from "./LeftBar";
 import { EditUserProvider } from "./LeftBar/hooks/EditUserContext";
-import { LeftBar } from "./LeftBar/ui/LeftBar";
+import { SideBar } from "./LeftBar/ui/SideBar";
 
-export { LeftBar }
+export { NavigationBar, type sections }
+
+export { SideBar }
 export { EditUserProvider }

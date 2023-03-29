@@ -26,7 +26,6 @@ export const EditInputsList = () => {
 
     useDidUpdate(() => {
         var iconOnUpdate: JSX.Element;
-        console.log(isError + 'iserror')
         if (isError) iconOnUpdate = errorIcon;
         else if (isLoading) iconOnUpdate = loaderIcon;
         else iconOnUpdate = successIcon;

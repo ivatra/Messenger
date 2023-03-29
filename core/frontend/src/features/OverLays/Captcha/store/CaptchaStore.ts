@@ -1,9 +1,8 @@
 import { create } from "zustand";
 import { ICaptcha } from "../types/Store";
-import { IStoreFeedback } from "../../../../shared";
+import { IStoreFeedback, handleRequest } from "../../../../shared";
 import { devtools } from "zustand/middleware";
 import api from "../../../../app/api/api";
-import handleRequest from "../../../../shared/lib/handleRequest";
 
 const initialState = {
     id: '',
@@ -23,13 +22,12 @@ const useCaptchaStore = create<ICaptcha & IStoreFeedback>()(devtools((set, get) 
     ...initialState,
     receiveCaptcha: async () => {
         const request = () => api.get('captcha')
-        const response = await handleRequest(request, set)
+        
+        const captcha = await handleRequest<ICaptchaResponse>(request, set)
 
-        if (!response) return
+        if (!captcha) return
 
-        const strResponse: ICaptchaResponse = await response.json()
-
-        set({ id: strResponse.id, svgData: strResponse.data })
+        set({ id: captcha.id, svgData: captcha.data })
     },
     verifyAnswer: async (answer) => {
 

@@ -1,7 +1,6 @@
 module.exports = function (req, res, next) {
-    var { limit, page } = req.body
-    page = page || 1;
+    var { limit, offset } = req.query;
     req.limit = limit || 20;
-    req.offset = page * req.limit - req.limit
-    next()
-}
+    req.offset = offset || 0
+    next();
+};

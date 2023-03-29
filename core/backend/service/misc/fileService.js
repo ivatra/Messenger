@@ -8,7 +8,7 @@ class fileService {
     async saveFile(file, fileName, dir) {
         const fileExtension = path.extname(fileName);
         const generatedFileName = uuid.v4() + fileExtension
-        file.mv(path.resolve(__dirname, '../../', 'static/' + dir, generatedFileName))
+        file.mv(path.resolve(__dirname, '../../', 'static', generatedFileName))
         return generatedFileName
     }
 

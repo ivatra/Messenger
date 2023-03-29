@@ -7,15 +7,20 @@ class chatQueries {
         return await Chat.create({ type: chatType })
     }
 
-    async createChatModel(chatModel, chatId) {
-        return await chatModel.create({ chatId: chatId })
+    async createIndividuaChat(chatId) {
+        return await IndividualChat.create({ chatId: chatId })
     }
 
-    async createParticipant(chatId, participantId) {
+    async createGroupChat(chatId, avatar = 'bdb4cfb7-1d28-4aa3-93f5-36c3402c54c8.jpg', name) {
+        return await GroupChat.create({ chatId: chatId, avatar: avatar, name: name })
+    }
+
+    async createParticipant(chatId, participantId,role) {
         return await ChatParticipant.findOrCreate({
             where: {
                 chatId: chatId,
-                userId: participantId
+                userId: participantId,
+                role:role
             }
         });
     }

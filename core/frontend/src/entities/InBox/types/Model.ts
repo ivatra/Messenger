@@ -1,8 +1,8 @@
 import { IMessage, IChat } from "../../../shared"
 
 export interface IInbox {
-    id: string
-    countUnreadMsgs: number
+    id: number
+    countOfUnreadMsgs: number
     isPinned: boolean
     message: IMessage
     chat: IChat

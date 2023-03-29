@@ -1,9 +1,17 @@
 import { IMessage } from "../../../shared";
 import { IInbox } from "./Model";
 
-export interface IInboxStore{
-    inboxes:IInbox[]
-    pin: () => void
-    receive:() => void
-    updateMessage:(message:IMessage) => void
+interface IReceiveParams {
+    page: number
+    limit: number
+}
+
+export interface IInboxStore {
+    pinnedInboxes:IInbox[]
+    inboxes: IInbox[]
+    inboxesTotalCount: number
+    pin: (id: number) => void
+    receive: ({ page, limit}: IReceiveParams) => void
+    receivePinned:() => void
+    updateMessage: (message: IMessage, inboxId: number) => void
 }
