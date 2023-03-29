@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Paper, PaperProps } from "@mantine/core";
 
 import { sections } from "../types/Sections";
@@ -14,8 +13,7 @@ const paperProps: PaperProps = {
     },
     shadow: "sm",
     style: {
-        borderColor: '',
-        height: "100vh",
+        height:'100%',
         overflow: "hidden",
     },
 };

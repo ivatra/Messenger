@@ -29,7 +29,7 @@ export const SectionContent: React.FC<IContentProps> = ({ section }) => {
     ))
 
     return (
-        <Stack {...stackProps}>
+        <Stack {...stackProps} h={'100%'}>
             <Search area={section} />
             {Sections}
         </Stack>

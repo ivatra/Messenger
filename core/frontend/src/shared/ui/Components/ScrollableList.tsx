@@ -1,11 +1,12 @@
 import { ScrollArea, ScrollAreaProps, Stack } from "@mantine/core";
 import { useRef, useState } from "react";
-import { ScrollShevron } from "../../../../shared";
+import { ScrollShevron } from "../..";
 
 const scrollAreaProps: ScrollAreaProps = {
     scrollHideDelay: 300,
     type: "scroll",
-    w:'100%',
+    w: '100%',
+    h:'100%',
     scrollbarSize: 7,
     styles: {
         scrollbar: {
@@ -14,14 +15,14 @@ const scrollAreaProps: ScrollAreaProps = {
     },
 };
 
-interface SectionListProps {
+interface ScrollableListProps {
     isLoading: boolean;
     Skeleton: () => JSX.Element;
     EntitiesList: JSX.Element[] | JSX.Element;
 }
 
 
-const SectionList: React.FC<SectionListProps> = ({
+const ScrollableList: React.FC<ScrollableListProps> = ({
     isLoading,
     Skeleton,
     EntitiesList,
@@ -34,7 +35,7 @@ const SectionList: React.FC<SectionListProps> = ({
         viewport.current?.scrollTo({ top: 0, behavior: "smooth" });
 
 
-    const manageShevronVisibility = (position: {x: number;y: number;}) => {
+    const manageShevronVisibility = (position: { x: number; y: number; }) => {
         if (!viewport.current) return;
 
         if (position.y >= viewport.current.scrollHeight / 4) setVisible(true);
@@ -42,7 +43,7 @@ const SectionList: React.FC<SectionListProps> = ({
     };
 
 
-    const SkeletonList = [...Array(10)].map((_, index) => (
+    const SkeletonList = [...Array(15)].map((_, index) => (
         <Skeleton key={index} />
     ));
 
@@ -65,4 +66,4 @@ const SectionList: React.FC<SectionListProps> = ({
     );
 };
 
-export default SectionList;
+export default ScrollableList;

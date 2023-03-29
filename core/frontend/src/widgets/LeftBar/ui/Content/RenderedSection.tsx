@@ -12,9 +12,8 @@ export const RenderedSection: React.FC<RenderedSectionProps> = ({ component: Com
             setShouldRender(true);
         }
     }, [visible]);
-
     return (
-        <div style={{ display: visible ? "flex" : "none", height: "100%" }}>
+        <div style={{ display: visible ? "flex" : "none" }}>
             {shouldRender && <Component />}
         </div>
     );
