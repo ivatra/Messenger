@@ -1,6 +1,7 @@
 import { TextInput, TextInputProps } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
-import { sections } from "../../../../widgets/LeftBar/types/Sections";
+
+import { sections } from "../../../../widgets";
 
 
 interface ISearchProps {

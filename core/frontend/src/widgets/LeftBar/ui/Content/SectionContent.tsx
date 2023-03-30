@@ -1,5 +1,6 @@
 import React from "react";
 import { Stack, StackProps } from "@mantine/core";
+
 import { Search } from "../../../../features/NavBar/Search/ui/Search";
 import { ContactsList, NotificationsList } from "../../mixtures/Lists";
 import { sections } from "../../types/Sections";
@@ -17,7 +18,6 @@ interface IContentProps {
 }
 
 const stackProps: StackProps = {
-    w: "100%",
     spacing: 0,
     align: "stretch",
 };
@@ -29,7 +29,7 @@ export const SectionContent: React.FC<IContentProps> = ({ section }) => {
     ))
 
     return (
-        <Stack {...stackProps} h={'100%'}>
+        <Stack {...stackProps}>
             <Search area={section} />
             {Sections}
         </Stack>

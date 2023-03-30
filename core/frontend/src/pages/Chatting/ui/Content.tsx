@@ -1,9 +1,9 @@
 import { useState } from "react";
 
 import { AppShell, AppShellProps } from "@mantine/core"
+import { useMediaQuery } from "@mantine/hooks";
 
 import { SideBar, MobileNavBar, DesktopNavBar, sections, EditUserProvider } from "../../../widgets"
-import { useMediaQuery } from "@mantine/hooks";
 
 
 export const Content = () => {
@@ -17,8 +17,8 @@ export const Content = () => {
 
     const appShellProps:Omit<AppShellProps,'children'> = {
         padding: 0,
-        style: { overflow: 'hidden' },
-        navbar: isDesktop ? <DesktopNavBar {...navBarProps} /> : <></>,
+        style:{overflow:'hidden'},
+        navbar: !isDesktop ? <DesktopNavBar {...navBarProps} /> : <></>,
         footer: !isDesktop ? <MobileNavBar {...navBarProps} /> : <></>
     }
 

@@ -1,22 +1,24 @@
 import { Paper } from "@mantine/core";
+import { useMergedRef } from "@mantine/hooks";
+
 import { useInboxStore } from "../../../../entities";
-import { InboxSkeleton } from "../../../../shared";
-import ScrollableList from "../../../../shared/ui/Components/ScrollableList";
+import { InboxSkeleton, ScrollableList } from "../../../../shared";
+
 import { useInboxesList } from "../hooks/useInboxesList";
 import useInboxesPagination from "../hooks/useInboxesPagination";
-import { useMergedRef } from "@mantine/hooks";
+
 
 export const InboxesList = () => {
     const { containerRef, observerRef, sizeRef } = useInboxesPagination()
 
     const mergedRef = useMergedRef(sizeRef, containerRef)
 
-    const { isLoading } = useInboxStore();
+    const isLoading = useInboxStore(state => state.isLoading);
 
     const inboxesList = useInboxesList({ ref: observerRef })
 
     return (
-        <Paper display='flex' w='100%' ref={mergedRef}>
+        <Paper ref={mergedRef}>
             <ScrollableList
                 EntitiesList={inboxesList}
                 Skeleton={InboxSkeleton}

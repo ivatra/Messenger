@@ -17,7 +17,7 @@ const initialState = {
 
 type StoreType = IUserStore & IStoreFeedback
 
-const useUserStore = create<StoreType>()(
+export const useUserStore = create<StoreType>()(
     persist(
         immer((set, get) => ({
             ...initialState,
@@ -57,4 +57,3 @@ const useUserStore = create<StoreType>()(
         })
     }))
 
-export default useUserStore

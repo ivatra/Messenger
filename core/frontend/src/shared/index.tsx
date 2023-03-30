@@ -1,3 +1,4 @@
+export { ScrollableList } from "./ui/Components/ScrollableList";
 export { usePaginationLimit } from "./lib/hooks/usePaginationLimit";
 export { API_URL, appFontUrl, tokenName, IMAGES_URL } from "./consts";
 export type { IChat, IUser, IMessage, IStoreFeedback } from "./types";

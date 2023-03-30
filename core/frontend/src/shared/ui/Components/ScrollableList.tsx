@@ -4,9 +4,8 @@ import { ScrollShevron } from "../..";
 
 const scrollAreaProps: ScrollAreaProps = {
     scrollHideDelay: 300,
-    type: "scroll",
+    type: "always",
     w: '100%',
-    h:'100%',
     scrollbarSize: 7,
     styles: {
         scrollbar: {
@@ -22,7 +21,7 @@ interface ScrollableListProps {
 }
 
 
-const ScrollableList: React.FC<ScrollableListProps> = ({
+export const ScrollableList: React.FC<ScrollableListProps> = ({
     isLoading,
     Skeleton,
     EntitiesList,
@@ -66,4 +65,3 @@ const ScrollableList: React.FC<ScrollableListProps> = ({
     );
 };
 
-export default ScrollableList;

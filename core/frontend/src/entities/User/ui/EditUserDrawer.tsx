@@ -8,7 +8,7 @@ interface IEditUserProps {
     closeDrawer: () => void;
 }
 
-const EditUserDrawer: React.FC<IEditUserProps> = ({ opened, closeDrawer }) => {
+export const EditUserDrawer: React.FC<IEditUserProps> = ({ opened, closeDrawer }) => {
     const mediaQueryValue = useMediaQuery(`(min-width: 46rem)`);
     const [isLargeScreen, setIsLargeScreen] = React.useState<boolean | undefined>(mediaQueryValue);
     useEffect(() => {
@@ -38,5 +38,3 @@ const EditUserDrawer: React.FC<IEditUserProps> = ({ opened, closeDrawer }) => {
         </>
     );
 };
-
-export default EditUserDrawer;
