@@ -47,7 +47,7 @@ class messageQueries {
             },
             include: {
                 model: Attachement,
-                attributes: ['id','type', 'url']
+                attributes: ['id', 'type', 'url']
             },
             limit: limit,
             offset: offset,
@@ -57,7 +57,7 @@ class messageQueries {
     }
     async receiveMessagesIdsThatSatisfyMessage(chatsWhereUserIn, likeMessage, plainMessage) {
         return await Message.findAll({
-            attributes: ["id"],
+            attributes: ["id", 'chatId'],
             where: {
                 chatId: {
                     [Sequelize.Op.in]: chatsWhereUserIn //

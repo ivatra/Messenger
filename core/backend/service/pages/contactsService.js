@@ -3,21 +3,34 @@ const userQueries = require('../../database/postqre/queries/userQueries');
 const ApiError = require('../../error/ApiError');
 
 class contactsService {
-  async getContacts(userId, status) {
-    const contacts = await contactsQueries.receiveContactsByUser(userId, status)
+  async getContacts(userId, status, offset, limit) {
+    status = status === 'all' ? undefined : status
+
+    const { contacts, count } = await contactsQueries.receiveContactsAndCountByUser(userId, status, limit, offset)
+
     const contactsInfo = await this.fetchContactsInfo(contacts, userId)
 
-    const contactsInfoWithStatus = contactsInfo.map(contact => {
-      const contactWithStatus = { ...contact.dataValues };
-      const matchingContact = contacts.find(c => c.dataValues.recipientId === contactWithStatus.id ||
-        c.dataValues.senderId === contactWithStatus.id);
-      if (matchingContact) {
-        contactWithStatus.status = matchingContact.dataValues.status;
-      }
-      return contactWithStatus;
-    });
 
-    return contactsInfoWithStatus
+    const newContacts = []
+    contactsInfo.forEach((contact, index) => {
+      const status = contacts[index].dataValues.status
+      const recipient = contacts[index].dataValues.recipientId
+      const sender = contacts[index].dataValues.senderId
+      const contactId = contact.dataValues.id
+
+      if (contactId === sender || contactId === recipient) {
+        if (sender !== userId && status === 'pending') {
+          var merged = { ...contact.dataValues, status: 'outgoing' }
+        } else {
+          var merged = { ...contact.dataValues, status: status }
+        }
+        newContacts.push(merged)
+      }
+
+
+    })
+
+    return { data: newContacts, count }
   }
 
   async getContact(userId) {
@@ -43,21 +56,17 @@ class contactsService {
     if (!isPending)
       throw ApiError.badRequest(`Contact ${userId} and ${contactId} has reviewed status`)
 
-    const isUpdated = await contactsQueries.updateContactStatus(userId, contactId, status) !== [0]
+    const contact = await contactsQueries.updateContactStatus(userId, contactId, status)
 
-    return isUpdated ?
-      `Contact ${contactId} ${status}` :
-      `Something went wrong with changing ${contactId} status`
+    return contact
   }
 
   async removeContact(senderId, recipientId) {
     await this.checkForContact(senderId, recipientId, true)
 
-    const isDestroyed = await contactsQueries.destroyContact(senderId, recipientId) !== [0]
+    const contact = await contactsQueries.destroyContact(senderId, recipientId)
 
-    return isDestroyed ?
-      `contact ${recipientId} removed` :
-      `Something went wrong with removing ${recipientId}`
+    return contact
 
   }
 
@@ -71,7 +80,6 @@ class contactsService {
 
   async checkForContact(userId, contactId, contactNeeded) {
     const contactExists = await this.isContactExists(userId, contactId)
-
     if (!contactExists && contactNeeded)
       throw ApiError.badRequest(`Contact ${contactId} doesn't exist`)
 
@@ -80,8 +88,7 @@ class contactsService {
   }
 
   async isContactExists(senderId, recipientId) {
-    const contact = await contactsQueries.receiveContact(senderId, recipientId)
-    return contact !== null;
+    return await contactsQueries.receiveContact(senderId, recipientId)
   }
 
   async checkRewievedContactStatus(userId, contactId) {

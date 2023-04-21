@@ -51,7 +51,7 @@ class inBoxQueries {
         {
           model: Message,
           as: 'message',
-          attributes: ['id', 'content', 'senderId', 'updatedAt']
+          attributes: ['id', 'content', 'senderId', 'updatedAt', 'isRead']
         },
         {
           model: Chat,
@@ -86,9 +86,6 @@ class inBoxQueries {
     })
 
   }
-
-
-
 
   async receiveUserInboxesByInboxesList(userId, inboxesIds) {
     return await InBox.findAll({

@@ -18,7 +18,7 @@ class attachementsQueries {
             },
             limit: limit,
             offset: offset,
-            attributes: ['id', 'content','createdAt', 'senderId','isRead']
+            attributes: ['id', 'content', 'updatedAt', 'senderId', 'isRead', 'chatId']
         })
     }
 
@@ -30,9 +30,9 @@ class attachementsQueries {
             },
             include: {
                 model: Attachement,
-                attributes: ['type', 'url']
+                attributes: ['id', 'type', 'url']
             },
-            attributes: ['id', 'content', 'createdAt', 'senderId'],
+            attributes: ['id', 'content', 'updatedAt', 'senderId'],
         })
     }
 

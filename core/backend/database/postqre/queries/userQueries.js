@@ -9,7 +9,7 @@ class userQueries {
     async create(login, email, hashPassword, name, avatar) {
         return await User.create({ login, name, avatar: avatar, email, password: hashPassword })
     }
-    async createUserVector(userId,name,login){
+    async createUserVector(userId, name, login) {
         return await UserVector.create({ userId: userId, name, login });
 
     }
@@ -17,7 +17,7 @@ class userQueries {
         return await User.findOne(
             {
                 where: { id: userId },
-                attributes: ['id', 'name', 'login','avatar', 'isActive', 'lastSeen'],
+                attributes: ['id', 'name', 'login', 'avatar', 'isActive', 'lastSeen'],
             })
     }
     async receiveUserServiceInfoById(userId) {
@@ -50,27 +50,31 @@ class userQueries {
             }
         });
     }
-    async receiveUsersWhichSatisfyCriteria(likeMessage, plainMessage) {
-        return await User.findAll({
-            attributes: ['id', 'name', 'avatar', 'login','isActive', 'lastSeen'],
+    async receiveUsersWhichSatisfyCriteria(likeMessage, plainMessage, limit, offset) {
+        const whereClause = {
+            [Sequelize.Op.or]: [
+                {
+                    nameCopy: {
+                        [Sequelize.Op.like]: likeMessage
+                    }
+                },
+                {
+                    loginCopy: {
+                        [Sequelize.Op.like]: likeMessage
+                    }
+                }
+            ]
+        }
+
+        const users = await User.findAll({
+            attributes: ['id', 'name', 'avatar', 'login', 'isActive', 'lastSeen'],
+            limit: limit,
+            offset: offset,
             include:
             {
                 model: UserVector,
                 attributes: [],
-                where: {
-                    [Sequelize.Op.or]: [
-                        {
-                            nameCopy: {
-                                [Sequelize.Op.like]: likeMessage
-                            }
-                        },
-                        {
-                            loginCopy: {
-                                [Sequelize.Op.like]: likeMessage
-                            }
-                        }
-                    ]
-                }
+                where: whereClause
             },
             order: [
                 [
@@ -85,6 +89,18 @@ class userQueries {
                 ],
             ],
         })
+
+        const count = await User.count({
+            limit: limit,
+            offset: offset,
+            include:
+            {
+                model: UserVector,
+                attributes: [],
+                where: whereClause
+            },
+        })
+        return { users, count }
     }
 
     async updateUserActivity(userId, isActive) {
@@ -103,17 +119,17 @@ class userQueries {
         return await user.update(fields)
     }
 
-    
-    async updateUserVector(userId,name,login){
+
+    async updateUserVector(userId, name, login) {
         await UserVector.update({ nameCopy: name, loginCopy: login }, {
             where: {
                 userId: userId
             }
         })
     }
-    
-    async destroyUser(user){
-        return await user.destroy({cascade:true,truncate:true})
+
+    async destroyUser(user) {
+        return await user.destroy({ cascade: true, truncate: true })
     }
 
     async incrementUserRequestCount(userId) {
