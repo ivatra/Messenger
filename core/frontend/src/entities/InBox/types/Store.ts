@@ -1,5 +1,4 @@
 import { IMessage } from "../../../shared";
-import { IInbox } from "./Model";
 
 interface IReceiveParams {
     page: number
