@@ -12,6 +12,7 @@ const paperProps: PaperProps = {
         [`${DESKTOP_WIDTH}`]: '35%',
     },
     shadow: "sm",
+    h:'100%',
     pos: 'sticky',
 };
 

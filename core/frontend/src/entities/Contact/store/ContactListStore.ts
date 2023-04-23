@@ -1,13 +1,12 @@
 import { create } from 'zustand';
 
 import { IContactInteractions, IContactListStore } from '../types/Store';
-import { IReceiveContactsResponse, ISearchContactsResponse } from '../types/ApiResponse';
+import { IReceiveContactsResponse } from '../types/ApiResponse';
 
 import { api } from '../../../app';
 import { IStoreFeedback, handleRequest } from '../../../shared';
-import { removeDublicates } from '../helpers/removeDublicates';
-import { ISearchedContact } from '../types/Model';
-import { sortSearchedContacts } from '../helpers/sortSearchedContacts';
+import { sortByIsContact } from '../helpers/sortSearchedContacts';
+import { updateContactList } from '../helpers/mutateContactList';
 
 const baseUrl = 'content/pages/contacts';
 
@@ -30,82 +29,99 @@ export type StoreType = IContactListStore & IStoreFeedback;
 
 export const useContactListStore = create<StoreType>((set, get) => ({
     ...initialState,
-    receiveContacts: async (limit) => {
+    receiveContacts: async (limit) => { // Can be a bug with duplicating data(User adds a new contact, and the same contact can be received from API , Can be solved in request to database (ranking by date))
         const { contacts } = get();
+
         const offset = contacts.length
 
-        const request = () => api.get(`${baseUrl}/?limit=${limit}&offset=${offset}`);
+        const request = () => api.get(`${baseUrl}/?limit=${limit}&offset=${contacts.length}`); 
 
         const response = await handleRequest<IReceiveContactsResponse>(request, set);
 
         if (!response || get().isError) return;
 
-
-        const newOffset = offset + limit
+        const unionContacts = [...contacts, ...response.data]
 
         set(({
-            contacts: [...contacts, ...response.data],
-            contactsHasMore:newOffset < response.count
+            contacts: unionContacts,
+            contactsHasMore: offset + limit < response.count
         }));
+
+
     },
+
     searchContacts: async (limit) => {
         const { searchedContacts, searchTerm } = get();
+
         const offset = searchedContacts.length
 
         const request = () => api.get(`content/search/contacts/?message=${searchTerm}&limit=${limit}&offset=${offset}`);
 
-        const response = await handleRequest<ISearchContactsResponse>(request, set);
+        const response = await handleRequest<IReceiveContactsResponse>(request, set);
 
         if (!response || get().isError) return;
 
-        const filteredContacts = removeDublicates(response.data,searchedContacts) //Very bad search alhoritm
+        const SetContacts = new Set([...response.data, ...searchedContacts])
+        const filteredContacts = Array.from(SetContacts)
 
-        const sortedContacts = sortSearchedContacts(filteredContacts)
-
-        const newOffset = offset + limit;
+        const sortedContacts = sortByIsContact(filteredContacts)
 
         set({
             searchedContacts: sortedContacts,
-            searchHasMore: newOffset < response.count
+            searchHasMore: offset + limit < response.count
         });
+
     },
-    filterContacts: () => {
-        const {
-            searchTerm,
-            filter,
-            searchedContacts,
-            contacts,
-            setVisibleContacts
-        } = get();
 
-        if (filter === "all") new Error('Contact filter is all but it filter function has called'); // Something went wrong
+    updateVisibleContacts: (contactsList) => {
+        const { filter, setVisibleContacts } = get()
 
-        const filteredContacts = searchTerm
-            ? searchedContacts.filter((contact) => contact.status === filter)
-            : contacts.filter((contact) => contact.status === filter);
+        if (filter !== 'all') {
+            const filteredContacts = contactsList.filter((contact) => contact.status === filter)
+            setVisibleContacts(filteredContacts)
+        } else {
+            setVisibleContacts(contactsList)
+        }
 
-        setVisibleContacts(filteredContacts);
     },
+
     pushContact: (contact) => {
-        set((state) => ({ contacts: [...state.contacts, contact] }))
+        const { contacts,searchedContacts,searchTerm} = get()
+
+        if(contacts.includes(contact)) return
+        
+        set({contacts: [...contacts, contact]})
+
+        if(searchTerm){
+            const updatedSearched = updateContactList(searchedContacts, contact.id, 'outgoing')
+            set({ searchedContacts: updatedSearched })
+        }
     },
+
     updateContactStatus: (contactId, status) => {
-        const {contacts} = get()
+        const { contacts, searchedContacts, searchTerm } = get()
 
-        const updatedContacts = contacts.map((contact) =>
-            contact.id === contactId ? { ...contact, status } : contact
-        );
+        var newContacts
 
-        set({ contacts: updatedContacts });
+        if (searchTerm) {
+            newContacts = updateContactList(searchedContacts, contactId, status)
+            set({ searchedContacts: newContacts })
+        } else {
+            newContacts = updateContactList(contacts, contactId, status)
+            set({ contacts: newContacts });
+        }
     },
     removeContact: (contactId) => {
-        const { contacts } = get()
+        const { contacts, searchTerm, searchedContacts } = get()
+
 
         const filteredContacts = contacts.filter((contact) => contact.id !== contactId)
-
-        if (filteredContacts.length === contacts.length) return // This contact did not exist
-
         set({ contacts: filteredContacts })
+
+        if (searchTerm) {
+            const updatedSearched = updateContactList(searchedContacts, contactId, null)
+            set({ searchedContacts: updatedSearched })
+        }
     },
     setSearchTerm: (searchTerm) => set({ searchTerm }),
 

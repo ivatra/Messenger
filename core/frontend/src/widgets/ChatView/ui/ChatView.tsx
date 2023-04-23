@@ -14,6 +14,7 @@ interface IChatViewProps {
 //Atachement view overlay
 //Attachements view overlay
 //Chat info overlay
+// Do not forget about isTyping events
 
 export const ChatView = () => {
     const { chatId } = useParams()

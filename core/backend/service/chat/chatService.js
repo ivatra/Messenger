@@ -53,10 +53,10 @@ class ChatService {
   }
 
   async addParticipantToChat(chatId, participantId, eventNeeded = false, invitedId = null, role = 'USER') {
-    const groupChat = await this.checkForGroupChat(chatId)
+    // const groupChat = await this.checkForGroupChat(chatId)
 
-    if (!groupChat)
-      throw ApiError.badRequest('Individual chat cannot have additional participants.')
+    // if (!groupChat)
+    //   throw ApiError.badRequest('Individual chat cannot have additional participants.')
 
     const [participant, created] = await chatQueries.createParticipant(chatId, participantId, role)
 

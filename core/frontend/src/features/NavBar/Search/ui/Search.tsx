@@ -21,5 +21,3 @@ export const Search: React.FC<ISearchProps> = ({ area }) => {
         <TextInput {...textInputProps} />
     );
 };
-
-// @TODO: FIX SEARCH

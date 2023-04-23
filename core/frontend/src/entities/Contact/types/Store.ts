@@ -1,11 +1,11 @@
-import { IContact, IContactStatus, ISearchedContact } from "./Model";
+import { IContact, IContactStatus} from "./Model";
 
 
 export type IContactInteractions = 'all' | 'accepted' | 'pending' | 'outgoing'
 
 export interface IContactListStore {
     contacts: IContact[];
-    searchedContacts: ISearchedContact[];
+    searchedContacts: IContact[];
     visibleContacts: IContact[];
 
     filter: IContactInteractions;
@@ -16,7 +16,7 @@ export interface IContactListStore {
 
     receiveContacts: (limit:number) => void;
     searchContacts: (limit:number) => void;
-    filterContacts: () => void;
+    updateVisibleContacts:(list:IContact[] | IContact[]) => void
 
     pushContact: (contact: IContact) => void;
     updateContactStatus: (contactId: string, status: IContactStatus) => void

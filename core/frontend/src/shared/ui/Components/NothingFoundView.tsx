@@ -8,8 +8,8 @@ interface NothingFoundTextProps {
 const textProps: TextProps = {
     display: 'flex',
     style: {
-        justifyContent: "center",
-        alignItems: "center",
+        justifySelf: "center",
+        alignSelf: "center",
     },
     h: "100%",
 }

@@ -1,4 +1,4 @@
-import { IMessage, IChat } from "../../../shared"
+import { IChat, IMessage } from "../../../shared"
 
 export interface IInbox {
     id: number

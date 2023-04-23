@@ -14,10 +14,10 @@ export type StoreType = IContactInteractionsStore & IStoreFeedback;
 const initialState = {
     isLoading: false,
     isError: false,
-    receivedContact:undefined,
+    receivedContact: undefined,
 
-    contactModalisOpened:false,
-    currentContact:undefined
+    contactModalisOpened: false,
+    currentContact: undefined
 }
 
 export const useContactInteractionStore = create<StoreType>((set, get) => ({
@@ -30,13 +30,15 @@ export const useContactInteractionStore = create<StoreType>((set, get) => ({
         const response = await handleRequest<IContact>(request, set);
 
         if (!response || get().isError || !currentContact) return;
-        
-        pushContact(response)
 
-        set({currentContact:{ ...currentContact, status: 'outgoing' }})
+        const updatedContact = { ...currentContact, status: 'outgoing' } as IContact
+
+        set({ currentContact: updatedContact })
+        pushContact(updatedContact)
+        
     },
     acceptContact: async (contactId) => {
-        const {updateContactStatus} = useContactListStore.getState()
+        const { updateContactStatus } = useContactListStore.getState()
         const { currentContact } = get()
 
         const request = () => api.put(`${baseUrl}/${contactId}/update?status=accepted`);
@@ -44,35 +46,37 @@ export const useContactInteractionStore = create<StoreType>((set, get) => ({
 
         if (!response || get().isError || !currentContact) return;
 
-        updateContactStatus(response.id,response.status)
+        const updatedContact = { ...currentContact, status: 'accepted' } as IContact
 
-        set({ currentContact: { ...currentContact, status: 'accepted' } })
+        set({ currentContact: updatedContact })
+        updateContactStatus(contactId, 'accepted')
     },
     removeContact: async (contactId) => {
         const { removeContact } = useContactListStore.getState()
-        const {currentContact} = get()
+        const { currentContact } = get()
 
         const request = () => api.delete(`${baseUrl}/${contactId}/remove`);
-
         const response = await handleRequest<IContact>(request, set);
 
         if (!response || get().isError || !currentContact) return;
 
-        removeContact(contactId)
+        
+        const updatedContact = {...currentContact,status:null} as IContact
 
-        set({ currentContact: { ...currentContact, status: null } })
+        set({ currentContact: updatedContact })
+        removeContact(contactId)
     },
     receiveContactById: async (id: string) => {
         const response = await handleRequest<IContact>(() => api.get(`${baseUrl}/${id}`), set);
 
         if (!response || get().isError) return;
 
-       set({receivedContact:response})
+        set({ receivedContact: response })
     },
-    openContactModal:(contact) =>{
-        set({currentContact:contact,contactModalisOpened:true})
+    openContactModal: (contact) => {
+        set({ currentContact: contact, contactModalisOpened: true })
     },
-    closeContactModal:()=>{
-        set({currentContact:undefined,contactModalisOpened:false})
+    closeContactModal: () => {
+        set({ currentContact: undefined, contactModalisOpened: false })
     }
 }));

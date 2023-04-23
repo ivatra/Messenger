@@ -7,7 +7,3 @@ export interface IContact extends IUser {
     id: string
     status: IContactStatus
 }
-
-export interface ISearchedContact extends IContact {
-    isContact: boolean
-}

@@ -40,10 +40,11 @@ export const useContactsLoading = (
             if (searchTerm && searchHasMore) searchContacts(limit);
             else if (!searchTerm && contactsHasMore) receiveContacts(limit);
         }
+        
     }, [scrollPosition]);
 
     useDidUpdate(() => {
-        const isTooFewFiltered = filter !== 'all' && visibleContacts.length < limit
+        const isTooFewFiltered = filter !== 'all' && visibleContacts.length < limit 
 
         if (isTooFewFiltered && !isLoading) {
             if (searchTerm && searchHasMore) searchContacts(limit);

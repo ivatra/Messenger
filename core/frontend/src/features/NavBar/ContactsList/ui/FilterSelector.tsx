@@ -1,7 +1,5 @@
 import { NativeSelect } from "@mantine/core";
-import { useState } from "react";
 import { IContactInteractions, useContactListStore } from "../../../../entities";
-import { useDidUpdate } from "@mantine/hooks";
 
 
 interface IFilterData {
@@ -20,8 +18,7 @@ export const FilterSelector: React.FC = () => {
     const {
         filter,
         setFilter,
-        setVisibleContacts,
-        filterContacts,
+        updateVisibleContacts,
         searchTerm,
         contacts,
         searchedContacts 
@@ -29,13 +26,12 @@ export const FilterSelector: React.FC = () => {
 
     const handleFilter = (value: string) => {
         setFilter(value as IContactInteractions)
-        if (value !== 'all') filterContacts()
-        else {
-            const actualContacts = searchTerm
-                ? searchedContacts
-                : contacts
-            setVisibleContacts(actualContacts)
-        }
+
+        const currentList = searchTerm
+            ? searchedContacts
+            : contacts
+
+        updateVisibleContacts(currentList)
     }
 
     return (

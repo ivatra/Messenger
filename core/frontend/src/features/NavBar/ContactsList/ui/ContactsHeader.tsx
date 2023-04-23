@@ -18,7 +18,7 @@ export const ContactsListHeader:React.FC<IHeaderProps> = ({limit}) => {
 
         contacts,
 
-        searchContacts, } = useContactListStore()
+        searchContacts } = useContactListStore()
 
     const handleSearch = (searchTerm: string) => {
         resetSearch()
@@ -28,7 +28,7 @@ export const ContactsListHeader:React.FC<IHeaderProps> = ({limit}) => {
         else setVisibleContacts(contacts)
     }
     return (
-        <Group noWrap spacing={"0px"} mb={0}>
+        <Group noWrap spacing="0px" mb={0}>
             <Search value={searchTerm} setValue={handleSearch} placeHolder="Write something..." />
             <FilterSelector />
         </Group>

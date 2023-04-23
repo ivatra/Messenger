@@ -15,7 +15,7 @@ import { ContactsBody } from "./ContactsBody";
 const averageContactSize = 40
 
 
-const contact:IContact = {
+const contact: IContact = {
     id: "669b0195-f0a1-4c60-b040-8bb5d9b4be32",
     name: "Mandi",
     avatar: "defaultImage.jpg",
@@ -27,21 +27,20 @@ const contact:IContact = {
 
 export const ContactsList = (): JSX.Element => {
     const [scrollPosition, onScrollPositionChange] = useState({ x: 0, y: 0 });
-   
+
     const { limit, sizeRef } = useDynamicLimit({ subjectSize: averageContactSize })
 
     const scrollViewPort = useScrollOnTabSwitch()
 
-    useContactsLoading(scrollViewPort, scrollPosition.y,limit)
+    useContactsLoading(scrollViewPort, scrollPosition.y, limit)
 
     useManageVisibleContacts()
 
     return (
-        <Paper display='flex' ref={sizeRef} h='100%' w='100%' >
-            <Stack spacing={0} w={"100%"}>
-                <ContactsListHeader limit={limit}/>
-                <ContactsBody onScrollPositionChange={onScrollPositionChange} scrollRef={scrollViewPort}/>
-                {/* <ContactTab contact={contact}/> */}
+        <Paper display='flex' ref={sizeRef} h='100%' w='100%'>
+            <Stack spacing={0} w="100%" display='flex' >
+                <ContactsListHeader limit={limit} />
+                <ContactsBody onScrollPositionChange={onScrollPositionChange} scrollRef={scrollViewPort} />
             </Stack>
         </Paper >
     );

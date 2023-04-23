@@ -1,11 +1,12 @@
-import { ISearchedContact } from "../types/Model"
+import { IContact } from "../types/Model";
 
 
-export function sortSearchedContacts(list:ISearchedContact[]){
+
+export function sortByIsContact(list:IContact[]){
     return list.sort((a, b) => {
-        if (a.isContact && !b.isContact) {
+        if (a.status !== null && !b.status === null) {
             return -1; // a comes before b
-        } else if (!a.isContact && b.isContact) {
+        } else if (a.status === null && b.status !== null) {
             return 1; // a comes after b
         } else {
             return 0; // order doesn't matter

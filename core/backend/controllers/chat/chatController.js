@@ -2,7 +2,7 @@ const chatService = require('../../service/chat/chatService');
 
 class ChatController {
   async createOrGetIndividualChat(req, res) {
-    const { participantId } = req.body;
+    const { participantId } = req.query;
 
     let [chat] = await chatService.findChat(req.user.id, participantId, "individual");
     if (!chat) {
@@ -16,8 +16,7 @@ class ChatController {
     const { participants, chatAvatar, chatName } = req.body;
 
     const chat = await chatService.createGroupChat(req.user.id, participants, chatAvatar, chatName);
-
-    console.log(chat)
+    
     return res.json(chat.id);
   }
 

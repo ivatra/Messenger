@@ -63,22 +63,29 @@ async function findInboxIdsByMessageIds(messages, userId) {
 
 
 class searchService {
-    async searchInContacts(senderId, contact, limit, offset) {
-        if (!contact) return
-        const likeString = stringService.convertToLikeStructure(contact)
+    async searchInContacts(senderId, searchTerm, limit, offset) {
+        if (!searchTerm) return
+        console.log('1313')
+        const likeString = stringService.convertToLikeStructure(searchTerm)
 
-        const { users, count } = await userQueries.receiveUsersWhichSatisfyCriteria(likeString, contact, limit, offset)
+        const { users, count } = await userQueries.receiveUsersWhichSatisfyCriteria(likeString, searchTerm, limit, offset)
 
         let newUsers = []
 
         for (var user of users) {
             const contact = await contactsQueries.receiveContact(senderId, user.dataValues.id)
             user.dataValues.isContact = contact !== null
-            user.dataValues.status = contact !== null ? contact.dataValues.status : null
-            newUsers.push(user)
+            if (contact !== null) {
+                if (contact.dataValues.senderId === senderId && contact.dataValues.status === 'pending') {
+                    var merged = { ...user.dataValues, status: 'outgoing' }
+                } else {
+                    var merged = { ...user.dataValues, status: contact.dataValues.status }
+                }
+                newUsers.push(merged)
+            } else newUsers.push({ ...user.dataValues, status: null })
         }
 
-        return { data: users, count }
+        return { data: newUsers, count }
 
     }
     async searchInInbox(senderId, message) {

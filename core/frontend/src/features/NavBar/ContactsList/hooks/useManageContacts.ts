@@ -3,22 +3,20 @@ import { useContactListStore } from "../../../../entities"
 
 export const useManageVisibleContacts = () => {
     const {
-        filter,
         searchTerm,
-
-        setVisibleContacts,
 
         contacts,
         searchedContacts,
-        filterContacts,
+        updateVisibleContacts
     } = useContactListStore()
 
     useDidUpdate(() => { // Managing visible contacts
-        if (filter !== 'all') {
-            filterContacts()
-            return
-        }
-        if (searchTerm === '') setVisibleContacts(contacts)
-        else setVisibleContacts(searchedContacts)
+        const currentList = searchTerm
+            ? searchedContacts
+            : contacts
+        
+        updateVisibleContacts(currentList)
+
     }, [contacts, searchedContacts])
 }
+

@@ -19,7 +19,7 @@ class contactsService {
       const contactId = contact.dataValues.id
 
       if (contactId === sender || contactId === recipient) {
-        if (sender !== userId && status === 'pending') {
+        if (sender === userId && status === 'pending') {
           var merged = { ...contact.dataValues, status: 'outgoing' }
         } else {
           var merged = { ...contact.dataValues, status: status }

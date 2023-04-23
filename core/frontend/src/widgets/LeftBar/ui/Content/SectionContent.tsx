@@ -18,12 +18,11 @@ interface IContentProps {
 
 const stackProps: StackProps = {
     w: "100%",
+    h:'100%',
     spacing: 0,
 };
 
 export const SectionContent: React.FC<IContentProps> = ({ section }) => {
-    const [isSearchMode, setSearchMode] = useState<boolean>(false)
-
     const Sections = Object.entries(sectionComponents).map(([key, Component]) => (
         <RenderedSection key={key} component={Component} visible={section === key} />
     ))
