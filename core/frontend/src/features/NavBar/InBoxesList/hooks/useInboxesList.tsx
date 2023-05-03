@@ -1,24 +1,31 @@
 import { useMemo } from "react";
 import { Box, Stack } from "@mantine/core";
-import { Inbox, useInboxStore } from "../../../../entities";
+import { IInbox, Inbox, useChatStore, useInboxStore } from "../../../../entities";
 
 interface IInboxesProps {
     ref: (element:
-         any) => void
-    props?: any
+        any) => void
 }
 
 
-export const useInboxesList = ({ ref, props }: IInboxesProps) => {
-    const { pinnedInboxes, inboxes } = useInboxStore()
+export const useInboxesList = ({ ref }: IInboxesProps) => {
+    const { pinnedInboxes, inboxes, isMatched, matchedInboxes, isLoading } = useInboxStore();
+    const { currentChatId } = useChatStore();
 
-    const pinnedInboxesList = useMemo(() => (
-        pinnedInboxes.map((inbox) => <Inbox key={inbox.id} inbox={inbox} {...props} />)
-    ), [pinnedInboxes]);
+    const renderInbox = (inbox: IInbox) => (
+        <Inbox
+            key={inbox.id}
+            inbox={inbox}
+            active={currentChatId === inbox.chat.id}
+        />
+    );
 
+    const pinnedInboxesList = useMemo(() => {
+        return pinnedInboxes.map(renderInbox)
+    }, [pinnedInboxes,currentChatId]);
 
     const inboxesList = useMemo(() => {
-        const inboxesList = inboxes.map((inbox) => <Inbox key={inbox.id} inbox={inbox} {...props} />);
+        const inboxesList = inboxes.map(renderInbox);
         return (
             <Stack spacing={0}>
                 {pinnedInboxesList}
@@ -28,5 +35,15 @@ export const useInboxesList = ({ ref, props }: IInboxesProps) => {
         );
     }, [inboxes, pinnedInboxesList]);
 
-    return inboxesList
-}
+    const matchedInboxesComponent = useMemo(() => {
+        if (!isMatched) return <></>;
+
+        return (
+            <Stack spacing={0}>
+                {matchedInboxes.map(renderInbox)}
+            </Stack>
+        );
+    }, [isMatched, matchedInboxes, isLoading, currentChatId]);
+
+    return { inboxesListComponent: inboxesList, matchedInboxesComponent };
+};

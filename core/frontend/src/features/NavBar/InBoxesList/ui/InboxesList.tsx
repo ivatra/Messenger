@@ -9,10 +9,13 @@ import { GroupChatButton } from "./GroupChatButton";
 import { Inbox, useInboxStore } from "../../../../entities";
 import { SideBarItemSkeleton, ScrollableList, NothingFoundView, Search } from "../../../../shared";
 
+
+//TODO: handle if inboxes is empty
+
 export const InboxesList = () => {
     const { containerRef, observerRef, sizeRef } = useInboxesPagination()
-    const { isLoading, matchedInboxes, isMatched, receiveMatched } = useInboxStore();
-    const inboxesList = useInboxesList({ ref: observerRef })
+    const { isLoading, isMatched, receiveMatched } = useInboxStore();
+    const { inboxesListComponent, matchedInboxesComponent } = useInboxesList({ ref: observerRef })
 
     const scrollViewPort = useRef<HTMLDivElement>(null);
     const mergedRef = useMergedRef(sizeRef, containerRef)
@@ -23,15 +26,6 @@ export const InboxesList = () => {
         searchValue !== '' && receiveMatched(searchValue);
     }, [searchValue]);
 
-    const matchedInboxesComponent = useMemo(() => {
-        if (!isMatched) return <></>;
-        return (
-            <Stack spacing={0}>
-                {matchedInboxes.map((inbox) => (
-                    <Inbox key={inbox.id} inbox={inbox} />))}
-            </Stack>
-        );
-    }, [isMatched, matchedInboxes, isLoading]);
 
     var inboxesComponent: any = []
 
@@ -39,7 +33,7 @@ export const InboxesList = () => {
         if (!isMatched && !isLoading) inboxesComponent = (<NothingFoundView searchValue={searchValue} />)
         else inboxesComponent = matchedInboxesComponent
     }
-    else inboxesComponent = inboxesList
+    else inboxesComponent = inboxesListComponent
 
     return (
         <Paper display='flex' ref={mergedRef} h='100%' w='100%' >

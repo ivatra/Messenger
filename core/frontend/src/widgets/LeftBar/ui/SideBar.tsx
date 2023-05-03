@@ -5,6 +5,7 @@ import { SectionContent } from "./Content/SectionContent";
 import { useDrawer } from "../hooks/EditUserContext";
 import {EditUserDrawer} from "../../../entities/User/ui/EditUserDrawer";
 import { DESKTOP_WIDTH } from "../../../shared";
+import React from "react";
 
 const paperProps: PaperProps = {
     w: {
@@ -22,7 +23,6 @@ interface ISideBarProps {
 
 export const SideBar: React.FC<ISideBarProps> = ({ section }) => {
     const { drawerOpen, toggleDrawer } = useDrawer();
-
     const drawer = drawerOpen && <EditUserDrawer opened={drawerOpen} closeDrawer={toggleDrawer} />
 
     const sectionContent = (
@@ -38,4 +38,3 @@ export const SideBar: React.FC<ISideBarProps> = ({ section }) => {
         </>
     )
 };
-

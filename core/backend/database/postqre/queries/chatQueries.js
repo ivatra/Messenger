@@ -49,7 +49,7 @@ class chatQueries {
                     attributes: ['id', 'name', 'login', 'avatar', 'isActive', 'lastSeen'],
                     required: true
                 }],
-                attributes: ['role']
+                attributes: ['id','role','isTyping']
             },
             {
                 model: GroupChat,

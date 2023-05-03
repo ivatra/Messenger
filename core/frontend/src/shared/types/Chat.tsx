@@ -1,8 +1,8 @@
 import IUser from "./User"
 
-interface IChatParticipant {
+export interface IChatParticipant {
     id: number
-    user:IUser
+    user: IUser
     role: 'ADMIN' | 'USER'
     isTyping: boolean
 }
@@ -12,7 +12,7 @@ interface IIndividualChat {
 }
 
 interface IGroupChat {
-    name: string 
+    name: string
     avatar: string
     countParticipants: number
 }
@@ -24,4 +24,5 @@ export interface IChat {
     groupChat: IGroupChat
     individualChat: IIndividualChat
     participants: IChatParticipant[]
+    typingUsers:IChatParticipant[] | []
 }

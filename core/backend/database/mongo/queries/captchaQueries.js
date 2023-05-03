@@ -19,6 +19,7 @@ class captchaQueries{
     async destroyCaptcha(){
         return await captchaCollection.deleteMany({})
     }
+
 } 
 
 

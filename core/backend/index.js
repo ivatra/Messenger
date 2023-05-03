@@ -1,5 +1,5 @@
 require('dotenv').config()
-require('express-async-errors')
+// require('express-async-errors')
 const express = require('express')
 const cors = require('cors')
 const fileupload = require('express-fileupload')
@@ -12,6 +12,8 @@ const mongoCl = require('./database/mongo/mongo')
 const sequelize = require('./database/postqre/postgre')
 const models = require('./database/postqre/models/index')
 const modelHooks = require('./database/postqre/hooks/index')
+
+
 
 const routes = require('./routes/index')
 
@@ -37,13 +39,21 @@ app.use(cookieParser())
 
 app.use('/api', routes)
 
+require("./websocket/websocket")
+
 app.use(errorHandler)
+
+
+
 const start = async () => {
     try{
         await sequelize.authenticate()
         await sequelize.sync()
         await mongoCl.connect()
-        // fillingDB.fillMessages()
+        // await fillingDB.fillUsers()
+        // await fillingDB.fillContacts()
+        // await fillingDB.fillChats()
+        // await fillingDB.fillMessages()
         await runSheduler()
         app.listen(PORT, () => {
             console.log(`Server started on port ${PORT}`)

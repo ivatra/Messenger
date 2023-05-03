@@ -3,19 +3,17 @@ import Ask from "./Ask/Ask"
 import Verification from "./Verification/Verification"
 import { useCaptchaStore } from "../store/CaptchaStore"
 
-export const Captcha = (): JSX.Element => {
-    const { isCaptcha, setCaptcha, isError } = useCaptchaStore()
+
+
+export const Captcha: React.FC = (): JSX.Element => {
+    const { setCaptcha, isError } = useCaptchaStore()
 
     const [isAskPassed, setAskPassed] = useState<boolean>(false)
 
     return (
-        isCaptcha ?
-            isAskPassed ?
-                <Verification setCaptcha={setCaptcha} />
-                :
-                <Ask setCaptcha={setCaptcha} passAsk={setAskPassed} />
-            :
-            <></>
+        isAskPassed
+            ? <Verification setCaptcha={setCaptcha} />
+            : <Ask setCaptcha={setCaptcha} passAsk={setAskPassed} />
     )
 }
 

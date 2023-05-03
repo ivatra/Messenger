@@ -32,8 +32,7 @@ export interface IContactInteractionsStore {
     addContact: (contactId:string) => void
     acceptContact: (contactId: string) => void
     removeContact: (contactId: string) => void
-    receiveContactById: (id: string) => void
-    receivedContact:IContact | undefined
+    receiveContactById: (id: string) => Promise<IContact | undefined>
 
     contactModalisOpened:boolean
     currentContact: IContact | undefined

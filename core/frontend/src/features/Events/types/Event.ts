@@ -1,9 +1,7 @@
-// export interface IEvent {
-//     _id: string
-//     recipientId: string
-//     type: 'Message' | 'Contact' | 'Chat'
-//     content: IMessageEventContent | IContactEventContent | IChatEventContent
-//     notify: boolean
-// }
-export {}
-// @TODO: Events
+import { IEvents } from "./EventContents"
+
+export type IEvent  = {
+    _id: string
+    recipientId: string
+    notify: boolean
+} & IEvents

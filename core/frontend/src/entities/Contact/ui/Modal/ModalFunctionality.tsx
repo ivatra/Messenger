@@ -17,10 +17,11 @@ interface IContactModalContentProps {
 const ModalFunctionality: React.FC<IContactModalContentProps> = ({
     contact,
 }) => {
-    const { getChatWithUser } = useChatStore()
+    const { receiveChatWithUser: getChatWithUser } = useChatStore()
     const { closeContactModal } = useContactInteractionStore()
 
     const navigate = useNavigate()
+    
     const handleAddGroup = () => {
         //@TODO: Handle add group
     }

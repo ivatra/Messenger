@@ -15,6 +15,6 @@ export const AppRoutes = () => {
         <BrowserRouter>
             {isAuth 
             ? <AuthenticatedRoutes /> : <PublicRoutes/>}
-        </BrowserRouter>
+    </BrowserRouter>
     );
 };

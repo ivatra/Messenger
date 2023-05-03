@@ -15,6 +15,6 @@ module.exports = async function (args) {
         `${args.name}@${mail}`,
         args.name,
         args.name,
-        null,
+        'defaultImage.jpg',
         {})
 }

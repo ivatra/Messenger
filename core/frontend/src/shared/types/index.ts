@@ -1,7 +1,7 @@
 import IUser from "./User"
-import IMessage from "./Message"
+import {IMessage,IAttachement} from "./Message"
 import IStoreFeedback from "./StoreFeedback"
 import { TablerIcon } from "./TablerIcon"
-import { IChat } from "./Chat"
+import { IChat,IChatParticipant } from "./Chat"
 
-export type { IUser, IMessage, IStoreFeedback, TablerIcon,IChat }
+export type { IUser, IMessage, IStoreFeedback, TablerIcon,IChat,IChatParticipant, IAttachement }

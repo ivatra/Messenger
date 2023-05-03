@@ -10,8 +10,8 @@ export const useManageVisibleContacts = () => {
         updateVisibleContacts
     } = useContactListStore()
 
-    useDidUpdate(() => { // Managing visible contacts
-        const currentList = searchTerm
+    useDidUpdate(() => { 
+        const currentList = searchTerm.length >= 1
             ? searchedContacts
             : contacts
         

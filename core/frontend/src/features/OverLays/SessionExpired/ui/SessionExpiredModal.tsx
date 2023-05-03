@@ -1,7 +1,9 @@
 import { IconAlertTriangle } from "@tabler/icons-react";
 import { Modal, Text, Stack, Group, Box } from "@mantine/core";
-import { useUserStore } from '../../../../entities';
+
 import { ResignButton } from "./ResignButton";
+
+import { useUserStore } from '../../../../entities';
 
 
 const modalProps = {

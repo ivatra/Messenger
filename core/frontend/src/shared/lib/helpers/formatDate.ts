@@ -7,6 +7,12 @@ export function formatDate(dateString: string): string {
     const isSameMonth = isSameYear && date.getMonth() === now.getMonth();
     const isSameDay = isSameMonth && date.getDate() === now.getDate();
 
+    const timeDiff = now.getTime() - date.getTime();
+    const is5minutesAgo = timeDiff <= 5 * 60 * 1000; // 5 minutes in milliseconds
+
+    if (isSameDay && is5minutesAgo) {
+        return "just now";
+    }
     if (isSameDay) {
         // Today
         const hours = date.getHours();

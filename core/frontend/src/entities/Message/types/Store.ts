@@ -1,25 +1,31 @@
 import { IMessage } from "../../../shared"
+import { IContentItem } from "./Model"
 
 
-interface IStoreMessage {
-    chatId: number
-    message: IMessage
+export interface IStoreMessage {
+    [chatId: number]: IContentItem[]
 }
 
-interface IAttachementStore {
-    chatId: number
-    attachement: any
+interface IStoreAttachement{
+    [chatId:number]:IMessage[]
 }
+
 
 export interface IMessageStore {
-    messages: IStoreMessage[]
-    attachements: IAttachementStore[]
+    messages: IStoreMessage
+    attachements: IStoreAttachement
+    
+    messagesAmount:number
+    page:number
 
-    getMessages: (chatId: number, offset: number, limit: number) => void
-    getAttachements: (chatId: number, limit: number) => void
+    receiveMessages: (chatId: number,limit: number) => void
+    receiveAttachements: (chatId: number, limit: number) => void
 
     addMessage: (chatId: number, message: string, attachement?: any) => void
     addAttachement: (chatId: number, attachement: any) => void
 
-    addContentExternal: (message: IMessage) => void
+    setMessageRead:(chatId:number,messageId:number) => void
+    setPage:(page:number) => void
+
+    addContentExternal: (chatId: number,content:IContentItem) => void;
 }

@@ -15,7 +15,7 @@ module.exports = async function (args) {
     try{
         await messageService.createMessage(
             args.content,
-            args.attachement,
+            null,
             args.senderId,
             args.chatId
         )

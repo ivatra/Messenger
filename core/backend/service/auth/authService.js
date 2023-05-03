@@ -33,6 +33,7 @@ async function authenticateUser(userId, userAgent) {
     return { accessToken: accessToken, refreshToken: refreshToken }
 }
 
+//TODO: 
 async function createAndSendActivationLink(email, userId) {
     const generatedUuid = uuid.v4()
     const activationLink = process.env.API_URL + '/api/auth/activate/' + generatedUuid
@@ -42,6 +43,7 @@ async function createAndSendActivationLink(email, userId) {
 
 class authService {
     async login(email, password, userAgent) {
+        console.log(email,password)
         const user = await userQueries.receiveUserByEmail(email)
         if (!user)
             throw ApiError.Internal('User not found')
@@ -58,9 +60,9 @@ class authService {
 
         const user = await userQueries.create(login, email, hashPassword, name, avatar)
 
-        await createAndSendActivationLink(email, user.id)
+        // await createAndSendActivationLink(email, user.id) //TODO:
 
-        const tokens = await authenticateUser(user.id, userAgent)
+        const tokens = await authenticateUser(user.dataValues.id, userAgent)
 
         return { tokens: tokens, user: user.dataValues }
     }

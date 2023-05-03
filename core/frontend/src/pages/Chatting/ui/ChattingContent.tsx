@@ -1,9 +1,11 @@
+import React from "react";
+import { useState } from "react";
+
 import { useMediaQuery } from "@mantine/hooks";
 import { AppShell, AppShellProps, Group, Loader } from "@mantine/core";
 
-import { useState } from "react";
 
-import { SideBar, MobileNavBar, DesktopNavBar, sections, ChatView, EditUserProvider } from "../../../widgets";
+import {  MobileNavBar, DesktopNavBar, sections, ChatView, EditUserProvider, SideBar } from "../../../widgets";
 
 import { DESKTOP_WIDTH } from "../../../shared";
 
@@ -11,8 +13,7 @@ import { DESKTOP_WIDTH } from "../../../shared";
 
 export const ChattingContent = () => {
     const [section, setSection] = useState<sections>("Chats");
-    const [currentChat,setCurrentChat] = useState<number>()
-
+    
     const isDesktop = useMediaQuery(`(min-width: ${DESKTOP_WIDTH})`);
 
     if (isDesktop === undefined) return <Loader />
@@ -30,7 +31,7 @@ export const ChattingContent = () => {
 
     return (
         <EditUserProvider>
-            <AppShell {...appShellProps}>
+            <AppShell {...appShellProps} >
                 <Group noWrap h='100%'>
                     <SideBar section={section} />
                     {isDesktop && <ChatView />}
@@ -39,3 +40,5 @@ export const ChattingContent = () => {
         </EditUserProvider>
     )
 }
+
+export const MemoziedChattingPage = React.memo(ChattingContent)

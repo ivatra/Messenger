@@ -28,9 +28,9 @@ async function checkIfAllUsersOnline(participants) {
 
 
 const createUserVector = async (user) => {
-    const nameCopy =  stringService.removePunctuation(user.name).toLowerCase()
-    const loginCopy = stringService.removePunctuation(user.login).toLowerCase()
-    await userQueries.createUserVector(id, nameCopy, loginCopy)
+    const nameCopy =  stringService.removePunctuation(user.dataValues.name).toLowerCase()
+    const loginCopy = stringService.removePunctuation(user.dataValues.login).toLowerCase()
+    await userQueries.createUserVector(user.dataValues.id, nameCopy, loginCopy)
 }
 
 const updateUserVector = async (user) => {

@@ -1,26 +1,47 @@
-import { Group, Paper, Stack } from "@mantine/core";
+import { useRef, useState } from "react";
+import { Group, MantineStyleSystemProps, ScrollArea, Stack, StackProps } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
+
 import { ChatInput } from "../../../features";
-
-
+import { ChatContext } from "../helpers/ChatContext";
+import { IChat, ScrollableList } from "../../../shared";
+import { TypingUsers } from "./TypingUsers";
+import { MessagesList } from "./MessagesList";
+import { useMessageStore } from "../../../entities";
 
 interface IChatRoomProps {
-    chatId: string
+    chat: IChat;
+    display: MantineStyleSystemProps['display'];
 }
 
-
-//Chat input doesnt rerenders
-export const ChatRoom: React.FC<IChatRoomProps> = ({ chatId }) => {
+export const ChatRoom: React.FC<IChatRoomProps> = ({ chat, display }) => {
     const { ref: elementSizeRef, width, height } = useElementSize();
+    const [isDragging, setIsDragging] = useState<boolean>(false);
+
+    const { isLoading, messages } = useMessageStore()
+
+    const stackProps: StackProps = {
+        w: "100%",
+        h: '100%',
+        display: display,
+        spacing: 0,
+        onDragEnter: () => setIsDragging(true),
+        onDragExit: () => setIsDragging(false)
+    };
 
     return (
-        <Stack w='100%' h='100%' spacing={0} ref={elementSizeRef}>
-            <Group w='100%' h={60} bg='red' />
-            <Paper w='100%' h='100%' bg='blue'>
-                {chatId}
-            </Paper>
-            <ChatInput parentHeight={height} />
-        </Stack>
-    )
+        <ChatContext.Provider value={chat}>
+            <Stack {...stackProps} ref={elementSizeRef}  >
+                <Group w='100%' h={60} bg='red' />
+                <MessagesList messages={messages} isLoading={isLoading} />
+                {chat.typingUsers.length >= 1 && <TypingUsers typingUsers={chat.typingUsers} />}
+                <ChatInput
+                    parentHeight={height}
+                    isDragging={isDragging}
+                    setIsDragging={setIsDragging}
+                />
+            </Stack>
+        </ChatContext.Provider>
 
-}
+    );
+};

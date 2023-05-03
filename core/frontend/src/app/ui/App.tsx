@@ -26,7 +26,7 @@ import StylesProvider from "./StylesProvider"
 const App = (): JSX.Element => {
     return (
         <StylesProvider>
-            <AppRoutes />
+                <AppRoutes />
         </StylesProvider>
     )
 }

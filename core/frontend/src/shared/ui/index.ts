@@ -1,3 +1,4 @@
+export { CenterLoader } from "./Components/CenterLoader";
 export { Search } from "./Components/Search";
 export { NothingFoundView } from "./Components/NothingFoundView";
 export { UserName } from "./Components/UserName";

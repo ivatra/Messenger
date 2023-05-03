@@ -30,7 +30,8 @@ export const FilterSelector: React.FC = () => {
         const currentList = searchTerm
             ? searchedContacts
             : contacts
-
+        
+            console.log(currentList)
         updateVisibleContacts(currentList)
     }
 

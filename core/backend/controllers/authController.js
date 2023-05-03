@@ -16,11 +16,10 @@ class AuthController {
         const userAgent = req.headers['user-agent']
 
         const result = await authService.register(login, email, password, name, avatar, userAgent)
-        
         const timeSwamp = dateService.daysToTimeSwamp(process.env.JWT_REFRESH_LIFECYCLE)
 
-        res.cookie('refreshToken', res.tokens.refreshToken, { maxAge: timeSwamp, httpOnly: true })
-        return res.json({ token: result.accessToken, user: result.user })
+        res.cookie('refreshToken', result.tokens.refreshToken, { maxAge: timeSwamp, httpOnly: true })
+        return res.json({ accessToken: result.tokens.accessToken, user: result.user })
     }
 
     async login(req, res, next) {

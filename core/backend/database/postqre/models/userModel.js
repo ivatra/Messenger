@@ -9,7 +9,7 @@ const User = sequelize.define('user', {
     email: { type: DataTypes.STRING, unique: true },
     password: { type: DataTypes.STRING },
     isActive: { type: DataTypes.BOOLEAN, defaultValue: false },
-    lastSeen: { type: DataTypes.TIME },
+    lastSeen: { type: DataTypes.DATE(6) },
     requestsCountPerMinute: { type: DataTypes.INTEGER },
     isActivated: { type: DataTypes.BOOLEAN, defaultValue: false },
 })

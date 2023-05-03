@@ -6,6 +6,8 @@ const { Chat } = require('../database/postqre/models/chatModel')
 const { User } = require('../database/postqre/models/userModel')
 const messageService = require('../service/chat/messageService')
 const { Sequelize } = require('../database/postqre/postgre')
+const contactsService = require('../service/pages/contactsService')
+const chatQueries = require('../database/postqre/queries/chatQueries')
 
 
 async function unpackFile(fileName) {
@@ -42,7 +44,7 @@ async function getAllExistedChats() {
     const chats = await Chat.findAll({
         where: {
             createdAt: {
-                [ Sequelize.Op.between]: [today, tomorrow]
+                [Sequelize.Op.between]: [today, tomorrow]
             }
         }
     });
@@ -70,12 +72,37 @@ function generateAttachement(image) {
 
 }
 
+function between(min, max) {
+    return Math.floor(
+        Math.random() * (max - min) + min
+    )
+}
+
+async function generateSenderId(chatId){
+    const chat = await chatQueries.receiveChatContent(chatId)
+
+    const randomValue = between(0, chat.dataValues.participants.length)
+    return chat.dataValues.participants[randomValue].user.id
+
+}
+
+async function generateChat(chats){
+    const chatId = await generateChatId(chats)
+    const senderId = await generateSenderId(chatId)
+    return {senderId:senderId,chatId:chatId}
+
+}
+
+const currentUserId = '4a2e36bb-91a5-4e60-ba5c-cdc85618134b'
 class fillDB {
     async fillUsers() {
         const executableFile = getAbsolutePath('./creators/users')
 
         const names = (await unpackFile('names')).flat(1)
-        const args = names.map((name) => {
+
+        const shortedNames = names.slice(0, 500)
+
+        const args = shortedNames.map((name) => {
             return {
                 name: name
             }
@@ -89,29 +116,21 @@ class fillDB {
         const executableFile = getAbsolutePath('./creators/chats')
         const names = (await unpackFile('names')).flat(1)
 
-        // const args = await Promise.all(
-        //     names.map(async () => {
-        //         return {
-        //             user1: await generateUserId(names),
-        //             user2: '00227f96-f152-450f-a57d-eabc7bc7a43a',
-        //             chatType: randomChatType()
-        //         }
-        //     }))
-
-        // wrapFuncIntoWorkers(executableFile, args)
-        const MAX_ARGS = 50;
+        const shortedNames = names.slice(0, 100)
 
         const args = await Promise.all(
-            names.slice(0, MAX_ARGS).map(async () => {
+            shortedNames.map(async (name) => {
+                const user2 = await getUserInstanceByLogin(name) 
+
                 return {
-                    user1: await generateUserId(names),
-                    user2: '00227f96-f152-450f-a57d-eabc7bc7a43a',
+                    user1: currentUserId,
+                    user2: user2.dataValues.id,
                     chatType: randomChatType()
                 };
             })
         );
-
-        wrapFuncIntoWorkers(executableFile, args);
+        const newArgs = new Set(args)
+        wrapFuncIntoWorkers(executableFile, Array.from(newArgs));
     }
 
     async fillMessages() {
@@ -119,51 +138,48 @@ class fillDB {
 
         const messages = await unpackFile('messages3')
         var names = (await unpackFile('names')).flat(1)
-        const image = await fs.promises.readFile(__dirname + '/images/attachement.jpeg')
-        const chats = await getAllExistedChats()
-        
-        // const args = await Promise.all(
-        //     messages.map(async (message) => {
-        //         return {
-        //             attachement1: generateAttachement(image),
-        //             content: message,
-        //             senderId: await generateUserId(names),
-        //             chatId: await generateChatId(chats)
-        //         }
-        //     }))
-        const MAX_ARGS = 1000;
-        names = names.slice(0, 50)
-        const args = await Promise.all(
-            messages.slice(0, MAX_ARGS).map(async (message) => {
-                return {
-                    attachement1: generateAttachement(image),
-                    content: message,
-                    senderId: await generateUserId(names),
-                    chatId: await generateChatId(chats)
-                };
-            })
-        );
+        const shortedNames = names.slice(0, 500)
 
-        wrapFuncIntoWorkers(executableFile, args);
-        // wrapFuncIntoWorkers(executableFile, args)
+        const image = await fs.promises.readFile(__dirname + '/images/attachement.jpeg')
+
+        const chats = await getAllExistedChats()
+
+        const args = await Promise.all(
+            messages.slice(0,1000).map(async (message) => {
+                const misc = await generateChat(chats)
+                return {
+                    // attachement1: generateAttachement(image),
+                    content: message,
+                    ...misc
+                }
+            }))
+        wrapFuncIntoWorkers(executableFile, args)
     }
 
     async fillContacts() {
         const executableFile = getAbsolutePath('./creators/contacts')
         const names = (await unpackFile('names')).flat(1)
 
-        for (var i = 0; i < 12; i++) {
+        const shortedNames = names.slice(0, 500)
 
-            const args = await Promise.all(
-                names.map(async () => {
-                    return {
-                        user1: await generateUserId(names),
-                        user2: await generateUserId(names)
-                    }
-                }))
+        var args = []
 
-            wrapFuncIntoWorkers(executableFile, args)
+        for (var i = 100; i < 200; i++) {
+            while (true) {
+                var user1 = currentUserId
+                var user2 = await getUserInstanceByLogin(shortedNames[i])
+
+                var user2Id = user2.dataValues.id
+
+                if (user1 === user2Id) continue
+
+                const result = await contactsService.isContactExists(user1, user2Id)
+
+                if (!result) break
+            }
+            args.push({ user1: user1, user2: user2Id })
         }
+        wrapFuncIntoWorkers(executableFile, args);
     }
 }
 

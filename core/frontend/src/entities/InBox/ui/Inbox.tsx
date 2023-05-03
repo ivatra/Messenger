@@ -22,9 +22,10 @@ const groupProps: GroupProps = {
 
 interface IInboxProps {
     inbox: IInbox
+    active: boolean
 }
 
-export const Inbox: React.FC<IInboxProps> = ({ inbox }) => {
+export const Inbox: React.FC<IInboxProps> = ({ inbox, active }) => {
     const [selected, setSelected] = useState<boolean>(false)
     const messageText = inbox.message.content
 
@@ -36,12 +37,13 @@ export const Inbox: React.FC<IInboxProps> = ({ inbox }) => {
     const boxProps = {
         onMouseEnter: () => setSelected(true),
         onMouseLeave: () => setSelected(false),
-        onClick: () => navigate(`/chat/${inbox.id}`),
-        bg: selected ? 'dark.5' : 'initial'
+        onClick: () => navigate(`/chat/${inbox.chat.id}`),
+        bg: active ? 'blue.6' :
+            selected ? 'dark.5' : 'initial',
     }
     return (
         <Box {...boxProps} >
-            <Group {...groupProps}>
+            <Group {...groupProps} noWrap>
                 <CustomAvatar size={'md'} avatarSrc={avatar} />
                 <Stack spacing={0} mx={0} w='100%'>
                     <MessageHeader

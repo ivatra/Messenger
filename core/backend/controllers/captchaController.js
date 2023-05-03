@@ -10,7 +10,7 @@ class captchaController {
 
     async validateCaptcha(req, res, next) {
         const { id, answer } = req.body
-        const result = await captchaService.compareCaptcha(id, answer)
+        const result = await captchaService.compareCaptcha(req.user.id,id, answer)
         return res.json(result)
 
     }

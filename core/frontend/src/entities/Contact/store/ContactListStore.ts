@@ -58,13 +58,10 @@ export const useContactListStore = create<StoreType>((set, get) => ({
         const request = () => api.get(`content/search/contacts/?message=${searchTerm}&limit=${limit}&offset=${offset}`);
 
         const response = await handleRequest<IReceiveContactsResponse>(request, set);
+        
+        if (!response) return;
 
-        if (!response || get().isError) return;
-
-        const SetContacts = new Set([...response.data, ...searchedContacts])
-        const filteredContacts = Array.from(SetContacts)
-
-        const sortedContacts = sortByIsContact(filteredContacts)
+    const sortedContacts = sortByIsContact([...searchedContacts,...response.data])
 
         set({
             searchedContacts: sortedContacts,
@@ -75,6 +72,7 @@ export const useContactListStore = create<StoreType>((set, get) => ({
 
     updateVisibleContacts: (contactsList) => {
         const { filter, setVisibleContacts } = get()
+        const value = contactsList.filter((contact) => contact.name === 'Brandy')
 
         if (filter !== 'all') {
             const filteredContacts = contactsList.filter((contact) => contact.status === filter)

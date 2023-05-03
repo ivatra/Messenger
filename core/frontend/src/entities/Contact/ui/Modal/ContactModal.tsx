@@ -17,7 +17,9 @@ const modalProps:Omit<ModalProps,'onClose' | 'opened'> = {
     padding:0,
 }
 
-const ContactModal: React.FC = () => {
+
+
+export const ContactModal: React.FC = () => {
     const {currentContact,contactModalisOpened,closeContactModal} = useContactInteractionStore()
 
     if(!contactModalisOpened || !currentContact) return <></>
@@ -34,5 +36,3 @@ const ContactModal: React.FC = () => {
         </Modal>
     )
 }
-
-export default ContactModal

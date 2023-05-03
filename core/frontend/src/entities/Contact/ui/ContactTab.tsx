@@ -1,9 +1,7 @@
 import { IContact } from "../..";
-import { useState, lazy } from "react";
+import { useState} from "react";
 import { Contact } from "./Contact";
 import { useContactInteractionStore } from "../store/ContactInteractionStore";
-
-const ContactModal = lazy(() => import("./Modal/ContactModal"));
 
 interface IContactTabProps {
     contact: IContact;

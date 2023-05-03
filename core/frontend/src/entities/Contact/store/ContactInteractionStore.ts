@@ -71,7 +71,7 @@ export const useContactInteractionStore = create<StoreType>((set, get) => ({
 
         if (!response || get().isError) return;
 
-        set({ receivedContact: response })
+        return response
     },
     openContactModal: (contact) => {
         set({ currentContact: contact, contactModalisOpened: true })

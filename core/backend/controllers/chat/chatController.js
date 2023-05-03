@@ -3,7 +3,6 @@ const chatService = require('../../service/chat/chatService');
 class ChatController {
   async createOrGetIndividualChat(req, res) {
     const { participantId } = req.query;
-
     let [chat] = await chatService.findChat(req.user.id, participantId, "individual");
     if (!chat) {
       chat = await chatService.createIndividualChat(req.user.id, participantId);
@@ -28,7 +27,7 @@ class ChatController {
 
   async update(req, res) {
     const { chatId } = req.params
-    const { name } = req.body
+    const { name } = req.form
     var avatar
     if (req.files) {
       avatar = req.files.avatar
@@ -48,10 +47,10 @@ class ChatController {
   }
 
   async removeChatParticipant(req, res) {
-    const { participantId } = req.body
+    const { participantId } = req.query
     const { chatId } = req.params
     console.log('chat id = ', chatId)
-    await chatService.destroyParticipantFromChat(chatId, participantId)
+    await chatService.destroyParticipantFromChat(chatId, participantId,req.user.id)
     return res.json(`Participant ${participantId} removed from chat ${chatId}`)
   }
 

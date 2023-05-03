@@ -13,15 +13,10 @@ const groupProps: GroupProps = {
     spacing: 'xs'
 }
 
-interface IImageDropzoneBodyProps {
-    isDraging: boolean
-}
-
-
-export const ImageDropzoneBody: React.FC<IImageDropzoneBodyProps> = ({ isDraging }) => {
+export const ImageDropzoneBody: React.FC = () => {
 
     return (
-        <Group {...groupProps} display={isDraging ? 'flex' : 'none'} noWrap>
+        <Group {...groupProps} noWrap>
             <DropzoneReject />
             <DropzoneAccept/>
         </Group>

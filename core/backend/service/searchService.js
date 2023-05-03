@@ -1,5 +1,6 @@
 const { InBox } = require("../database/postqre/models/inBoxModel");
 const { Message } = require("../database/postqre/models/messageModel");
+const { User } = require("../database/postqre/models/userModel");
 const { Sequelize } = require("../database/postqre/postgre");
 const chatQueries = require("../database/postqre/queries/chatQueries");
 const contactsQueries = require("../database/postqre/queries/contactsQueries");
@@ -61,14 +62,26 @@ async function findInboxIdsByMessageIds(messages, userId) {
     return messageIds.map((messageId) => inboxMap.get(messages.find((message) => message.id === messageId).chatId));
 }
 
+async function searchUsers(senderId,searchTerm,limit,offset) {
+    const users = await User.findAll({limit:limit,offset:offset})
+    const searchResults = users.filter(user => {
+        const userName = user.dataValues.name.toLowerCase();
+        const search = searchTerm.toLowerCase();
+        return userName.includes(search) && user.dataValues.id !== senderId;
+    });
+
+    const count = searchResults.length;
+
+    return { users: searchResults, count };
+}
 
 class searchService {
     async searchInContacts(senderId, searchTerm, limit, offset) {
         if (!searchTerm) return
-        console.log('1313')
+
         const likeString = stringService.convertToLikeStructure(searchTerm)
 
-        const { users, count } = await userQueries.receiveUsersWhichSatisfyCriteria(likeString, searchTerm, limit, offset)
+        const {users,count} = await searchUsers(senderId,searchTerm,limit,offset)
 
         let newUsers = []
 

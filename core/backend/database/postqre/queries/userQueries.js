@@ -10,7 +10,7 @@ class userQueries {
         return await User.create({ login, name, avatar: avatar, email, password: hashPassword })
     }
     async createUserVector(userId, name, login) {
-        return await UserVector.create({ userId: userId, name, login });
+        return await UserVector.create({ userId: userId, nameCopy:name, loginCopy:login });
 
     }
     async receiveUserById(userId) {
@@ -141,6 +141,9 @@ class userQueries {
 
     async resetUsersRequestsCount() {
         return await User.update({ requestsCountPerMinute: 0 }, { where: {} });
+    }
+    async resetUserRequestsCount(userId) {
+        return await User.update({ requestsCountPerMinute: 0 }, { where: {id:userId} });
     }
 
 }

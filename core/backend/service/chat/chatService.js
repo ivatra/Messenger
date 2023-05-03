@@ -1,5 +1,5 @@
 const ApiError = require('../../error/ApiError');
-const { GroupChat, IndividualChat } = require("../../database/postqre/models/chatModel");
+const { GroupChat, IndividualChat, ChatParticipant } = require("../../database/postqre/models/chatModel");
 
 
 const chatQueries = require('../../database/postqre/queries/chatQueries');
@@ -8,6 +8,8 @@ const inboxQueries = require('../../database/postqre/queries/inboxQueries');
 const fileService = require('../misc/fileService');
 const messageService = require('./messageService');
 const messageQueries = require('../../database/postqre/queries/messageQueries');
+
+const { InBox } = require('../../database/postqre/models');
 
 
 async function filterChatParticipants(chat, firstUser, secondUser) {
@@ -23,7 +25,11 @@ class ChatService {
     }
     const chat = await chatQueries.createChat("individual");
     await chatQueries.createIndividuaChat(chat.id);
-    await this.createSubTables(chat.id, userId, userId2);
+
+    await this.addParticipantToChat(chat.id, userId, false, userId, 'ADMIN')
+    await this.addParticipantToChat(chat.id, userId2, false, userId, 'USER')
+
+    await messageQueries.createMessage(chat.id, 'I have just created a chat. Hello guys! - ', userId)
 
     return chat;
   }
@@ -37,27 +43,14 @@ class ChatService {
 
     const chat = await chatQueries.createChat("group");
     await chatQueries.createGroupChat(chat.id, chatAvatar, chatName);
-    await this.addParticipantToChat(chat.id, userId, false, null, 'ADMIN')
-    await participants.forEach(async (participant) => this.addParticipantToChat(chat.id, participant.id, true, userId, 'USER'))
+    await this.addParticipantToChat(chat.id, userId, false, userId, 'ADMIN')
+    await participants.forEach(async (participant) => this.addParticipantToChat(chat.id, participant, true, userId, 'USER'))
     await messageQueries.createMessage(chat.id, 'I have just created a chat. Hello guys!', userId)
+
     return chat;
   }
 
-  async createSubTables(chatId, userId, userId2) {
-    await this.addParticipantToChat(chatId, userId, false, null, 'ADMIN')
-    await inboxQueries.createInbox(chatId, userId)
-    if (userId2) {
-      await inboxQueries.createInbox(chatId, userId2)
-      await this.addParticipantToChat(chatId, userId2, true, userId, 'USER')
-    }
-  }
-
-  async addParticipantToChat(chatId, participantId, eventNeeded = false, invitedId = null, role = 'USER') {
-    // const groupChat = await this.checkForGroupChat(chatId)
-
-    // if (!groupChat)
-    //   throw ApiError.badRequest('Individual chat cannot have additional participants.')
-
+  async addParticipantToChat(chatId, participantId, eventNeeded = false, invitedId, role = 'USER') {
     const [participant, created] = await chatQueries.createParticipant(chatId, participantId, role)
 
     if (!created)
@@ -65,9 +58,11 @@ class ChatService {
 
     await inboxQueries.createInbox(chatId, participantId)
 
+    const chat = await chatQueries.receiveChatContent(chatId,invitedId)
+
     if (eventNeeded) {
-      await this.notifyAllUsersAboutNewParticipant(chatId, participantId)
-      await eventsQueries.createChatEvent(participantId, chatId, 'Invited', invitedId, true)
+      await this.notifyAllUsersAboutNewParticipant(chatId, participant)
+      await eventsQueries.createInvitedToChatEvent(participantId, chat.dataValues)
     }
   }
 
@@ -109,7 +104,7 @@ class ChatService {
     return message
   }
 
-  async destroyParticipantFromChat(chatId, participantId, destroyedId) {
+  async destroyParticipantFromChat(chatId, participantId, destroyerId) {
     const groupChat = await this.checkForGroupChat(chatId)
 
     if (!groupChat)
@@ -120,29 +115,39 @@ class ChatService {
     if (destroyedParticipant === 0) {
       throw ApiError.badRequest(`Participant ${participantId} doesn't exist in chat ${chatId}`);
     }
+    const chat = await chatQueries.receiveChatByPk(chatId)
+    await InBox.destroy({ chatId: chatId, userId: participantId })
+    await ChatParticipant.destroy({ chatId: chatId, participantId: participantId })
 
-    await eventsQueries.createChatEvent(participantId, chatId, 'Kicked', destroyedId)
+    const participants = await chatQueries.receiveParticipantsByChat(chatId)
+
+    for(var participant of participants){
+      await eventsQueries.createParticipantRemovedEvent(participant.user.id, chatId, participantId, destroyerId)
+    }
+    
+    await eventsQueries.createExcludedFromChatEvent(participantId, chat.dataValues.id, destroyerId)
   }
 
   async checkForMemberingInChat(userId, chatId) {
     const participants = await chatQueries.receiveParticipantsByChat(chatId)
+
     const participant = participants.find((participant) => participant.userId === userId);
     if (!participant) {
       throw ApiError.forbidden(`You are not participant of chat ${chatId}`)
     }
   }
 
-  async notifyAllUsersAboutNewParticipant(chatId, participantId) {
+  async notifyAllUsersAboutNewParticipant(chatId, participant) {
     const participants = await chatQueries.receiveParticipantsByChat(chatId)
-
+    const chat = chatQueries.receiveChatByPk(chatId)
     for (var participant of participants) {
-      await eventsQueries.createChatEvent(participant.userId, chatId, "New Participant", participantId, false)
+      await eventsQueries.createParticipantInvitedEvent(participant.userId, chat.dataValues.id, )
     }
   }
 
   async checkForGroupChat(chatId) {
     const chat = await chatQueries.receiveChatByPk(chatId);
-    return chat.type === 'group'
+    return chat.dataValues.type === 'group'
   }
 
 

@@ -30,7 +30,7 @@ export const MessageHeader: React.FC<ITitleProps> = ({ name, inbox, messageSentD
                 {inbox.isPinned && PinnedIcon}
                 <UserName name={name} />
             </Group>
-            <Group ml='xs'>
+            <Group ml='xs' noWrap>
                 {rightSide}
             </Group>
         </Group>

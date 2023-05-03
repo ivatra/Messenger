@@ -46,7 +46,7 @@ async function sendMessageReceivedEvent(message) {
     const messageWithAttachement = assignAttachementToMessage(attachement, message.dataValues)
 
     if (message.senderId !== id)
-      await eventsQueries.createMessageEvent(id, messageWithAttachement, userMentioned)
+      await eventsQueries.createReceivedMessageEvent(id, {...messageWithAttachement,isMentioned:userMentioned})
 
     await inboxQueries.updateMessage(id, message.chatId, message.id)
   });

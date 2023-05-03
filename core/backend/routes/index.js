@@ -22,7 +22,6 @@ router.use('/captcha',
 router.use('/content',
     checkAuth,
     checkActivation,
-    checkRequestsCount,
     updateUserActivity,
     generalRoutes)
     

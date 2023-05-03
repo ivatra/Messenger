@@ -1,3 +1,7 @@
+export  {ContactModal} from "./ui/Modal/ContactModal"
+
+export { useContactInteractionStore } from "./store/ContactInteractionStore"
+
 export { type IContactInteractions } from "./types/Store"
 
 export { Contact } from "./ui/Contact"

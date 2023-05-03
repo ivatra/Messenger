@@ -1,9 +1,8 @@
-import { Box, BoxProps, Button, Group, GroupProps, Text } from "@mantine/core";
+import { Box, BoxProps, MantineStyleSystemProps } from "@mantine/core";
 import { Dropzone, DropzoneProps, FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 
 import { useDropzoneStyles } from "./ImageDropzone.styles";
 import { ImageDropzoneBody } from "./ImageDropzoneBody";
-import { useState } from "react";
 
 
 /* Dropzone
@@ -16,8 +15,12 @@ import { useState } from "react";
 interface IImageDropzoneProps {
     bottomOffset: number;
     parentHeight: number;
+    
     openRef: React.RefObject<() => void>
     setFiles: (files: FileWithPath[]) => void
+
+    display: MantineStyleSystemProps['display']
+    setIsDragging:(value:boolean) => void
 }
 
 
@@ -25,18 +28,19 @@ export const ImageDropzone: React.FC<IImageDropzoneProps> = ({
     parentHeight,
     bottomOffset,
     openRef,
-    setFiles
+    display,
+    setFiles,
+    setIsDragging
 }) => {
     const { dropzone } = useDropzoneStyles()
 
-    const [isDragging, setDragging] = useState<boolean>(false)
-
+    const handleDrop = (files:FileWithPath[]) => {
+        setIsDragging(false)
+        setFiles(files)
+    }
+    
     const dropZoneProps: Omit<DropzoneProps, "children"> = {
-        onDrop: (files) => setFiles(files),
-
-        onDragEnter: () => setDragging(true),
-        onDragLeave: () => setDragging(false),
-
+        onDrop: handleDrop,
         maxSize: 3 * 1024 ** 2,
         accept: IMAGE_MIME_TYPE,
         maxFiles: 1,
@@ -46,7 +50,7 @@ export const ImageDropzone: React.FC<IImageDropzoneProps> = ({
         top: bottomOffset,
         className: dropzone,
 
-        openRef: openRef
+        openRef: openRef,
     };
 
     const boxProps: BoxProps = {
@@ -54,12 +58,13 @@ export const ImageDropzone: React.FC<IImageDropzoneProps> = ({
         w: "100%",
         h: parentHeight - bottomOffset,
         p: '4px',
-    }
+        display: display
+    };
 
     return (
-       <Box {...boxProps}>
+        <Box {...boxProps} >
             <Dropzone {...dropZoneProps}>
-                <ImageDropzoneBody isDraging={isDragging} />
+                <ImageDropzoneBody />
             </Dropzone>
         </Box>
     );

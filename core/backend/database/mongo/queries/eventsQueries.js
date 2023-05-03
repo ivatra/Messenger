@@ -1,69 +1,158 @@
+const { Timestamp } = require('mongodb');
 const mongoClient = require('../mongo');
 const events = mongoClient.db('Messenger').collection('events');
 
+async function insertEvent(event) {
+    event.sent = false;
+    event.createdAt = new Date();
+
+    await events.insertOne(event);
+}
 
 class eventQueries {
-    async createMessageEvent(recipientId, message, isMentioned = false, isRead = false, status = 'Received Message',notify = true) {
+    async createReceivedMessageEvent(recipientId, message, chatId, isMentioned) {
         const event = {
+            type: 'received_message',
             recipientId: recipientId,
-            type: "Message",
-            content: {
-                status: status,
+            data: {
                 message: message,
-                isRead: isRead,
+                chatId: chatId,
                 isMentioned: isMentioned
             },
-            notify: notify,
-            sent: false
+            notify: true
         };
-        await events.insertOne(event)
+
+        insertEvent(event);
     }
 
-    async createContactEvent(recipientId, status, contact) {
+    async createReadMessageEvent(recipientId, chatId, msgId) {
         const event = {
+            type: 'message_read',
             recipientId: recipientId,
-            type: "Contact",
-            content: {
-                status: status,
-                contact: contact
-            },
-            notify: true,
-            sent: false
-        }
-
-        await events.insertOne(event)
-    }
-
-    async createChatEvent(recipientId, chatId, status, facilicatorId = null, notify = true) {
-        const event = {
-            recipientId: recipientId,
-            type: "Chat",
-            content: {
+            data: {
                 chatId: chatId,
-                status: status,
-                facilicatorId: facilicatorId,
+                msgId: msgId
             },
-            notify: notify,
-            sent: false
-        }
+            notify: false
+        };
 
-        await events.insertOne(event)
-
+        insertEvent(event);
     }
 
-    async receiveEvents(userId){
-        return await events.find({ recipientId: userId }).toArray()
+    async createContactEvent(recipientId, contact, status) {
+        const event = {
+            type: 'contact',
+            recipientId: recipientId,
+            data: {
+                contact: contact,
+                status: status
+            },
+            notify: true
+        };
+
+        insertEvent(event);
     }
 
-    async receiveUnreadMsgs(userId){
+    async createTypingEvent(recipientId, chatId, typingState, typerId) {
+        const event = {
+            type: 'typing',
+            recipientId: recipientId,
+            data: {
+                chatId: chatId,
+                typingState: typingState,
+                typerId: typerId
+            },
+            notify: false
+        };
+
+        insertEvent(event);
+    }
+
+    async createParticipantInvitedEvent(recipientId, chatId, participant, inviterId) {
+        const event = {
+            type: 'participant_invited',
+            recipientId: recipientId,
+            data: {
+                chatId: chatId,
+                participant: participant,
+                inviterId: inviterId
+            },
+            notify: false
+        };
+
+        insertEvent(event);
+    }
+
+    async createParticipantRemovedEvent(recipientId, chatId, participantId, removerId) {
+        const event = {
+            type: 'participant_removed',
+            recipientId: recipientId,
+            data: {
+                chatId: chatId,
+                participantId: participantId,
+                removerId: removerId
+            },
+            notify: false
+        };
+
+        insertEvent(event);
+    }
+
+    async createExcludedFromChatEvent(recipientId, chatId, excluderId) {
+        const event = {
+            type: 'excluded_from_chat',
+            recipientId: recipientId,
+            data: {
+                chatId: chatId,
+                excluderId: excluderId
+            },
+            notify: true
+        };
+
+        insertEvent(event);
+    }
+
+    async createInvitedToChatEvent(recipientId, chat, inviterId) {
+        const event = {
+            type: 'invited_to_chat',
+            recipientId: recipientId,
+            data: {
+                invitedId: inviterId,
+                chat: chat
+            },
+            notify: true
+        };
+
+        insertEvent(event);
+    }
+
+    async createChatUpdatedEvent(recipientId, fields, chatId) {
+        const event = {
+            type: 'chat_updated',
+            recipientId: recipientId,
+            data: {
+                fields: fields,
+                chatId: chatId
+            },
+            notify: false
+        };
+
+        insertEvent(event);
+    }
+
+    async receiveEvents(userId) {
+        return await events.find({ recipientId: userId, sent: false }).toArray()
+    }
+
+    async receiveUnreadMsgs(userId) {
         return await events.find({
             type: "Message",
             recipientId: userId,
             "content.isRead": false
-          }).toArray()
+        }).toArray()
     }
 
-    async updateMessageReadStatus(userId,messageId){
+    async updateMessageReadStatus(userId, messageId) {
         return await events.updateOne({
             recipientId: userId, "content.message.id": messageId
         },
@@ -74,15 +163,18 @@ class eventQueries {
             })
     }
 
-    async updateEventsSentStatus(eventId){
+    async updateEventsSentStatus(eventId) {
         return await events.updateMany({
-            id:eventId
+            _id: eventId
         },
             {
                 $set: {
                     "sent": true
                 }
             })
+    }
+    async destroyNotRelevant() {
+        return await events.deleteMany({ notify: false })
     }
 
 }

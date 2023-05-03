@@ -41,7 +41,7 @@ class messageQueries {
         })
     }
     async receiveByChat(chatId, limit, offset) {
-        return await Message.findAll({
+        return await Message.findAndCountAll({
             where: {
                 chatId: chatId
             },
@@ -49,11 +49,23 @@ class messageQueries {
                 model: Attachement,
                 attributes: ['id', 'type', 'url']
             },
+            attributes: [
+                'id',
+                'content',
+                'senderId',
+                'createdAt',
+                'isRead',
+                [
+                    Sequelize.literal(
+                        `(ROW_NUMBER() OVER (PARTITION BY "message"."chatId" ORDER BY "message"."id") - 1)`
+                    ),
+                    'index',
+                ],
+            ],
             limit: limit,
             offset: offset,
-            attributes: ['id', 'content', 'senderId', 'createdAt', 'isRead'],
             order: ['id']
-        })
+        });
     }
     async receiveMessagesIdsThatSatisfyMessage(chatsWhereUserIn, likeMessage, plainMessage) {
         return await Message.findAll({

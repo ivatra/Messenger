@@ -6,11 +6,11 @@ const { Contact } = require('../models/contactModel')
 
 async function makeContactStatusChangedEvent() {
   Contact.addHook('afterCreate', async (contact) => {
-    await eventsQueries.createContactEvent(contact.recipientId,contact.status,contact.dataValues)
+    await eventsQueries.createContactEvent(contact.recipientId,contact.dataValues,contact.dataValues.status)
   })
 
   Contact.addHook('afterUpdate', async (contact) => {
-     await eventsQueries.createContactEvent(contact.recipientId,contact.status,contact.dataValues)
+    await eventsQueries.createContactEvent(contact.recipientId, contact.dataValues, contact.dataValues.status)
   })
 }
 
