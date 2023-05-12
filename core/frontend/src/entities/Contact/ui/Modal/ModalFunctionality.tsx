@@ -17,7 +17,7 @@ interface IContactModalContentProps {
 const ModalFunctionality: React.FC<IContactModalContentProps> = ({
     contact,
 }) => {
-    const { receiveChatWithUser: getChatWithUser } = useChatStore()
+    const { receiveChatWithUser } = useChatStore()
     const { closeContactModal } = useContactInteractionStore()
 
     const navigate = useNavigate()
@@ -28,7 +28,7 @@ const ModalFunctionality: React.FC<IContactModalContentProps> = ({
 
 
     const handleForward = async () => {
-        const chatId = await getChatWithUser(contact.id)
+        const chatId = await receiveChatWithUser(contact.id)
         if (!chatId) return
         closeContactModal()
         navigate(`/chat/${chatId}`)

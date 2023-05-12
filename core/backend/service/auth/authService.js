@@ -10,8 +10,8 @@ const activationQueries = require('../../database/mongo/queries/activationQuerie
 const tokensQueries = require('../../database/mongo/queries/tokensQueries');
 
 
-function comparePassword(rightPassword, usersPassword) {
-    const isPasswordCorrect = bcrypt.compareSync(usersPassword, rightPassword)
+function comparePassword(correctPassword, requestPassword) {
+    const isPasswordCorrect = bcrypt.compareSync(requestPassword, correctPassword)
     if (!isPasswordCorrect)
         throw ApiError.Internal('Incorrent password')
 }
@@ -36,35 +36,37 @@ async function authenticateUser(userId, userAgent) {
 //TODO: 
 async function createAndSendActivationLink(email, userId) {
     const generatedUuid = uuid.v4()
-    const activationLink = process.env.API_URL + '/api/auth/activate/' + generatedUuid
-    // await mailService.sendActivationMail(email, activationLink)
+    const activationLink = process.env.FRONTEND_URL + generatedUuid
+    await mailService.sendActivationMail(email, activationLink)
     await activationQueries.createLink(userId, generatedUuid)
 }
 
 class authService {
     async login(email, password, userAgent) {
-        console.log(email,password)
         const user = await userQueries.receiveUserByEmail(email)
+
         if (!user)
-            throw ApiError.Internal('User not found')
+            throw ApiError.badRequest('User not found')
 
         comparePassword(user.password, password)
 
         const tokens = await authenticateUser(user.id, userAgent)
 
-        return { tokens: tokens, user: user.dataValues }
+        return { tokens: tokens, user: { ...user.dataValues, password: 'hidden' } }
     }
 
     async register(login, email, password, name, avatar, userAgent) {
         const hashPassword = await bcrypt.hash(password, 5)
 
-        const user = await userQueries.create(login, email, hashPassword, name, avatar)
+        const _ = await userQueries.create(login, email, hashPassword, name, avatar)
+
+        const user = await userQueries.receiveUserByEmail(email)
 
         // await createAndSendActivationLink(email, user.id) //TODO:
 
         const tokens = await authenticateUser(user.dataValues.id, userAgent)
 
-        return { tokens: tokens, user: user.dataValues }
+        return { tokens: tokens, user: { ...user.dataValues, password: 'hidden' } }
     }
 
     async logout(refreshToken) {
@@ -99,7 +101,16 @@ class authService {
             throw ApiError.badRequest('Token isn"t valid. Relogin, please.')
 
         return tokenService.generateAccess(validToken.userId, validToken.device)
+    }
 
+    async checkActivatedStatus(userId) {
+        if (!userId) {
+            throw ApiError.badRequest('There was no user')
+        }
+
+        const user = await userQueries.receiveUserServiceInfoById(userId)
+
+        return { isActivated: user.dataValues.isActivated }
     }
 }
 

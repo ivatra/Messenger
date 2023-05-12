@@ -35,8 +35,7 @@ export const UnderlinedTextButton: React.FC<UnderlinedTextButtonProps> = ({ chil
             onMouseLeave={handleMouseLeave}
             role='button'
             tabIndex={0}
-            onClick={onClick}
-        >
+            onClick={onClick}>
             {children}
         </Text>
     );

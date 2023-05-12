@@ -7,10 +7,11 @@ const { Sequelize } = require("../postgre")
 class userQueries {
 
     async create(login, email, hashPassword, name, avatar) {
-        return await User.create({ login, name, avatar: avatar, email, password: hashPassword })
+        return await User.create({ login, name, avatar, email, password: hashPassword },
+            { attributes: ['id', 'login', 'name', 'avatar', 'email'] })
     }
     async createUserVector(userId, name, login) {
-        return await UserVector.create({ userId: userId, nameCopy:name, loginCopy:login });
+        return await UserVector.create({ userId: userId, nameCopy: name, loginCopy: login });
 
     }
     async receiveUserById(userId) {
@@ -29,7 +30,12 @@ class userQueries {
     }
 
     async receiveUserByEmail(email) {
-        return await User.findOne({ where: { email } })
+        return await User.findOne(
+            {
+                where: { email },
+                attributes: ['id', 'login', 'name', 'avatar', 'email', 'password', 'isActivated']
+            }
+        )
     }
 
     async receiveUserByLogin(login) {
@@ -143,7 +149,7 @@ class userQueries {
         return await User.update({ requestsCountPerMinute: 0 }, { where: {} });
     }
     async resetUserRequestsCount(userId) {
-        return await User.update({ requestsCountPerMinute: 0 }, { where: {id:userId} });
+        return await User.update({ requestsCountPerMinute: 0 }, { where: { id: userId } });
     }
 
 }

@@ -1,11 +1,12 @@
 import { create } from 'zustand'
+import produce from "immer";
 
 import { IInboxStore } from '../types/Store'
 import { IStoreFeedback, handleRequest } from '../../../shared'
 import { api } from '../../../app'
-import { updateInboxMessage } from './updaters'
 import { IInbox } from '../types/Model'
 import { IMatchedInboxesResponse, IInboxesResponse, IPinnedInboxesResponse } from '../types/ApiResponse'
+import { useChatStore } from '../../Chat';
 
 export type StoreType = IInboxStore & IStoreFeedback
 
@@ -33,8 +34,7 @@ const useInboxStore = create<StoreType>()((set, get) => ({
 
         const { inboxes, pinnedInboxes, matchedInboxes } = get();
 
-        const inbox =
-            inboxes.find((i) => i.id === id) ||
+        const inbox = inboxes.find((i) => i.id === id) ||
             pinnedInboxes.find((i) => i.id === id) ||
             matchedInboxes.find((i) => i.id === id);
 
@@ -42,15 +42,13 @@ const useInboxStore = create<StoreType>()((set, get) => ({
 
         const wasPinned = inbox.isPinned;
 
-        inbox.isPinned = !wasPinned;
-
         set({
             inboxes: wasPinned
-                ? [...inboxes, inbox]
+                ? [...inboxes, {...inbox,isPinned:!wasPinned}]
                 : inboxes.filter((i) => i.id !== id),
             pinnedInboxes: wasPinned
                 ? pinnedInboxes.filter((i) => i.id !== id)
-                : [...pinnedInboxes, inbox],
+                : [...pinnedInboxes, { ...inbox, isPinned: !wasPinned }],
             matchedInboxes: matchedInboxes.map((i) => {
                 if (i.id === id) {
                     return { ...i, isPinned: !wasPinned };
@@ -84,6 +82,25 @@ const useInboxStore = create<StoreType>()((set, get) => ({
         set({ pinnedInboxes: response })
 
     },
+    receiveByChat: async (chatId) => {
+        const addChat = useChatStore.getState().addChat
+        const request = () => api(baseUrl + `/bychat/?chatId=${chatId}`)
+
+        const response = await handleRequest<IInbox>(request, set)
+
+        if (!response) return
+
+        if (response.isPinned) {
+            set(produce((state: StoreType) => {
+                state.pinnedInboxes.push(response)
+            }));
+        } else {
+            set(produce((state: StoreType) => {
+                state.inboxes.push(response)
+            }));
+        }
+        addChat(response.chat)
+    },
     receiveMatched: async (message) => {
         const request = () => api.get(`content/search/inbox/?message=${message}`);
         const inboxes = await handleRequest<IMatchedInboxesResponse>(request, set);
@@ -95,11 +112,24 @@ const useInboxStore = create<StoreType>()((set, get) => ({
 
         set({ matchedInboxes: inboxes });
     },
-    updateMessage: (message, inboxId) => {
-        set((state) => {
-            const updatedInboxes = updateInboxMessage(state, message, inboxId)
-            return { ...state, inboxes: updatedInboxes };
-        });
+    updateMessage: (message, chatId, isExternal) => {
+        const { receiveByChat } = get()
+
+        set(produce((
+            state: StoreType) => {
+
+            const foundInbox = state.inboxes.find((inbox) => inbox.chat.id === chatId)
+                || state.pinnedInboxes.find((inbox) => inbox.chat.id === chatId)
+
+            if (!foundInbox) {
+                receiveByChat(chatId)
+            } else {
+                foundInbox.message = message
+                if (isExternal) {
+                    foundInbox.countUnreadMsgs = foundInbox.countUnreadMsgs + 1
+                }
+            }
+        }));
     },
 }))
 

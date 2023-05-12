@@ -10,6 +10,7 @@ class Api {
     constructor() {
         this.api = ky.create({
             prefixUrl: API_URL,
+            credentials:'include',
             timeout: 5000,
             retry: 0,
             throwHttpErrors: false,

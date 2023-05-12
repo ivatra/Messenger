@@ -1,31 +1,47 @@
+import { FileWithPath } from "@mantine/dropzone"
 import { IMessage } from "../../../shared"
-import { IContentItem } from "./Model"
+import { IContentItem, IListMessage } from "./Model"
 
 
-export interface IStoreMessage {
-    [chatId: number]: IContentItem[]
+
+
+export interface IChatContent {
+    items: IContentItem[];
+    page: number;
+    totalCount:number | undefined
+    communicationMessagesTally :number
+    hasMore: boolean;
 }
 
-interface IStoreAttachement{
-    [chatId:number]:IMessage[]
+export interface IAttachementsContent {
+    attachments: IListMessage[]
+    page: number
+    totalCount: number | undefined
+    hasMore: boolean
+}
+
+export interface IStoreMessage {
+    [chatId: number]: IChatContent
+}
+
+export interface IStoreAttachement{
+    [chatId: number]: IAttachementsContent
 }
 
 
 export interface IMessageStore {
-    messages: IStoreMessage
-    attachements: IStoreAttachement
-    
-    messagesAmount:number
-    page:number
+    items: IStoreMessage
+    attachments: IStoreAttachement
 
-    receiveMessages: (chatId: number,limit: number) => void
-    receiveAttachements: (chatId: number, limit: number) => void
+    receiveMessages: (chatId: number,offset:number,limit: number) => void
+    receiveAttachments: (chatId: number, limit: number) => void
 
-    addMessage: (chatId: number, message: string, attachement?: any) => void
-    addAttachement: (chatId: number, attachement: any) => void
+    sendMessage: (chatId: number, message: string, attachement?: FileWithPath) => void
+    sendAttachment: (chatId: number, attachement: any) => void
 
     setMessageRead:(chatId:number,messageId:number) => void
-    setPage:(page:number) => void
-
-    addContentExternal: (chatId: number,content:IContentItem) => void;
+    setPage:(chatId:number,page:number) => void
+    
+    increaseCommunicationMessagesTally:(chatId:number) => void
+    addItemExternal: (chatId: number,content:IContentItem) => void;
 }

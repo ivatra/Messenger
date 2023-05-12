@@ -4,6 +4,7 @@ const avatarUrl  = `https://images.unsplash.com/photo-1535713875002-d1d0cf377fde
 
 export const profile: IProfile = {
     avatar: avatarUrl,
+    email:'ivatra@yandex.ru',
     id: '12345',
     login: 'ivatra',
     name: 'охуенный военный'

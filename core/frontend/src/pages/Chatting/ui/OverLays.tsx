@@ -2,16 +2,23 @@ import React, { useCallback } from "react"
 
 import { Notifications } from "@mantine/notifications"
 
-import { SessionExpiredModal, Captcha, useCaptchaStore } from "../../../features"
+import { SessionExpiredModal, Captcha, useCaptchaStore, EmailActivationHint } from "../../../features"
 import { useContactInteractionStore, useUserStore, ContactModal } from "../../../entities"
 
 
- const OverLays = (): JSX.Element => {
-    const { isSessionExpired } = useUserStore()
+interface IOverlays {
+    component: React.FC
+    condition: boolean
+    priority: 1 | 2 | 3 | 4
+}
+
+const OverLays = (): JSX.Element => {
+    const { isSessionExpired,isActivated } = useUserStore()
     const { isCaptcha } = useCaptchaStore()
     const { contactModalisOpened } = useContactInteractionStore()
 
-    const overlays = [
+    const overlays: IOverlays[] = [
+        { component: EmailActivationHint, condition: !isActivated, priority: 4 },
         { component: SessionExpiredModal, condition: isSessionExpired, priority: 3 },
         { component: Captcha, condition: isCaptcha, priority: 2 },
         { component: ContactModal, condition: contactModalisOpened, priority: 1 },
@@ -29,7 +36,6 @@ import { useContactInteractionStore, useUserStore, ContactModal } from "../../..
 
     return (
         <>
-            <Notifications />
             {VisibleComponent && <VisibleComponent />}
         </>
     )

@@ -7,20 +7,22 @@ import { useDynamicLimit } from "../../../../shared";
 const averageInboxSize = 50
 
 const useInboxesPagination = () => {
-    const { receive, receivePinned, inboxesTotalCount, inboxes } = useInboxStore()
-
     const [page, setPage] = useState<number>(1);
-
     const containerRef = useRef<HTMLDivElement>(null);
+
     const { ref: observerRef, entry } = useIntersection({
         root: containerRef.current,
     })
+
+    const { receive, receivePinned, inboxesTotalCount, inboxes } = useInboxStore()
     const { limit, sizeRef } = useDynamicLimit({ subjectSize: averageInboxSize })
+   
 
     useEffect(() => {
-        if (inboxes.length >= inboxesTotalCount - 1 && inboxes.length !== 0) return // TODO: Temporarily condiition
-        page === 1 && receivePinned()
-        receive(limit)
+        if (inboxes.length < inboxesTotalCount || !inboxesTotalCount){
+            page === 1 && receivePinned()
+            receive(limit)
+        }
     }, [page])
 
 

@@ -1,39 +1,45 @@
+import { useState, useContext, useEffect } from "react";
+
 import { Group } from "@mantine/core";
+import { useFocusTrap } from "@mantine/hooks";
+
 import { PickEmodji } from "./Buttons/PickEmodji";
 import { PickAttachement } from "./Buttons/PickAttachement";
 import { MessageInput } from "./MessageInput";
 import { SendMessage } from "./Buttons/SendMessage";
-import { useState, useContext, useEffect } from "react";
-import { SocketContext } from "../../../../pages/Chatting";
-import { ChatContext } from "../../../../widgets/ChatView/helpers/ChatContext";
-import { useDidUpdate } from "@mantine/hooks";
+import { sendTypingEvent } from "../helpers/sendTypingEvent";
 
-interface IInputBodyProps{
+import { ChatContext } from "../../../../widgets";
+import { SocketContext } from "../../../../pages";
+
+
+interface IInputBodyProps {
     attachementRef: React.RefObject<() => void>
+
+    messageSending: boolean
+    inputValue: string
+
+    sendMessage: () => void
+    setInputValue: (value: string) => void
 }
 
-export const InputBody:React.FC<IInputBodyProps> = ({attachementRef}) => {
+export const InputBody: React.FC<IInputBodyProps> = ({ attachementRef, inputValue, setInputValue, sendMessage, messageSending }) => {
     const [isTyping, setIsTyping] = useState<boolean>(false)
-    const [inputValue, setInputValue] = useState<string>('');
 
-    const socket = useContext(SocketContext)
+    const focusTrapRef = useFocusTrap();
+
     const chat = useContext(ChatContext)
+    const socket = useContext(SocketContext)
 
     useEffect(() => {
         const isInputEmpty = inputValue.length === 0
         if (isInputEmpty !== isTyping) {
 
             setIsTyping(isInputEmpty)
-
-            const event = {
-                type: 'typing',
-                data:{
-                    chatId: chat.id,
-                    isTyping: inputValue ? true : false
-                }
-          
+            console.log(socket)
+            if (socket) {
+                sendTypingEvent(socket, !isInputEmpty, chat.id)
             }
-            socket.current.send(JSON.stringify(event))
         }
     }, [inputValue])
 
@@ -43,10 +49,10 @@ export const InputBody:React.FC<IInputBodyProps> = ({attachementRef}) => {
 
     return (
         <Group noWrap px='md'>
-            <PickAttachement openFileExplorer = {attachementRef}/>
-            <MessageInput inputValue={inputValue} setInputValue={setInputValue} />
+            <PickAttachement openFileExplorer={attachementRef} />
+            <MessageInput inputValue={inputValue} setInputValue={setInputValue} focusRef={focusTrapRef} />
             <PickEmodji onEmojdiPick={handleEmojiSelect} />
-            <SendMessage onAction={() => { }} isLoading={false} />
+            <SendMessage onAction={() => sendMessage()} isLoading={messageSending} />
         </Group>
     );
 };

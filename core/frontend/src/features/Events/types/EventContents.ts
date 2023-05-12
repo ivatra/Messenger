@@ -1,11 +1,12 @@
 import { IContact, IGroupChatUpdatebleFields } from "../../../entities"
 import { IContactStatus } from "../../../entities/Contact/types/Model"
+import { IListMessage } from "../../../entities/Message/types/Model"
 import { IChat, IChatParticipant, IMessage } from "../../../shared"
 
 export interface IReceivedMessageEvent {
     type: 'received_message'
     data: {
-        message: IMessage
+        message: IListMessage
         chatId:number
         isMentioned: boolean
     }

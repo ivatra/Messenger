@@ -19,12 +19,15 @@ interface IUserStore extends IAuthStore {
 
 interface IAuthStore {
     isAuth: boolean
+    isActivated:boolean
+    isAnotherAccountActivated:boolean
     isSessionExpired: boolean
     setSessionExpired: (value: boolean) => void
-    register: (name: string, log: string, email: string, pass: string, avatar: ImageBitmap) => void
+    register: (name: string, log: string, email: string, pass: string, avatar: File | null) => void
     login: (email: string, pass: string) => void
     logout: () => void
     activate: (link: string) => void
+    checkActivation:() => void
     refreshActivation: () => void
 }
 

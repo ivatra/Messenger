@@ -31,13 +31,17 @@ export const ScrollChevron: React.FC<IShevronProps> = ({
 }) => {
     const ChevronIcon = position === 'bottom' ? IconChevronDown : IconChevronUp;
 
+    const handleClick = (e:any) =>{
+        e.preventDefault()
+        onClick()
+    }
     return (
         <>
             {visible ? (
                 <ActionIcon
                     {...actionIconProps}
                     {...pos}
-                    onClick={onClick}>
+                    onClick={handleClick}>
                     <ChevronIcon size="2.5rem" stroke={1.5} />
                 </ActionIcon>
             ) : null}

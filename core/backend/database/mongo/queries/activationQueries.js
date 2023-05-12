@@ -15,7 +15,7 @@ class activationQueries {
     }
 
     async receiveLink(link) {
-        return await activation.findOne({ link: link })
+        return await activation.findOne({ link: link})
     }
 
     async destroyExpiredLinks() {

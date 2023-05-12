@@ -1,33 +1,34 @@
-import { Box, Group, Text } from "@mantine/core"
-import { TablerIconsProps } from "@tabler/icons-react"
 import { useState } from "react"
+
+import { Box, Group, Text } from "@mantine/core"
+
 import { TablerIcon } from "../../../../../shared"
 
 interface IButtonTabProps {
     Icon: TablerIcon
     label: string
-    feedBack?: JSX.Element
-    onClick:() => void
+    feedbackIndicator?: JSX.Element
+    onClick: () => void
 }
 
-export const ButtonTab: React.FC<IButtonTabProps> = ({ Icon, label, feedBack,onClick }) => {
+export const ButtonTab: React.FC<IButtonTabProps> = ({ Icon, label, feedbackIndicator, onClick }) => {
     const [selected, setSelected] = useState<boolean>(false)
 
     const boxProps = {
         onMouseEnter: () => setSelected(true),
         onMouseLeave: () => setSelected(false),
         bg: selected ? 'dark.5' : 'initial',
-        onClick:onClick
+        onClick: onClick
     }
 
     return (
         <Box {...boxProps} >
-            <Group px='lg' spacing={'xl'} py={'xs'} position ='apart'>
+            <Group px='lg' spacing={'xl'} py={'xs'} position='apart'>
                 <Group>
                     <Icon />
                     <Text>{label}</Text>
                 </Group>
-                {feedBack}
+                {feedbackIndicator}
             </Group>
         </Box>
 

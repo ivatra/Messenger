@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ActionIcon, Group } from "@mantine/core";
 import { UpdateProfileParams } from "../types/Store";
-import { EditFileInput } from "./EditFileInput";
+import { EditFileInput } from "../../../shared/ui/Components/EditFileInput";
 import { IProfile } from "..";
 import { IEditInputs } from "../model/EditInputProps";
 import { EditTextInput } from "./EditTextInput";

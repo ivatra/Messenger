@@ -13,7 +13,7 @@ const groupProps: GroupProps = {
 const fotterProps: Omit<FooterProps, 'children'> = {
     height: 65,
     bg: 'dark.8',
-    pt: 'xs'
+    pt: 'xs',
 }
 
 interface INavigationProps {

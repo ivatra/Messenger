@@ -36,6 +36,5 @@ module.exports = async function (req, res, next) {
     }
     else
         req.avatar = 'defaultPic.jpg';
-
     next()
 }

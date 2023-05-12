@@ -1,7 +1,8 @@
-import { IMessage } from "../../../shared";
+;import { IListMessage } from "./Model";
 
 
 export interface IMessagesApiResponse{
-    data:IMessage[]
+    data:IListMessage[]
     count:number
 }
+

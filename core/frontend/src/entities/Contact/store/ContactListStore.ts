@@ -62,7 +62,7 @@ export const useContactListStore = create<StoreType>((set, get) => ({
         if (!response) return;
 
     const sortedContacts = sortByIsContact([...searchedContacts,...response.data])
-
+    
         set({
             searchedContacts: sortedContacts,
             searchHasMore: offset + limit < response.count

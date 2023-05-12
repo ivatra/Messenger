@@ -1,14 +1,22 @@
-const { Timestamp } = require('mongodb');
 const mongoClient = require('../mongo');
 const events = mongoClient.db('Messenger').collection('events');
 
-async function insertEvent(event) {
+const { userSockets } = require('../../../websocket/userSocket')
+
+function insertEvent(event) {
     event.sent = false;
     event.createdAt = new Date();
-
-    await events.insertOne(event);
+    const ws = userSockets.get(event.recipientId);
+    if (ws && ws.isAlive) {
+        ws.send(JSON.stringify([event]), (err) => {
+            if (err) {
+                console.log('Failed to send event:', err);
+            } else {
+                console.log('sent ', event.type);
+            }
+        });
+    }
 }
-
 class eventQueries {
     async createReceivedMessageEvent(recipientId, message, chatId, isMentioned) {
         const event = {
@@ -19,7 +27,7 @@ class eventQueries {
                 chatId: chatId,
                 isMentioned: isMentioned
             },
-            notify: true
+            notify: false
         };
 
         insertEvent(event);
@@ -152,15 +160,16 @@ class eventQueries {
         }).toArray()
     }
 
-    async updateMessageReadStatus(userId, messageId) {
-        return await events.updateOne({
-            recipientId: userId, "content.message.id": messageId
-        },
-            {
-                $set: {
-                    "content.isRead": true
-                }
-            })
+    async createMessageReadStatus(userId,chatId, messageId) {
+        const event = {
+            type: 'message_read',
+            recipientId: userId,
+            data: {
+                chatId: chatId,
+                msgId: messageId
+            }
+        }
+        insertEvent(event)
     }
 
     async updateEventsSentStatus(eventId) {

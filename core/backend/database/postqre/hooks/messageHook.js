@@ -46,15 +46,18 @@ async function sendMessageReceivedEvent(message) {
     const messageWithAttachement = assignAttachementToMessage(attachement, message.dataValues)
 
     if (message.senderId !== id)
-      await eventsQueries.createReceivedMessageEvent(id, {...messageWithAttachement,isMentioned:userMentioned})
-
+      await eventsQueries.createReceivedMessageEvent(id,
+        { ...messageWithAttachement, isMentioned: userMentioned},
+        messageWithAttachement.chatId,
+        userMentioned)
+        
     await inboxQueries.updateMessage(id, message.chatId, message.id)
   });
   await Promise.all(promises);
 }
 
-async function createMessagesVector(messageId,filteredMessage) {
-  await messageQueries.createMessageVector(messageId,filteredMessage)
+async function createMessagesVector(messageId, filteredMessage) {
+  await messageQueries.createMessageVector(messageId, filteredMessage)
 
 }
 const declareMessageTrigger = async () => {
@@ -65,7 +68,19 @@ const declareMessageTrigger = async () => {
       removePunctuation(message.content).
       toLowerCase()
 
-    await createMessagesVector(message.id,filteredMessage)
+    await createMessagesVector(message.id, filteredMessage)
+  });
+  Message.addHook('beforeCreate',async (message, options) => {
+    const lastMessage = await Message.findOne({
+      where: { chatId: message.chatId },
+      order: [['index', 'DESC']],
+    });
+
+    if (lastMessage) {
+      message.index = lastMessage.index + 1;
+    } else {
+      message.index = 0;
+    }
   });
 }
 

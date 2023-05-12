@@ -10,8 +10,9 @@ class messageController {
         const { content } = req.body
         const { attachement } = req.files || false
         const chatId = req.params.chatId
-
+    
         const message = await messageService.createMessage(content, attachement, req.user.id, chatId)
+
         return res.json(message)
     }
 }

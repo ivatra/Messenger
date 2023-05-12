@@ -24,5 +24,5 @@ export interface IChat {
     groupChat: IGroupChat
     individualChat: IIndividualChat
     participants: IChatParticipant[]
-    typingUsers:IChatParticipant[] | []
+    typingUsers:IChatParticipant[]
 }

@@ -48,7 +48,7 @@ export const InteractionButton: React.FC<IButtonTabLogicProps> = ({ status, cont
         <ButtonTab
             Icon={Icon}
             label={label}
-            feedBack={feedBackLoader}
+            feedbackIndicator={feedBackLoader}
             onClick={handleInteraction}
         />
     );

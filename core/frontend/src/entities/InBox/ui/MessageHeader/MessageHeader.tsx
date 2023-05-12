@@ -20,7 +20,7 @@ export const MessageHeader: React.FC<ITitleProps> = ({ name, inbox, messageSentD
     const rightSide = inboxSelected
         ? <Options
             pinInbox={() => pin(inbox.id)}
-            inboxPinned={inbox.isPinned} />
+            isInboxPinned={inbox.isPinned} />
         : <Date
             messageSentDate={messageSentDate} />
 

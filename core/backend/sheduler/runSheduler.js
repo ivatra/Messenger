@@ -10,6 +10,9 @@ const tokensQueries = require('../database/mongo/queries/tokensQueries');
 const captchaQueries = require('../database/mongo/queries/captchaQueries');
 
 module.exports = async function runSheduler() {
+    cron.schedule('*/3 * * * * *', async () => { // every 5 seconds
+        await eventsQueries.destroyNotRelevant()
+    })
     cron.schedule('*/1 * * * *', async () => { // every minute
         await deactivateInactiveUsers();
         await deactivateTypingParticipants()

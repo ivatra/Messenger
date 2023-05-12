@@ -7,7 +7,10 @@ interface ITypingUsersProps {
 }
 
 export const TypingUsers: React.FC<ITypingUsersProps> = ({ typingUsers }) => {
+
+    if(typingUsers.length <  1) return <></>
+    
     return (
-        <Text>{typingUsers.map((participant) => participant.user.name)} is Typing</Text>
+        <Text >{typingUsers.map((participant) => participant.user.name)} is Typing</Text>
     )
 }

@@ -47,7 +47,6 @@ export const ImageDropzone: React.FC<IImageDropzoneProps> = ({
         multiple: false,
         activateOnClick: false,
 
-        top: bottomOffset,
         className: dropzone,
 
         openRef: openRef,
@@ -56,13 +55,14 @@ export const ImageDropzone: React.FC<IImageDropzoneProps> = ({
     const boxProps: BoxProps = {
         pos: "absolute",
         w: "100%",
+        top: bottomOffset,
         h: parentHeight - bottomOffset,
         p: '4px',
         display: display
     };
 
     return (
-        <Box {...boxProps} >
+        <Box {...boxProps}  mah={'100vh'}>
             <Dropzone {...dropZoneProps}>
                 <ImageDropzoneBody />
             </Dropzone>

@@ -1,3 +1,8 @@
+export { subscribeToEvents } from "./Events";
+
+export { EmailActivationHint } from "./OverLays/EmailActivationHint";
+
+export { MessagesList } from "./ChatView/MessagesList";
 export { ChatInput } from "./ChatView/ChatInput";
 export { ContactsList } from "./NavBar/ContactsList";
 export { InboxesList } from "./NavBar/InBoxesList";

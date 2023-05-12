@@ -43,7 +43,9 @@ class MessageService {
             const fileType = await fileService.getFileType(attachement.name)
             attachement = await attachementService.create(fileType, fileName, message.id)
         }
-        return { message, attachement }
+
+        
+        return attachement ? {...message.dataValues,attachement:attachement.dataValues} : message.dataValues
     }
 
 }

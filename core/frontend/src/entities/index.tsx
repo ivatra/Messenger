@@ -1,4 +1,4 @@
-export { Message, useMessageStore } from "./Message";
+export { Message, useMessageStore,ParticipantAction ,type IContentItem,type IMessageContentItem} from "./Message";
 
 export { useInboxStore, type IInbox, Inbox } from "./InBox";
 export { useUserStore, type IProfile } from "./User";

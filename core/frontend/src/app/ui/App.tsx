@@ -1,3 +1,4 @@
+import { Notifications } from "@mantine/notifications"
 import { ChattingPage } from "../../pages/Chatting"
 import { AppRoutes } from "./Routes/AppRoutes"
 import StylesProvider from "./StylesProvider"
@@ -22,11 +23,15 @@ import StylesProvider from "./StylesProvider"
 
 //@TODO: Might be reset of right indicator in edit user drawer when user again enters something
 
+
+
+// Handle activation
 */
 const App = (): JSX.Element => {
     return (
         <StylesProvider>
-                <AppRoutes />
+            <Notifications />
+            <AppRoutes />
         </StylesProvider>
     )
 }

@@ -3,6 +3,7 @@ import { Drawer, DrawerProps, Group, Loader, Stack } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { EditInputsList } from "./EditInputsList";
 import { useLoader } from '../../../shared/lib/hooks/useLoader';
+import { CenterLoader } from '../../../shared';
 
 interface IEditUserProps {
     opened: boolean;
@@ -12,7 +13,7 @@ interface IEditUserProps {
 export const EditUserDrawer: React.FC<IEditUserProps> = ({ opened, closeDrawer }) => {
     const isLargeScreen = useMediaQuery(`(min-width: 46rem)`);
 
-    if (isLargeScreen === undefined) return <Loader />
+    if (isLargeScreen === undefined) return <></>
 
     const drawerProps: DrawerProps = {
         opened: opened,

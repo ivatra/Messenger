@@ -1,20 +1,24 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-
-import { Text } from "@mantine/core"
+import { BrowserRouter } from 'react-router-dom';
 
 import AuthenticatedRoutes from './AuthenticatedRoutes';
+import NotAuthorizedRoutes from './NotAuthorizedRoutes';
 import PublicRoutes from './PublicRoutes';
+import ActivationRoutes from './ActivationRoutes';
 
 import { useUserStore } from '../../../entities';
 
 
 export const AppRoutes = () => {
-    const isAuth = useUserStore(state => state.isAuth)
+    const { isAuth, isActivated } = useUserStore()
 
     return (
         <BrowserRouter>
-            {isAuth 
-            ? <AuthenticatedRoutes /> : <PublicRoutes/>}
-    </BrowserRouter>
+            {isAuth && isActivated
+                ? <AuthenticatedRoutes />
+                : isAuth && !isActivated
+                    ? <ActivationRoutes />
+                    : <NotAuthorizedRoutes />
+            }
+        </BrowserRouter>
     );
 };

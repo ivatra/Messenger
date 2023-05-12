@@ -5,10 +5,10 @@ import { IconBookmark } from '@tabler/icons-react';
 
 interface IStatusTabProps {
     status: string | null;
-    display?:string
+    display?: string
 }
 
-export const StatusText: FC<IStatusTabProps> = ({ status,display }) => {
+export const StatusText: FC<IStatusTabProps> = ({ status, display }) => {
     if (!status) return <></>
 
     const statusWithCapital = status.charAt(0).toUpperCase() + status.slice(1)

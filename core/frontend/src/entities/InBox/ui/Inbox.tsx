@@ -30,7 +30,7 @@ export const Inbox: React.FC<IInboxProps> = ({ inbox, active }) => {
     const messageText = inbox.message.content
 
     const { name, avatar } = fetchProps(inbox)
-    const formattedDate = formatDate(inbox.message.updatedAt)
+    const formattedDate = formatDate(inbox.message.createdAt)
 
     const navigate = useNavigate();
 

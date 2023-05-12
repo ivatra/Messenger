@@ -27,7 +27,7 @@ export const ContactsBody: React.FC<IContactsBodyProps> = ({ onScrollPositionCha
 
     const ContactsBody = (
         !visibleContacts.length && !isLoading
-            ? <NothingFoundView searchValue={searchTerm || filter} />
+            ? <NothingFoundView subject={searchTerm || filter} />
             : VisibleContacts
     )
     return ContactsBody

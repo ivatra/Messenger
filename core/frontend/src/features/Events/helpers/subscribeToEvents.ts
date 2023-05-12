@@ -1,8 +1,7 @@
-import { notifications } from "@mantine/notifications";
 
 import { IEvent } from "../types/Event";
 
-import { useChatStore, useContactListStore, useMessageStore } from "../../../entities";
+import { useChatStore, useContactListStore, useInboxStore, useMessageStore } from "../../../entities";
 import { WS_URL } from "../../../shared";
 
 
@@ -14,10 +13,11 @@ function handleEvent(event: IEvent) {
             const message = receivedMessageData.message;
             const messageChatId = receivedMessageData.chatId;
 
-            const { addContentExternal } = useMessageStore.getState()
+            const { addItemExternal } = useMessageStore.getState()
+            const { updateMessage } = useInboxStore.getState()
 
-            addContentExternal(messageChatId, { type: 'Message', data: message })
-
+            updateMessage(message, messageChatId, true)
+            addItemExternal(messageChatId, { type: 'Message', data: message })
             break;
         }
 
@@ -27,9 +27,9 @@ function handleEvent(event: IEvent) {
             const msgId = readMessageData.msgId;
             const chatId = readMessageData.chatId;
 
-            const {setMessageRead} = useMessageStore.getState()
-            
-            setMessageRead(chatId,msgId)
+            const { setMessageRead } = useMessageStore.getState()
+
+            setMessageRead(chatId, msgId)
 
             break;
         }
@@ -40,10 +40,10 @@ function handleEvent(event: IEvent) {
             const contact = contactEventData.contact;
             const status = contactEventData.status;
 
-            const {updateContactStatus,pushContact} = useContactListStore.getState()
+            const { updateContactStatus, pushContact } = useContactListStore.getState()
 
-            if(status === 'pending') pushContact(contact)
-            else updateContactStatus(contact.id,status)
+            if (status === 'pending') pushContact(contact)
+            else updateContactStatus(contact.id, status)
 
             break;
         }
@@ -118,7 +118,7 @@ function handleEvent(event: IEvent) {
     // notifications.show({ message: `Event ${event.type}` })
 }
 
-export async function subscribeToEvents(socketRef: any, userId: string) {
+export async function subscribeToEvents(socketRef: React.MutableRefObject<WebSocket | null>, userId: string) {
     socketRef.current = new WebSocket(WS_URL);
 
     socketRef.current.onopen = () => {
@@ -128,7 +128,7 @@ export async function subscribeToEvents(socketRef: any, userId: string) {
                 userId: userId,
             },
         };
-        socketRef.current.send(JSON.stringify(message));
+        socketRef?.current?.send(JSON.stringify(message));
     };
 
     socketRef.current.onmessage = (message: MessageEvent) => {

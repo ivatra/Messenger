@@ -21,7 +21,7 @@ export interface IChatStore{
     chats :IStoreChat
     currentChatId:number
 
-    setCurrentChatId:(chatId:number) => void
+    setCurrentChatId:(chatId:number | undefined) => void
 
     receiveChatWithUser: (userId: string) => Promise<number | undefined>
     receiveChat: (chatId: number) => void

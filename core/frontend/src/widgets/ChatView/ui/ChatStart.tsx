@@ -1,7 +1,8 @@
 import { Group, Stack, Text } from "@mantine/core"
 
 import { IconMessageCircle2 } from "@tabler/icons-react"
-import { UnderlinedTextButton } from "./UnderlinedTextButton"
+
+import { UnderlinedTextButton } from "../../../shared"
 
 
 // TODO: Create group chat

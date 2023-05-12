@@ -19,6 +19,11 @@ class inBoxService {
 
     return await inbox.update({ isPinned: !inbox.isPinned })
   }
+
+  async getByChat(userId,chatId){
+    const inbox = await inboxQueries.receiveInboxByChatId(userId,chatId)
+    return inbox[0]
+  }
 }
 
 module.exports = new inBoxService()

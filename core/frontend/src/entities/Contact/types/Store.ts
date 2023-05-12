@@ -1,6 +1,5 @@
 import { IContact, IContactStatus} from "./Model";
 
-
 export type IContactInteractions = 'all' | 'accepted' | 'pending' | 'outgoing'
 
 export interface IContactListStore {

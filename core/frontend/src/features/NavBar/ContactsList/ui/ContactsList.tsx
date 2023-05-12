@@ -25,6 +25,7 @@ const contact: IContact = {
     status: 'pending'
 }
 
+
 export const ContactsList = (): JSX.Element => {
     const [scrollPosition, onScrollPositionChange] = useState({ x: 0, y: 0 });
 

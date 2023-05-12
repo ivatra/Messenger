@@ -41,7 +41,7 @@ class eventService {
 
         // const chat = await chatQueries.receiveChatByPk(chatId)
         for (var participant of participants) {
-            // if(participant.user.id === userId) continue
+            if(participant.user.id === userId) continue
             await eventsQueries.createTypingEvent(participant.user.id, chatId, isTyping,userId)
         }
     }
@@ -50,20 +50,19 @@ class eventService {
         await validateOnReadMessage(chatId, messageId)
         await chatService.checkForMemberingInChat(userId, chatId)
 
-        await this.updateMessageRead(userId, messageId)
         const isMessageNoted = await this.messageArleadyNotedRead(messageId)
         const participants = await chatQueries.receiveParticipantsByChat(chatId)
         if (!isMessageNoted) {
             for (var participant of participants) {
                 eventsQueries.createReadMessageEvent(participant.user.id, chatId, messageId)
-                await this.updateMessageRead(participant.user.id, messageId)
+                await this.updateMessageRead(participant.user.id,chatId, messageId)
             }
         }
 
     }
 
-    async updateMessageRead(userId, messageId) {
-        await eventsQueries.updateMessageReadStatus(userId, messageId)
+    async updateMessageRead(userId,chatId, messageId) {
+        await eventsQueries.createMessageReadStatus(userId,chatId, messageId)
         await messageQueries.updateMessage(messageId, { isRead: true })
     }
 

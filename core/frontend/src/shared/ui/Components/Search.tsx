@@ -10,11 +10,11 @@ const textInputProps: TextInputProps = {
 
 interface ISearch {
     value: string
-    placeHolder:string
+    placeholder:string
     setValue: (value: string) => void
 }
 
-export const Search: React.FC<ISearch> = ({ value, setValue,placeHolder }) => {
+export const Search: React.FC<ISearch> = ({ value, setValue,placeholder: placeHolder }) => {
     return (
         <TextInput
             {...textInputProps}

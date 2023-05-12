@@ -6,7 +6,7 @@ import { useMediaQuery } from "@mantine/hooks";
 const scrollAreaProps: ScrollAreaProps = {
     scrollHideDelay: 300,
     type: "hover",
-    pb: 'xs',
+    offsetScrollbars:true,
     scrollbarSize: 7,
     styles: {
         scrollbar: {
@@ -48,8 +48,7 @@ export const ScrollableList: React.FC<ScrollableListProps> = ({
     const handLeScrollPosChange = (pos: scrollPos) => {
         manageShevronVisibility(pos)
         onScrollPosChange && onScrollPosChange(pos)
-    }
-
+    }   
     // const SkeletonList = [...Array(15)].map((_, index) => (
     //     <Skeleton key={index} />
     // ));

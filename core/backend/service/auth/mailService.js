@@ -18,7 +18,7 @@ class mailService {
         await this.transporter.sendMail({
             from: process.env.SMTP_USER,
             to: recipientMail,
-            subject: 'Account activation ' + process.env.API_URL,
+            subject: 'Account activation ' + process.env.FRONTEND_URL,
             text: '',
             html: 
             `

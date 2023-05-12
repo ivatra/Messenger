@@ -29,7 +29,7 @@ export const ContactsListHeader:React.FC<IHeaderProps> = ({limit}) => {
     }
     return (
         <Group noWrap spacing="0px" mb={0}>
-            <Search value={searchTerm} setValue={handleSearch} placeHolder="Write something..." />
+            <Search value={searchTerm} setValue={handleSearch} placeholder="Write something..." />
             <FilterSelector />
         </Group>
     )

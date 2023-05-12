@@ -28,7 +28,7 @@ class messageQueries {
                 id: messageId,
             }, include: {
                 model: Attachement,
-                attributes: ['type', 'url']
+                attributes: ['type', 'url',]
             }
         })
     }
@@ -55,16 +55,12 @@ class messageQueries {
                 'senderId',
                 'createdAt',
                 'isRead',
-                [
-                    Sequelize.literal(
-                        `(ROW_NUMBER() OVER (PARTITION BY "message"."chatId" ORDER BY "message"."id") - 1)`
-                    ),
-                    'index',
-                ],
+                'updatedAt',
+                'index'
             ],
             limit: limit,
             offset: offset,
-            order: ['id']
+            order: [['id', 'DESC']]
         });
     }
     async receiveMessagesIdsThatSatisfyMessage(chatsWhereUserIn, likeMessage, plainMessage) {

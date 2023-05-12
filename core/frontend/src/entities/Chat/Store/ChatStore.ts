@@ -1,8 +1,10 @@
-import { create } from 'zustand'
-import { IChatStore } from '../types/Store'
-import { IChatParticipant, IStoreFeedback, handleRequest } from '../../../shared'
-import { api } from '../../../app'
-import { IChat } from '../../../shared'
+import { create } from 'zustand';
+import produce from "immer";
+
+import { IChatStore } from '../types/Store';
+
+import { api } from '../../../app';
+import { IChat, IStoreFeedback, handleRequest } from '../../../shared';
 
 export type StoreType = IChatStore & IStoreFeedback
 
@@ -18,7 +20,7 @@ const initialState = {
 
 export const useChatStore = create<StoreType>()((set, get) => ({
     ...initialState,
-    setCurrentChatId: (chatId: number) => {
+    setCurrentChatId: (chatId) => {
         set({ currentChatId: chatId });
     },
     receiveChatWithUser: async (userId) => {
@@ -30,35 +32,34 @@ export const useChatStore = create<StoreType>()((set, get) => ({
         return chatId
     },
     receiveChat: async (chatId: number) => {
+        const { addChat } = get()
+
         const request = () => api.get(baseUrl + chatId);
+
         const chat = await handleRequest<IChat>(request, set);
 
         if (!chat || get().chats[chatId]) return;
 
-        get().addChat(chat)
+        addChat(chat)
     },
     addParticipant: async (chatId, participant) => {
-        const request = () => api.post(baseUrl + chatId + '/participants', {
-            json: {
-                participantId: participant.user.id
-            }
-        });
+        const request = () =>
+            api.post(baseUrl + chatId + '/participants', {
+                json: {
+                    participantId: participant.user.id,
+                },
+            });
         const response = await handleRequest(request, set);
 
-        const foundParticipant = get().chats[chatId].participants.filter((part) => part.id === participant.id)
+        const foundParticipant = get().chats[chatId].participants.find((part) => part.id === participant.id);
 
-        if (!response || foundParticipant) return
+        if (!response || foundParticipant) return;
 
-        set((state) => ({
-            chats: {
-                ...state.chats,
-                [chatId]: {
-                    ...state.chats[chatId],
-                    participants: [...state.chats[chatId].participants, participant]
-                }
-            }
-        }));
-
+        set(
+            produce((state: StoreType) => {
+                state.chats[chatId].participants.push(participant);
+            })
+        );
     },
     removeParticipant: async (chatId, userId) => {
         const request = () => api.delete(baseUrl + chatId + `/participants/${userId}`);
@@ -66,24 +67,14 @@ export const useChatStore = create<StoreType>()((set, get) => ({
 
         if (!response) return;
 
-        set((state) => {
-            const updatedParticipants = state.chats[chatId].participants.filter(
-                (participant) => participant.user.id !== userId
-            );
-
-            return {
-                chats: {
-                    ...state.chats,
-                    [chatId]: {
-                        ...state.chats[chatId],
-                        participants: updatedParticipants
-                    }
-                }
-            };
-        })
-
+        set(
+            produce((state: StoreType) => {
+                state.chats[chatId].participants = state.chats[chatId].participants.filter(
+                    (participant) => participant.user.id !== userId
+                );
+            })
+        );
     },
-
     createGroupChat: async (participants, fields) => {
         const formData = new FormData();
 
@@ -94,14 +85,18 @@ export const useChatStore = create<StoreType>()((set, get) => ({
         if (fields.name) {
             formData.append('name', fields.name);
         }
-        formData.append('participants', JSON.stringify(participants))
+        formData.append('participants', JSON.stringify(participants));
 
         const request = () => api.post(baseUrl + 'group', { body: formData });
         const response = await handleRequest<IChat>(request, set);
 
         if (!response) return;
 
-        get().addChat(response)
+        set(
+            produce((state: StoreType) => {
+                state.chats[response.id] = { ...response, typingUsers: [] };
+            })
+        );
     },
     editGroupChat: async (chatId, fields) => {
         const formData = new FormData();
@@ -114,158 +109,99 @@ export const useChatStore = create<StoreType>()((set, get) => ({
             formData.append('name', fields.name);
         }
 
-        const request = () => api.put(baseUrl + chatId, {
-            body: formData
-        });
+        const request = () =>
+            api.put(baseUrl + chatId, {
+                body: formData,
+            });
 
         const response = await handleRequest(request, set);
 
         if (!response) return;
 
-        set((state) => {
-            const updatedChat = {
-                ...state.chats[state.currentChatId],
-                groupChat: {
-                    ...state.chats[state.currentChatId].groupChat,
-                    ...fields
-                }
-            };
-
-            return {
-                ...state,
-                chats: {
-                    ...state.chats,
-                    [state.currentChatId]: updatedChat
-                }
-            };
-        });
+        set(
+            produce((state: StoreType) => {
+                state.chats[chatId].groupChat = { ...state.chats[chatId].groupChat, ...fields };
+            })
+        );
     },
     addParticipantExternal: async (chatId, participant) => {
-        const chats = get().chats
-
-        if (!chats[chatId]) return
-
-        set((state) => ({
-            chats: {
-                ...state.chats,
-                [chatId]: {
-                    ...state.chats[chatId],
-                    participants: [...state.chats[chatId].participants, participant]
-                }
-            }
-        }));
-    },
-
-    addChat: (chat) => {
-        set((state) => ({
-            chats: {
-                ...state.chats,
-                [chat.id]: { ...chat, typingUsers: [] },
-            }
-        }));
-    },
-    removeChat: (chatId) => {
-        set((state) => {
-            const updatedChats = { ...state.chats };
-            delete updatedChats[chatId];
-            return {
-                chats: updatedChats
-            };
-        });
-    },
-    removeParticipantExternal: async (chatId, participantId) => {
-        const chats = get().chats
-
+        const chats = get().chats;
 
         if (!chats[chatId]) return;
 
-        set((state) => {
-            const updatedParticipants = state.chats[chatId].participants.filter(
-                (participant) => participant.id !== participantId
-            );
+        set(
+            produce((state: StoreType) => {
+                state.chats[chatId].participants.push(participant);
+            })
+        );
+    },
 
-            return {
-                chats: {
-                    ...state.chats,
-                    [chatId]: {
-                        ...state.chats[chatId],
-                        participants: updatedParticipants
-                    }
-                }
-            };
-        });
+    addChat: (chat) => {
+        set(
+            produce((state: StoreType) => {
+                state.chats[chat.id] = { ...chat, typingUsers: [] };
+            })
+        );
+    },
+
+    removeChat: (chatId) => {
+        set(
+            produce((state: StoreType) => {
+                delete state.chats[chatId];
+            })
+        );
+    },
+
+    removeParticipantExternal: async (chatId, participantId) => {
+        const chats = get().chats;
+
+        if (!chats[chatId]) return;
+
+        set(
+            produce((state: StoreType) => {
+                state.chats[chatId].participants = state.chats[chatId].participants.filter(
+                    (participant) => participant.id !== participantId
+                );
+            })
+        );
     },
 
     editGroupChatExternal: async (chatId, fields) => {
-        if (!get().chats[chatId]) return
+        if (!get().chats[chatId]) return;
 
-        set((state) => ({
-            chats: {
-                ...state.chats,
-                [chatId]: {
-                    ...state.chats[chatId],
-                    groupChat: {
-                        ...state.chats[chatId].groupChat,
-                        ...fields
-                    }
-                }
-            }
-        }));
+        set(
+            produce((state: StoreType) => {
+                state.chats[chatId].groupChat = { ...state.chats[chatId].groupChat, ...fields };
+            })
+        );
     },
 
     addTypingUser: (chatId, userId) => {
-        set((state) => {
-            const chat = state.chats[chatId];
+        set(
+            produce((state: StoreType) => {
+                const chat = state.chats[chatId];
 
-            const typingUser = chat.participants.find((participant) => participant.user.id === userId);
+                const typingUser = chat && chat.participants.find((participant) => participant.user.id === userId);
 
-            if (!typingUser) {
-                return state;
-            }
-
-            if (chat.typingUsers) {
-                const foundTypingUser = chat.typingUsers.find((participant) => participant.user.id === userId)
-                if (foundTypingUser) {
-                    return state
+                if (!typingUser || chat.typingUsers.find((participant) => participant.user.id === userId)) {
+                    return;
                 }
-            }
 
-            const updatedChat = {
-                ...chat,
-                typingUsers: [...chat.typingUsers, typingUser],
-            };
-
-            return {
-                chats: {
-                    ...state.chats,
-                    [chatId]: updatedChat,
-                },
-            };
-        });
+                chat.typingUsers.push(typingUser);
+            })
+        );
     },
 
     removeTypingUser: (chatId, userId) => {
-        set((state) => {
-            const chat = state.chats[chatId];
+        set(
+            produce((state: StoreType) => {
+                const chat = state.chats[chatId];
 
-            if (!chat.typingUsers) return state
+                if (!chat || !chat.typingUsers) return;
 
-            const updatedTypingUsers = chat.typingUsers.filter((participant) => participant.user.id !== userId);
-
-            if (!updatedTypingUsers) return state
-
-            const updatedChat = {
-                ...chat,
-                typingUsers: updatedTypingUsers,
-            };
-
-            return {
-                chats: {
-                    ...state.chats,
-                    [chatId]: updatedChat,
-                },
-            };
-        });
+                chat.typingUsers = chat.typingUsers.filter((participant) => participant.user.id !== userId);
+            })
+        );
     }
 }))
 

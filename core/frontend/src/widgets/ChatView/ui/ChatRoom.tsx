@@ -1,13 +1,16 @@
-import { useRef, useState } from "react";
-import { Group, MantineStyleSystemProps, ScrollArea, Stack, StackProps } from "@mantine/core";
-import { useElementSize } from "@mantine/hooks";
+import { useEffect, useRef, useState } from "react";
 
-import { ChatInput } from "../../../features";
-import { ChatContext } from "../helpers/ChatContext";
-import { IChat, ScrollableList } from "../../../shared";
+import { Group, MantineStyleSystemProps, Stack, StackProps } from "@mantine/core";
+import { useElementSize, useMediaQuery } from "@mantine/hooks";
+
 import { TypingUsers } from "./TypingUsers";
-import { MessagesList } from "./MessagesList";
+import { ChatContext } from "../helpers/ChatContext";
+
+import { ChatInput, MessagesList } from "../../../features";
 import { useMessageStore } from "../../../entities";
+import { DESKTOP_WIDTH, IChat } from "../../../shared";
+import { ChatHeader } from "./ChatHeader";
+import React from "react";
 
 interface IChatRoomProps {
     chat: IChat;
@@ -15,14 +18,21 @@ interface IChatRoomProps {
 }
 
 export const ChatRoom: React.FC<IChatRoomProps> = ({ chat, display }) => {
-    const { ref: elementSizeRef, width, height } = useElementSize();
-    const [isDragging, setIsDragging] = useState<boolean>(false);
+    const [isDragging, setIsDragging] = useState<boolean>(false)
+    const scrollRef = useRef<HTMLDivElement>(null)
 
-    const { isLoading, messages } = useMessageStore()
+    const isDesktop = useMediaQuery(`(min-width: ${DESKTOP_WIDTH})`);
+
+    const childrenHeight = isDesktop ? '60px' : '7rem'
+
+    const { ref: elementSizeRef, width, height } = useElementSize();
+    const { isLoading,  items } = useMessageStore()
+
+    const scrollToBottom = () => scrollRef?.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
 
     const stackProps: StackProps = {
         w: "100%",
-        h: '100%',
+        h:'100%',
         display: display,
         spacing: 0,
         onDragEnter: () => setIsDragging(true),
@@ -31,17 +41,25 @@ export const ChatRoom: React.FC<IChatRoomProps> = ({ chat, display }) => {
 
     return (
         <ChatContext.Provider value={chat}>
-            <Stack {...stackProps} ref={elementSizeRef}  >
-                <Group w='100%' h={60} bg='red' />
-                <MessagesList messages={messages} isLoading={isLoading} />
-                {chat.typingUsers.length >= 1 && <TypingUsers typingUsers={chat.typingUsers} />}
+            <Stack {...stackProps} ref={elementSizeRef}>
+                <ChatHeader chat={chat} height={childrenHeight} />
+                <MessagesList
+                    {...items[chat.id]}
+                    chatId = {chat.id}
+                    isLoading={isLoading}
+                    scrollRef={scrollRef} />
+                <TypingUsers typingUsers={chat.typingUsers} />
                 <ChatInput
                     parentHeight={height}
+                    height={childrenHeight}
                     isDragging={isDragging}
                     setIsDragging={setIsDragging}
-                />
+                    scrollListToBottom={scrollToBottom} />
             </Stack>
         </ChatContext.Provider>
 
     );
 };
+
+
+export const MemoizedChatRoom = React.memo(ChatRoom)

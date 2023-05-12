@@ -2,6 +2,7 @@ const activationQueries = require("../database/mongo/queries/activationQueries")
 
 module.exports = async function (req, res, next) {
     const { link } = req.params
+    const {userId}  = req.body
 
     const activation = await activationQueries.receiveLink(link)
 

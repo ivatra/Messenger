@@ -6,7 +6,6 @@ interface IMessageCounter {
 }
 
 export const MessagesCounter: React.FC<IMessageCounter> = ({ count }) => {
-
     const colorSwatchProps:ColorSwatchProps = {
         radius:'xl',
         size:'1.1rem',

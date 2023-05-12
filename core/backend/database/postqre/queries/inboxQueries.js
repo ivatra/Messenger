@@ -15,6 +15,12 @@ class inBoxQueries {
     return await InBox.findByPk(inboxId)
   }
 
+  async receiveInboxByChatId(userId,chatId) {
+   const inbox = await InBox.findOne({where:{chatId:chatId,userId:userId}})
+   const result = await this.receiveInboxesByIds([inbox.dataValues.id],userId)
+   return result
+  }
+
   async receivePinnedInboxes(userId) {
     const inboxes = await InBox.findAll({
       where: { userId: userId, isPinned: true, messageId: { [Sequelize.Op.ne]: null } },
@@ -51,7 +57,7 @@ class inBoxQueries {
         {
           model: Message,
           as: 'message',
-          attributes: ['id', 'content', 'senderId', 'updatedAt', 'isRead']
+          attributes: ['id', 'content', 'senderId', 'updatedAt', 'isRead','createdAt']
         },
         {
           model: Chat,

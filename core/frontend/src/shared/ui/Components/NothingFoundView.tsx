@@ -2,7 +2,7 @@ import { Text, TextProps } from "@mantine/core";
 
 
 interface NothingFoundTextProps {
-    searchValue: string
+    subject: string
 }
 
 const textProps: TextProps = {
@@ -14,7 +14,7 @@ const textProps: TextProps = {
     h: "100%",
 }
 
-export const NothingFoundView: React.FC<NothingFoundTextProps> = ({ searchValue }) => (
+export const NothingFoundView: React.FC<NothingFoundTextProps> = ({ subject: searchValue }) => (
     <Text {...textProps}>
         No results found for {searchValue}
     </Text>

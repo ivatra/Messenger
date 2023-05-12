@@ -1,3 +1,4 @@
+const { badRequest } = require('../../error/ApiError')
 const inBoxService = require('../../service/pages/inBoxService')
 
 class inBoxController {
@@ -16,6 +17,15 @@ class inBoxController {
         const { inboxId } = req.params
         const updatedInbox = await inBoxService.pinInbox(inboxId)
         return res.json(updatedInbox)
+    }
+
+    async getByChat(req, res) {
+        const { chatId } = req.query
+        if(!chatId) throw badRequest('No chatId')
+        const inbox = await inBoxService.getByChat(req.user.id, chatId)
+        return res.json(inbox)
+
+
     }
 }
 

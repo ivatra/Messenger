@@ -1,1 +1,3 @@
-export {}
+export { subscribeToEvents } from "./helpers/subscribeToEvents";
+
+
