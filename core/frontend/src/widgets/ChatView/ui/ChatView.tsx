@@ -1,14 +1,12 @@
-import { useEffect, useMemo } from "react"
-import { useParams } from "react-router-dom";
+import { useEffect, useMemo } from "react";
 
-import { Box, MantineStyleSystemProps } from "@mantine/core";
+import { Box } from "@mantine/core";
 
-import { ChatRoom, MemoizedChatRoom } from "./ChatRoom";
+import { ChatRoom } from "./ChatRoom";
 import { ChatStart } from "./ChatStart";
 
 import { useChatStore } from "../../../entities";
 import { CenterLoader, IChat } from "../../../shared";
-import { useViewportSize } from "@mantine/hooks";
 
 //Atachement view overlay
 //Attachements view overlay

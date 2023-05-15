@@ -10,7 +10,7 @@ import { useUserStore } from '../../User'
 
 
 import { api } from '../../../app'
-import { IStoreFeedback, getRandomInt as getRandomArbitrary, handleRequest } from '../../../shared'
+import { IStoreFeedback, getRandomArbitrary as getRandomArbitrary, handleRequest } from '../../../shared'
 import { useInboxStore } from '../..';
 
 export type StoreType = IMessageStore & IStoreFeedback

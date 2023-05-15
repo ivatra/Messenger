@@ -1,3 +1,12 @@
 import { createContext } from "react";
 
-export const SocketContext = createContext<WebSocket | null>(null)
+import { IEventRequest } from "../../../shared";
+
+
+interface SocketActions {
+    send: (data: IEventRequest) => void
+}
+
+type SocketType = SocketActions | null
+
+export const SocketContext = createContext<SocketType>(null)

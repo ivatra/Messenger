@@ -7,7 +7,7 @@ interface AlertStyleProps {
     };
 }
 
-const AlertStyles:AlertStyleProps = {
+const AlertMessageStyles:AlertStyleProps = {
     500:{
         withCloseButton: true,
         title: "There was an internal error",
@@ -29,4 +29,4 @@ const AlertStyles:AlertStyleProps = {
     },
 
 }
-export { AlertStyles}
+export { AlertMessageStyles}

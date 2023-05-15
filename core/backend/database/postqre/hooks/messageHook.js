@@ -45,11 +45,14 @@ async function sendMessageReceivedEvent(message) {
     const attachement = await getMessageAttachements(message.id)
     const messageWithAttachement = assignAttachementToMessage(attachement, message.dataValues)
 
-    if (message.senderId !== id)
+    if (message.senderId !== id){
+      await inboxQueries.updateUnreadMsgs(id, message.chatId, 'increment')
       await eventsQueries.createReceivedMessageEvent(id,
-        { ...messageWithAttachement, isMentioned: userMentioned},
+        { ...messageWithAttachement, isMentioned: userMentioned },
         messageWithAttachement.chatId,
         userMentioned)
+    }
+  
         
     await inboxQueries.updateMessage(id, message.chatId, message.id)
   });

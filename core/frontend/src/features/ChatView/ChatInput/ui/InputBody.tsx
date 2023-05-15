@@ -36,7 +36,6 @@ export const InputBody: React.FC<IInputBodyProps> = ({ attachementRef, inputValu
         if (isInputEmpty !== isTyping) {
 
             setIsTyping(isInputEmpty)
-            console.log(socket)
             if (socket) {
                 sendTypingEvent(socket, !isInputEmpty, chat.id)
             }

@@ -25,7 +25,9 @@ export const useIntersectionObserver = ({
         entries: IntersectionObserverEntry[],
         _: IntersectionObserver
     ) => {
-        if (entries[0].isIntersecting) {
+        const [entry] = entries
+        
+        if (entry.isIntersecting) {
             executeOnIntersection();
         }
     };
@@ -34,7 +36,7 @@ export const useIntersectionObserver = ({
         if (targetRef?.current) {
             if (!isObserved) {
                 unobserve();
-            } else if (isObserved) {
+            } else {
                 observerRef.current = new IntersectionObserver(callbackFunc, options);
                 observerRef.current.observe(targetRef.current);
             }

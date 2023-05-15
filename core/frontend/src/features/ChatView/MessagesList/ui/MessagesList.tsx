@@ -1,12 +1,11 @@
-
 import { Box, ScrollArea, ScrollAreaProps, Stack, StackProps } from "@mantine/core";
 
 import { useMessagesLoading } from "../helpers/hooks/useMessagesLoading";
+import { useRenderMessages } from "../helpers/hooks/useRenderMessages";
+import { useHandleScroll } from "../helpers/hooks/useHandleScroll";
 
 import { IContentItem } from "../../../../entities";
 import { CenterLoader } from "../../../../shared";
-import { useRenderMessages } from "../helpers/hooks/useRenderMessages";
-
 
 
 /*
@@ -32,7 +31,7 @@ interface IMessagesListProps {
     page: number
     chatId: number
     hasMore: boolean
-    totalCount:number | undefined
+    totalCount: number | undefined
     scrollRef: React.RefObject<HTMLDivElement>
     isLoading: boolean;
 }
@@ -54,18 +53,26 @@ export const MessagesList: React.FC<IMessagesListProps> = ({
         scrollRef
     })
 
-    const {renderedItems} = useRenderMessages({
+    const { renderedItems } = useRenderMessages({
         items,
         page,
         scrollRef,
         turnOffLoading,
     })
 
-    const scrollAreaProps:ScrollAreaProps = {
-        viewportRef:scrollRef,
-        h:'100%',
-        type:'always',
-        w:'100%',
+    useHandleScroll(
+        renderedItems,
+        chatId,
+        items,
+        scrollRef,
+        page
+    )
+
+    const scrollAreaProps: ScrollAreaProps = {
+        viewportRef: scrollRef,
+        h: '100%',
+        type: 'always',
+        w: '100%',
         onScrollPositionChange: onScrollPositionChange
     }
 

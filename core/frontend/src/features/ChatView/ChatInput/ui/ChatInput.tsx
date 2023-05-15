@@ -16,13 +16,12 @@ import { useInboxStore, useMessageStore } from "../../../../entities";
 
 interface IChatInputProps {
     parentHeight: number
-    height: MantineStyleSystemProps['h']
     isDragging: boolean
     setIsDragging: (value: boolean) => void
     scrollListToBottom: any
 }
 
-export const ChatInput: React.FC<IChatInputProps> = ({ parentHeight, isDragging, setIsDragging, scrollListToBottom, height }) => {
+export const ChatInput: React.FC<IChatInputProps> = ({ parentHeight, isDragging, setIsDragging, scrollListToBottom }) => {
     const openAttachementPickRef = useRef<() => void>(null);
 
     const [files, setFiles] = useState<FileWithPath[]>([]);

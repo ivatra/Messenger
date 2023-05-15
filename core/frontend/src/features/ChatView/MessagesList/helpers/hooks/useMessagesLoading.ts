@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 
-import { IContentItem, useMessageStore } from "../../../../../entities";
 import { useDebouncedState } from "@mantine/hooks";
+
+import { IContentItem, useMessageStore } from "../../../../../entities";
+
 
 const limit: number = 30;
 
@@ -66,8 +68,9 @@ export const useMessagesLoading = ({ hasMore, page, totalCount, items, chatId, s
 
 
     useEffect(() => {
-        if (!scrollRef.current) return;
-        handlePagination()
+        if (scrollRef.current){
+            handlePagination()
+        };
 
     }, [scrollPosition]);
 

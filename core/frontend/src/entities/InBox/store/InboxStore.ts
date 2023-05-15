@@ -22,6 +22,10 @@ const initialState = {
     isMatched: false
 }
 
+function findInboxByChat(state: StoreType, chatId: number) {
+    return state.inboxes.find((inbox) => inbox.chat.id === chatId)
+        || state.pinnedInboxes.find((inbox) => inbox.chat.id === chatId)
+}
 
 const useInboxStore = create<StoreType>()((set, get) => ({
     ...initialState,
@@ -44,7 +48,7 @@ const useInboxStore = create<StoreType>()((set, get) => ({
 
         set({
             inboxes: wasPinned
-                ? [...inboxes, {...inbox,isPinned:!wasPinned}]
+                ? [...inboxes, { ...inbox, isPinned: !wasPinned }]
                 : inboxes.filter((i) => i.id !== id),
             pinnedInboxes: wasPinned
                 ? pinnedInboxes.filter((i) => i.id !== id)
@@ -112,21 +116,32 @@ const useInboxStore = create<StoreType>()((set, get) => ({
 
         set({ matchedInboxes: inboxes });
     },
+
+    decrementCountUnreadMsgs: (chatId) => {
+        set(produce((
+            state: StoreType) => {
+
+            const foundInbox = findInboxByChat(state, chatId)
+
+            if (!foundInbox || foundInbox?.countUnreadMsgs < 1) return
+
+            foundInbox.countUnreadMsgs--
+        }));
+    },
     updateMessage: (message, chatId, isExternal) => {
         const { receiveByChat } = get()
 
         set(produce((
             state: StoreType) => {
 
-            const foundInbox = state.inboxes.find((inbox) => inbox.chat.id === chatId)
-                || state.pinnedInboxes.find((inbox) => inbox.chat.id === chatId)
+            const foundInbox = findInboxByChat(state, chatId)
 
             if (!foundInbox) {
                 receiveByChat(chatId)
             } else {
                 foundInbox.message = message
                 if (isExternal) {
-                    foundInbox.countUnreadMsgs = foundInbox.countUnreadMsgs + 1
+                    foundInbox.countUnreadMsgs++
                 }
             }
         }));

@@ -1,4 +1,3 @@
-
 import { IEvent } from "../types/Event";
 
 import { useChatStore, useContactListStore, useInboxStore, useMessageStore } from "../../../entities";
@@ -118,25 +117,27 @@ function handleEvent(event: IEvent) {
     // notifications.show({ message: `Event ${event.type}` })
 }
 
-export async function subscribeToEvents(socketRef: React.MutableRefObject<WebSocket | null>, userId: string) {
-    socketRef.current = new WebSocket(WS_URL);
+export function subscribeToEvents(socket: React.MutableRefObject<WebSocket | null>, userId: string) {
+    socket.current = new WebSocket(WS_URL);
 
-    socketRef.current.onopen = () => {
+    socket.current.onopen = () => {
         const message = {
             type: 'initial',
             data: {
                 userId: userId,
             },
         };
-        socketRef?.current?.send(JSON.stringify(message));
+        socket?.current?.send(JSON.stringify(message));
     };
 
-    socketRef.current.onmessage = (message: MessageEvent) => {
+    socket.current.onmessage = (message: MessageEvent) => {
         const events: IEvent[] = JSON.parse(message.data)
         events.forEach((event) => handleEvent(event))
     };
 
-    socketRef.current.onclose = () => {
-        subscribeToEvents(socketRef, userId)
+    socket.current.onclose = () => {
+        socket.current = null
+        console.log('WebSocket disconnected');
     };
+    
 }

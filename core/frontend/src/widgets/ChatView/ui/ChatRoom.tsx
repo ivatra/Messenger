@@ -1,24 +1,25 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState, FC,memo } from "react";
 
-import { Group, MantineStyleSystemProps, Stack, StackProps } from "@mantine/core";
+import { MantineStyleSystemProps, Stack, StackProps } from "@mantine/core";
 import { useElementSize, useMediaQuery } from "@mantine/hooks";
 
 import { TypingUsers } from "./TypingUsers";
 import { ChatContext } from "../helpers/ChatContext";
+import { ChatHeader } from "./ChatHeader";
 
 import { ChatInput, MessagesList } from "../../../features";
 import { useMessageStore } from "../../../entities";
 import { DESKTOP_WIDTH, IChat } from "../../../shared";
-import { ChatHeader } from "./ChatHeader";
-import React from "react";
+
 
 interface IChatRoomProps {
     chat: IChat;
     display: MantineStyleSystemProps['display'];
 }
 
-export const ChatRoom: React.FC<IChatRoomProps> = ({ chat, display }) => {
+export const ChatRoom: FC<IChatRoomProps> = ({ chat, display }) => {
     const [isDragging, setIsDragging] = useState<boolean>(false)
+
     const scrollRef = useRef<HTMLDivElement>(null)
 
     const isDesktop = useMediaQuery(`(min-width: ${DESKTOP_WIDTH})`);
@@ -51,7 +52,6 @@ export const ChatRoom: React.FC<IChatRoomProps> = ({ chat, display }) => {
                 <TypingUsers typingUsers={chat.typingUsers} />
                 <ChatInput
                     parentHeight={height}
-                    height={childrenHeight}
                     isDragging={isDragging}
                     setIsDragging={setIsDragging}
                     scrollListToBottom={scrollToBottom} />
@@ -62,4 +62,3 @@ export const ChatRoom: React.FC<IChatRoomProps> = ({ chat, display }) => {
 };
 
 
-export const MemoizedChatRoom = React.memo(ChatRoom)

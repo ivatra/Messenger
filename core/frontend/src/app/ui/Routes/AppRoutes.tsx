@@ -2,7 +2,6 @@ import { BrowserRouter } from 'react-router-dom';
 
 import AuthenticatedRoutes from './AuthenticatedRoutes';
 import NotAuthorizedRoutes from './NotAuthorizedRoutes';
-import PublicRoutes from './PublicRoutes';
 import ActivationRoutes from './ActivationRoutes';
 
 import { useUserStore } from '../../../entities';

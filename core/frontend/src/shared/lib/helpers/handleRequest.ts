@@ -1,4 +1,4 @@
-import { showInternal } from "../../../app/api/lib/middlewares";
+import { showInternalErrorMessage } from "./messages";
 import { IStoreFeedback } from "../../types";
 
 type SetStateFunc<T> = (state: T | ((prevState: T) => T)) => void;
@@ -26,7 +26,7 @@ export const handleRequest = async <T>(
     } catch(e) {
         set((state) => ({ ...state, isError: true })); // Handling internal error
         console.log(e)
-        await showInternal()
+        await showInternalErrorMessage()
     } finally {
         set((state) => ({ ...state, isLoading: false }));
     }

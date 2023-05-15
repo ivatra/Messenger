@@ -17,21 +17,12 @@ interface IUseRenderMessagesProps {
     turnOffLoading: () => void
 }
 
-export const useRenderMessages = ({ page, items, scrollRef, turnOffLoading }: IUseRenderMessagesProps) => {
+export const useRenderMessages = ({ items,turnOffLoading, scrollRef }: IUseRenderMessagesProps) => {
     const [renderedItems, setRenderedItems] = useState<JSX.Element[]>([]);
 
     const chat = useContext(ChatContext);
 
     const { id: userAgentId } = useUserStore().profile;
-
-    const scrollToBottom = () => scrollRef?.current?.scrollTo({ top: scrollRef.current.scrollHeight });
-
-    useEffect(() => {
-        turnOffLoading()
-        if (page === 1) {
-            scrollToBottom();
-        }
-    }, [renderedItems]);
 
     useDidUpdate(() => {
         const fetchAndRenderItems = async () => {
@@ -43,8 +34,8 @@ export const useRenderMessages = ({ page, items, scrollRef, turnOffLoading }: IU
                 userAgentId,
                 item
             )))
-
             setRenderedItems(itemsComponent);
+            turnOffLoading()
         };
 
         fetchAndRenderItems();

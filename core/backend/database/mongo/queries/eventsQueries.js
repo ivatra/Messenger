@@ -160,17 +160,6 @@ class eventQueries {
         }).toArray()
     }
 
-    async createMessageReadStatus(userId,chatId, messageId) {
-        const event = {
-            type: 'message_read',
-            recipientId: userId,
-            data: {
-                chatId: chatId,
-                msgId: messageId
-            }
-        }
-        insertEvent(event)
-    }
 
     async updateEventsSentStatus(eventId) {
         return await events.updateMany({

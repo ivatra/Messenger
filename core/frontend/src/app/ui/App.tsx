@@ -5,7 +5,6 @@ import StylesProvider from "./StylesProvider"
 
 
 /*
- @TODO: Remember on which message was user when he enters another chat
 
 //TODO: 4 Add group chat.
      First form is -  select avatar and name of grouo)

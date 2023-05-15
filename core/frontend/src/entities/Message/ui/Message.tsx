@@ -1,16 +1,20 @@
-import { Text, Box, Group, Stack } from "@mantine/core"
-import { CustomAvatar, IMessage, IUser, formatDate, useIntersectionObserver } from "../../../shared"
-import { IListMessage } from "../types/Model"
 import { useContext, useRef } from "react";
+
+import { Text, Box, Group, Stack } from "@mantine/core"
+
+import { IListMessage } from "../types/Model"
 import { useMessageStore } from "../Store/MessageStore";
 import { ChatContext } from "../../../widgets";
 import { SocketContext } from "../../../pages";
 import { sendMessageReadEvent } from "../helpers/sendMessageReadEvent";
 
+import { CustomAvatar, IMessage, IUser, formatDate, useIntersectionObserver } from "../../../shared"
+import { useInboxStore } from "../../InBox";
+
 const observerOptions: IntersectionObserverInit = {
     root: null,
     rootMargin: "0px",
-    threshold: 1
+    threshold: 0.1
 };
 
 
@@ -22,6 +26,8 @@ interface IMessageProps {
 }
 
 export const Message: React.FC<IMessageProps> = ({ message, sender, isSentBySelf, scrollAreaRef }) => {
+    const {decrementCountUnreadMsgs} = useInboxStore.getState()
+
     const ref = useRef<HTMLDivElement>(null);
 
     const chat = useContext(ChatContext);
@@ -30,12 +36,12 @@ export const Message: React.FC<IMessageProps> = ({ message, sender, isSentBySelf
     const handleMessageRead = () => {
         if(socket){
             sendMessageReadEvent(socket, chat.id, message.id)
-            
+            decrementCountUnreadMsgs(chat.id)
         }
     }
     useIntersectionObserver({
         targetRef: ref,
-        isObserved: !message.isRead,
+        isObserved: !message.isRead && !isSentBySelf,
         options: { ...observerOptions, root: scrollAreaRef.current },
         executeOnIntersection: handleMessageRead
     });

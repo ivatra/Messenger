@@ -1,6 +1,8 @@
 import ky from "ky";
-import { API_URL } from "../../shared";
-import { setHeader, refreshToken, showAlertMessage, showCaptcha } from "./lib/middlewares";
+
+import { setHeader, refreshToken, showCaptcha } from "./lib/middlewares";
+
+import { showAlertMessage, API_URL } from "../../shared";
 
 export const alertStatusCodes = [500, 403, 400];
 
@@ -35,4 +37,5 @@ class Api {
 }
 
 const api = new Api().api;
+
 export default api;

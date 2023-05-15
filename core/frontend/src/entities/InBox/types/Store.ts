@@ -18,5 +18,6 @@ export interface IInboxStore {
     receivePinned: () => void
     receiveMatched: (message: string) => void
 
+    decrementCountUnreadMsgs:(chatId:number) => void
     updateMessage: (message: IMessage, chatId: number,isExternal:boolean) => void // events feature ought to update this 
 }

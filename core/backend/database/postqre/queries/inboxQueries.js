@@ -15,10 +15,10 @@ class inBoxQueries {
     return await InBox.findByPk(inboxId)
   }
 
-  async receiveInboxByChatId(userId,chatId) {
-   const inbox = await InBox.findOne({where:{chatId:chatId,userId:userId}})
-   const result = await this.receiveInboxesByIds([inbox.dataValues.id],userId)
-   return result
+  async receiveInboxByChatId(userId, chatId) {
+    const inbox = await InBox.findOne({ where: { chatId: chatId, userId: userId } })
+    const result = await this.receiveInboxesByIds([inbox.dataValues.id], userId)
+    return result
   }
 
   async receivePinnedInboxes(userId) {
@@ -57,7 +57,7 @@ class inBoxQueries {
         {
           model: Message,
           as: 'message',
-          attributes: ['id', 'content', 'senderId', 'updatedAt', 'isRead','createdAt']
+          attributes: ['id', 'content', 'senderId', 'updatedAt', 'isRead', 'createdAt']
         },
         {
           model: Chat,
@@ -189,15 +189,32 @@ class inBoxQueries {
   }
 
   async updateMessage(userId, chatId, messageId) {
-    return await InBox.update({ messageId: messageId },
-      {
-        where: {
-          userId,
-          chatId
-        }
-      })
-  }
+    const inbox = await InBox.findOne({
+      where: {
+        userId,
+        chatId
+      }
+    })
 
+    return await inbox.update({ messageId: messageId })
+  }
+  async updateUnreadMsgs(userId, chatId, property) {
+    if (property !== 'increment' && property !== 'decrement') {
+      throw new Error('Invalid property value. Must be either "increment" or "decrement".');
+    }
+
+    const inbox = await InBox.findOne(
+      { where: { chatId, userId } }
+    )
+    
+    if(inbox.dataValues.countUnreadMsgs < 0) return
+    
+    if(property === 'increment'){
+      await inbox.increment('countUnreadMsgs')
+    }else{
+      await inbox.decrement('countUnreadMsgs')
+    }
+  }
 }
 
 module.exports = new inBoxQueries()
