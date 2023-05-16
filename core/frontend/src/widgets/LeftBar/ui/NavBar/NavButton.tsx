@@ -1,6 +1,6 @@
 import { ActionIcon, useMantineTheme } from "@mantine/core";
 import { forwardRef } from "react";
-import { sharedUi } from "../../../../shared";
+import { SharedUi } from "../../../../shared";
 
 interface INavButtonProps {
     Icon: TablerIcon

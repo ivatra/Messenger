@@ -7,13 +7,13 @@ import { SectionContent } from "./Content/SectionContent";
 import { useDrawer } from "../hooks/EditUserContext";
 import { EditUserDrawer } from "../../../entities/User/ui/EditUserDrawer";
 
-import { sharedConsts } from "../../../shared";
+import { SharedConsts } from "../../../shared";
 
 
 const paperProps: PaperProps = {
     w: {
         "0rem": '100%',
-        [`${sharedConsts.DESKTOP_WIDTH}`]: '35%',
+        [`${SharedConsts.DESKTOP_WIDTH}`]: '35%',
     },
     shadow: "sm",
     h:'100%',

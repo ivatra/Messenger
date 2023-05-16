@@ -2,17 +2,17 @@ import ky from "ky";
 
 import { useCaptchaStore } from "../../../features"
 import { useUserStore } from "../../../entities";
-import { sharedConsts } from "../../../shared";
+import { SharedConsts } from "../../../shared";
 
 export const setHeader = (request: Request) => {
     const token = localStorage.getItem('accessToken');
-    request.headers.set('Authorization', `${sharedConsts.tokenName} ${token}`);
+    request.headers.set('Authorization', `${SharedConsts.tokenName} ${token}`);
 };
 
 export const refreshToken = async (request: Request, response: Response) => {
     try {
         const token: string = await ky.get(
-            sharedConsts.API_URL + 'auth/refreshToken', {
+            SharedConsts.API_URL + 'auth/refreshToken', {
             credentials: "include",
         }).json()
 

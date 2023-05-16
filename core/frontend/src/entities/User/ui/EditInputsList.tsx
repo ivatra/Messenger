@@ -6,7 +6,7 @@ import { useDidUpdate } from "@mantine/hooks";
 import { EditInputProps } from "../model/EditInputProps";
 import { UpdateProfileParams, ProfileFields } from "../types/Store";
 import { useUserStore } from "..";
-import { errorIcon, loaderIcon, successIcon } from "../../../shared";
+import { SharedUi } from "../../../shared";
 import { BaseEditInput } from "./BaseEditInput";
 
 
@@ -15,7 +15,7 @@ type IOutcomeIcons = {
 };
 
 export const EditInputsList = () => {
-    const { profile,updateProfile, isError, isLoading } = useUserStore();
+    const { profile, updateProfile, isError, isLoading } = useUserStore();
     const [fieldUpdated, setFieldUpdated] = useState<string>("");
     const [outcomeIcons, setOutcomeIcons] = useState<IOutcomeIcons>({});
 
@@ -26,9 +26,9 @@ export const EditInputsList = () => {
 
     useDidUpdate(() => {
         var iconOnUpdate: JSX.Element;
-        if (isError) iconOnUpdate = errorIcon;
-        else if (isLoading) iconOnUpdate = loaderIcon;
-        else iconOnUpdate = successIcon;
+        if (isError) iconOnUpdate = SharedUi.errorIcon;
+        else if (isLoading) iconOnUpdate = SharedUi.loaderIcon;
+        else iconOnUpdate = SharedUi.successIcon;
 
         setOutcomeIcons((prevState) => ({
             ...prevState,
@@ -42,7 +42,7 @@ export const EditInputsList = () => {
             {EditInputProps.map((Input) => (
                 <BaseEditInput
                     key={Input.field}
-                    props = {Input}
+                    props={Input}
                     profile={profile}
                     onSubmit={editUserField}
                     outcomeIcon={outcomeIcons[Input.field]}

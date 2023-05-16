@@ -1,9 +1,10 @@
 import { useRef } from "react";
 
 import { Stack, Text } from "@mantine/core";
-import { CustomToolTip, CustomAvatar } from "../../../../../shared";
+
 
 import { useUserStore } from "../../../../../entities";
+import { SharedUi } from "../../../../../shared";
 
 export const UserAvatar = () => {
     const profile = useUserStore((state) => state.profile);
@@ -16,8 +17,8 @@ export const UserAvatar = () => {
         </Stack>
 
     return (
-        <CustomToolTip label={Popover}>
-            <CustomAvatar size='md' avatarSrc={profile.avatar} ref={ref} />
-        </CustomToolTip>
+        <SharedUi.CustomToolTip label={Popover}>
+            <SharedUi.CustomAvatar size='md' avatarSrc={profile.avatar} ref={ref} />
+        </SharedUi.CustomToolTip>
     );
 }
