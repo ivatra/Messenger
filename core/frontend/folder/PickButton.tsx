@@ -1,13 +1,9 @@
-import { json } from "stream/consumers";
 import {
     TablerIcon, IUser, API_URL, showAlertMessage, IChatParticipant, Search, ScrollableList, showInternal, getRandomArbitrary
     , extractCommonFields
 } from "../../../../../shared";
 
 
-interface bebra{
-    a:number
-}
 export const PickButton = () => {
     TablerIcon
     IUser
@@ -22,7 +18,3 @@ export const PickButton = () => {
 
     return (<Search key={1} />)
 }
-
-const arr = [1,2,3,4,5]
-
-const copy = JSON.parse(JSON.stringify(arr))
