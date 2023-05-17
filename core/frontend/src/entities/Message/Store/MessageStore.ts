@@ -6,12 +6,11 @@ import { IContentItem, IListMessage, SentStatuses } from '../types/Model'
 import { IMessagesApiResponse } from '../types/ApiResponse'
 import { createMessage } from '../helpers/createMessage'
 import { useUserStore } from '../../User'
-
-
-
-import { api } from '../../../app'
-import { SharedTypes, SharedHelpers } from '../../../shared';
 import { useInboxStore } from '../..';
+import { api } from '../../../app'
+
+import { SharedTypes, SharedHelpers } from '../../../shared';
+
 
 export type StoreType = IMessageStore & SharedTypes.IStoreFeedback
 
