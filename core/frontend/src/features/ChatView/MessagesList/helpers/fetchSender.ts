@@ -1,7 +1,7 @@
 import { useContactInteractionStore } from "../../../../entities"
-import { IChat } from "../../../../shared"
+import { SharedTypes } from "../../../../shared"
 
-export async function fetchSender (chat:IChat,senderId: string) {
+export async function fetchSender (chat:SharedTypes.IChat,senderId: string) {
     const participant = chat.participants.find((participant) => participant.user.id === senderId)
     
     if (participant) return participant.user

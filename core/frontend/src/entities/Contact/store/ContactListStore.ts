@@ -4,7 +4,7 @@ import { IContactInteractions, IContactListStore } from '../types/Store';
 import { IReceiveContactsResponse } from '../types/ApiResponse';
 
 import { api } from '../../../app';
-import { IStoreFeedback, handleRequest } from '../../../shared';
+import { SharedTypes, SharedHelpers } from '../../../shared';
 import { sortByIsContact } from '../helpers/sortSearchedContacts';
 import { updateContactList } from '../helpers/mutateContactList';
 
@@ -25,7 +25,7 @@ export const initialState = {
     contactsHasMore: true
 };
 
-export type StoreType = IContactListStore & IStoreFeedback;
+export type StoreType = IContactListStore & SharedTypes.IStoreFeedback;
 
 export const useContactListStore = create<StoreType>((set, get) => ({
     ...initialState,
@@ -36,7 +36,7 @@ export const useContactListStore = create<StoreType>((set, get) => ({
 
         const request = () => api.get(`${baseUrl}/?limit=${limit}&offset=${contacts.length}`); 
 
-        const response = await handleRequest<IReceiveContactsResponse>(request, set);
+        const response = await SharedHelpers.handleRequest<IReceiveContactsResponse>(request, set);
 
         if (!response || get().isError) return;
 
@@ -57,7 +57,7 @@ export const useContactListStore = create<StoreType>((set, get) => ({
 
         const request = () => api.get(`content/search/contacts/?message=${searchTerm}&limit=${limit}&offset=${offset}`);
 
-        const response = await handleRequest<IReceiveContactsResponse>(request, set);
+        const response = await SharedHelpers.handleRequest<IReceiveContactsResponse>(request, set);
         
         if (!response) return;
 

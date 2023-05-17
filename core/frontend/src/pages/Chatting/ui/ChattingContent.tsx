@@ -7,7 +7,7 @@ import { AppShell, AppShellProps, Group, Loader } from "@mantine/core";
 
 import { MobileNavBar, DesktopNavBar, sections, ChatView, EditUserProvider, SideBar } from "../../../widgets";
 
-import { CenterLoader, DESKTOP_WIDTH } from "../../../shared";
+import { SharedUi, SharedConsts } from "../../../shared";
 import { useParams } from "react-router-dom";
 import { useChatStore } from "../../../entities";
 
@@ -19,7 +19,7 @@ export const ChattingContent = () => {
 
     const { setCurrentChatId } = useChatStore()
 
-    const isDesktop = useMediaQuery(`(min-width: ${DESKTOP_WIDTH})`);
+    const isDesktop = useMediaQuery(`(min-width: ${SharedConsts.DESKTOP_WIDTH})`);
 
     useEffect(() => {
         setCurrentChatId(chatId ? +chatId : undefined)
@@ -38,7 +38,7 @@ export const ChattingContent = () => {
 
     const body = useMemo(() => {
         if (isDesktop === undefined) {
-            return <CenterLoader />
+            return <SharedUi.CenterLoader />;
         }
 
         const sideBarVisible = isDesktop || !chatId

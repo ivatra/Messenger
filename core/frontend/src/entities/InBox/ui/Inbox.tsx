@@ -8,7 +8,7 @@ import { MessageFotter } from "./MessageFotter";
 import { MessageHeader } from "./MessageHeader/MessageHeader";
 import { fetchProps } from "../helpers/fetchProps";
 
-import { CustomAvatar, formatDate } from "../../../shared";
+import { SharedUi ,SharedHelpers} from "../../../shared";
 
 
 const groupProps: GroupProps = {
@@ -30,7 +30,7 @@ export const Inbox: React.FC<IInboxProps> = ({ inbox, active }) => {
     const messageText = inbox.message.content
 
     const { name, avatar } = fetchProps(inbox)
-    const formattedDate = formatDate(inbox.message.createdAt)
+    const formattedDate = SharedHelpers.formatDate(inbox.message.createdAt)
 
     const navigate = useNavigate();
 
@@ -42,9 +42,9 @@ export const Inbox: React.FC<IInboxProps> = ({ inbox, active }) => {
             selected ? 'dark.5' : 'initial',
     }
     return (
-        <Box {...boxProps} >
+        (<Box {...boxProps} >
             <Group {...groupProps} noWrap>
-                <CustomAvatar size={'md'} avatarSrc={avatar} />
+                <SharedUi.CustomAvatar size={'md'} avatarSrc={avatar} />
                 <Stack spacing={0} mx={0} w='100%'>
                     <MessageHeader
                         name={name}
@@ -55,9 +55,8 @@ export const Inbox: React.FC<IInboxProps> = ({ inbox, active }) => {
                     <MessageFotter content={messageText} countOfUnreadMsgs={inbox.countUnreadMsgs} />
                 </Stack>
             </Group>
-        </Box>
-
-    )
+        </Box>)
+    );
 };
 
 

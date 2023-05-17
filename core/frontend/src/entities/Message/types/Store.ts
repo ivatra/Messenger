@@ -1,5 +1,5 @@
 import { FileWithPath } from "@mantine/dropzone"
-import { IMessage } from "../../../shared"
+import { SharedTypes } from "../../../shared"
 import { IContentItem, IListMessage } from "./Model"
 
 

@@ -2,9 +2,8 @@ import { useRef } from "react";
 
 import { Stack, Text } from "@mantine/core";
 
-
 import { useUserStore } from "../../../../../entities";
-import { SharedUi } from "../../../../../shared";
+import {SharedUi} from "../../../../../shared";
 
 export const UserAvatar = () => {
     const profile = useUserStore((state) => state.profile);

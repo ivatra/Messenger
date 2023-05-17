@@ -1,15 +1,15 @@
 
 import { IContact } from "../../Contact";
-import { IUser, IChat, IChatParticipant } from "../../../shared";
+import { SharedTypes } from "../../../shared";
 
 
 
 export interface IStoreChat{
-   [chatId:number]:IChat
+   [chatId:number]:SharedTypes.IChat
 }
 
 export interface ITypingUsers { 
-    [userId: string]: IUser[]
+    [userId: string]: SharedTypes.IUser[]
  } 
 
 export interface IGroupChatUpdatebleFields{
@@ -26,16 +26,16 @@ export interface IChatStore{
     receiveChatWithUser: (userId: string) => Promise<number | undefined>
     receiveChat: (chatId: number) => void
 
-    addParticipant: (chatId:number,participant:IChatParticipant) => void
+    addParticipant: (chatId:number,participant:SharedTypes.IChatParticipant) => void
     removeParticipant: (chatId:number,userId:string) => void
     editGroupChat: (chatId:number,fields: IGroupChatUpdatebleFields) => void
 
     createGroupChat: (participants: IContact[], fields:IGroupChatUpdatebleFields) => void
 
-    addChat:(chat:IChat) => void
+    addChat:(chat:SharedTypes.IChat) => void
     removeChat:(chatId:number) => void
 
-    addParticipantExternal:(chatId:number,participant:IChatParticipant) => void
+    addParticipantExternal:(chatId:number,participant:SharedTypes.IChatParticipant) => void
     removeParticipantExternal: (chatId:number,participantId: number) => void
     editGroupChatExternal: (chatId:number,fields: IGroupChatUpdatebleFields) => void
 

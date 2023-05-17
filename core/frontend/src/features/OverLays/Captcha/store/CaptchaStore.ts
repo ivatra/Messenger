@@ -1,8 +1,9 @@
 import { create } from "zustand";
 import { ICaptcha } from "../types/Store";
-import { IStoreFeedback, handleRequest } from "../../../../shared";
+import { SharedTypes, SharedHelpers } from "../../../../shared";
 import { devtools } from "zustand/middleware";
 import api from "../../../../app/api/api";
+
 
 const initialState = {
     id: '',
@@ -18,12 +19,12 @@ interface ICaptchaResponse {
     data: string
 }
 
-export const useCaptchaStore = create<ICaptcha & IStoreFeedback>()(devtools((set, get) => ({
+export const useCaptchaStore = create<ICaptcha & SharedTypes.IStoreFeedback>()(devtools((set, get) => ({
     ...initialState,
     receiveCaptcha: async () => {
         const request = () => api.get('captcha')
 
-        const captcha = await handleRequest<ICaptchaResponse>(request, set)
+        const captcha = await SharedHelpers.handleRequest<ICaptchaResponse>(request, set)
 
         if (!captcha) return
 
@@ -38,7 +39,7 @@ export const useCaptchaStore = create<ICaptcha & IStoreFeedback>()(devtools((set
             }
         })
 
-        await handleRequest(request, set)
+        await SharedHelpers.handleRequest(request, set)
 
         if (!get().isError) set(initialState)
     },

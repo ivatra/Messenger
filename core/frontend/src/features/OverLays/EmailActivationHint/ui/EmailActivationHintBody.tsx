@@ -4,7 +4,7 @@ import { IconCircleCheck } from "@tabler/icons-react"
 
 import { RefreshActivationGroup } from "./RefreshActivationGroup"
 
-import { HoverableText } from "../../../../shared"
+import { SharedUi } from "../../../../shared"
 
 
 const baseButtonProps: TextProps = {
@@ -21,10 +21,10 @@ export const EmailActivationHintBody: React.FC<IProps> = ({ email, logout }) => 
     const emailText = <Text {...baseButtonProps}>{email}</Text>
 
     const logoutButton = (
-        <HoverableText
+        <SharedUi.HoverableText
             onClick={() => logout()}>
             logout
-        </HoverableText>
+        </SharedUi.HoverableText>
     )
 
     return (

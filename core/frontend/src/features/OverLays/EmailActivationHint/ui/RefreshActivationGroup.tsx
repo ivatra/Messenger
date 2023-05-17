@@ -3,7 +3,7 @@ import { useState } from "react"
 import { Group, Loader, Text, TextProps } from "@mantine/core"
 
 import { useUserStore } from "../../../../entities"
-import { HoverableText } from "../../../../shared"
+import { SharedUi } from "../../../../shared"
 
 
 export const RefreshActivationGroup = () => {
@@ -17,10 +17,10 @@ export const RefreshActivationGroup = () => {
     }
 
     const refreshActivationButton = (
-        <HoverableText
+        <SharedUi.HoverableText
             onClick={() => handleRefreshActivation()}>
             Refresh Activation
-        </HoverableText>
+        </SharedUi.HoverableText>
     )
 
     if (isLetterRefreshed && !isLoading && !isError) {

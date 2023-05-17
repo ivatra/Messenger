@@ -2,7 +2,7 @@ import ky from "ky";
 
 import { setHeader, refreshToken, showCaptcha } from "./lib/middlewares";
 
-import { showAlertMessage, API_URL } from "../../shared";
+import { Messages, SharedConsts } from "../../shared";
 
 export const alertStatusCodes = [500, 403, 400];
 
@@ -11,7 +11,7 @@ class Api {
 
     constructor() {
         this.api = ky.create({
-            prefixUrl: API_URL,
+            prefixUrl: SharedConsts.API_URL,
             credentials:'include',
             timeout: 5000,
             retry: 0,
@@ -22,7 +22,7 @@ class Api {
                     async (request, options, response) => {
                         if (response.ok) return response
                         else if (alertStatusCodes.includes(response.status))
-                            await showAlertMessage(response);
+                            await Messages.showAlertMessage(response);
                         else if (response.status === 401)
                             return await refreshToken(request, response);
                         else if (response.status === 429)

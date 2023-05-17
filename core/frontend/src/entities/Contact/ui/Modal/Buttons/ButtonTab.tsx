@@ -2,10 +2,10 @@ import { useState } from "react"
 
 import { Box, Group, Text } from "@mantine/core"
 
-import { TablerIcon } from "../../../../../shared"
+import { SharedTypes } from "../../../../../shared";
 
 interface IButtonTabProps {
-    Icon: TablerIcon
+    Icon: SharedTypes.ITablerIcon
     label: string
     feedbackIndicator?: JSX.Element
     onClick: () => void

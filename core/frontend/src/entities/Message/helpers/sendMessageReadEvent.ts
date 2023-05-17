@@ -1,8 +1,8 @@
-import { IEventRequest } from "../../../shared"
+import { SharedTypes } from "../../../shared"
 
 
-export function sendMessageReadEvent(socket: WebSocket, chatId: number, msgId: number) {
-    const event: IEventRequest = {
+export function sendMessageReadEvent(socket: SharedTypes.ISocketActions, chatId: number, msgId: number) {
+    const event: SharedTypes.IEventRequest = {
         type: 'message_read',
         data: {
             chatId: chatId,
@@ -10,5 +10,5 @@ export function sendMessageReadEvent(socket: WebSocket, chatId: number, msgId: n
         }
 
     }
-    socket.send(JSON.stringify(event))
+    socket.send(event)
 }

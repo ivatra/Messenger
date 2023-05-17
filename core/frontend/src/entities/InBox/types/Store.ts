@@ -1,4 +1,4 @@
-import { IMessage } from "../../../shared";
+import { SharedTypes } from "../../../shared";
 import { IMatchedInboxesResponse } from "./ApiResponse";
 import { IInbox } from "./Model";
 
@@ -19,5 +19,5 @@ export interface IInboxStore {
     receiveMatched: (message: string) => void
 
     decrementCountUnreadMsgs:(chatId:number) => void
-    updateMessage: (message: IMessage, chatId: number,isExternal:boolean) => void // events feature ought to update this 
+    updateMessage: (message: SharedTypes.IMessage, chatId: number,isExternal:boolean) => void // events feature ought to update this 
 }

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useDidUpdate, useIntersection } from "@mantine/hooks";
 
 import { useInboxStore } from "../../../../entities";
-import { useDynamicLimit } from "../../../../shared";
+import { SharedHooks } from "../../../../shared";
 
 const averageInboxSize = 50
 
@@ -15,7 +15,7 @@ const useInboxesPagination = () => {
     })
 
     const { receive, receivePinned, inboxesTotalCount, inboxes } = useInboxStore()
-    const { limit, sizeRef } = useDynamicLimit({ subjectSize: averageInboxSize })
+    const { limit, sizeRef } = SharedHooks.useDynamicLimit({ subjectSize: averageInboxSize })
    
 
     useEffect(() => {

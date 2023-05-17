@@ -6,9 +6,9 @@ import { useDidUpdate } from "@mantine/hooks";
 import { EditInputProps } from "../model/EditInputProps";
 import { UpdateProfileParams, ProfileFields } from "../types/Store";
 import { useUserStore } from "..";
-import { SharedUi } from "../../../shared";
 import { BaseEditInput } from "./BaseEditInput";
 
+import { SharedUi } from "../../../shared";
 
 type IOutcomeIcons = {
     [key in ProfileFields]?: JSX.Element;

@@ -1,9 +1,11 @@
-import { ActionIcon, useMantineTheme } from "@mantine/core";
 import { forwardRef } from "react";
-import { SharedUi } from "../../../../shared";
+
+import { ActionIcon, useMantineTheme } from "@mantine/core";
+
+import { SharedTypes } from "../../../../shared";
 
 interface INavButtonProps {
-    Icon: TablerIcon
+    Icon: SharedTypes.ITablerIcon
     active?: boolean;
     onClick: () => void;
 }

@@ -9,11 +9,11 @@ import { ChatHeader } from "./ChatHeader";
 
 import { ChatInput, MessagesList } from "../../../features";
 import { useMessageStore } from "../../../entities";
-import { DESKTOP_WIDTH, IChat } from "../../../shared";
+import { SharedConsts, SharedTypes } from "../../../shared";
 
 
 interface IChatRoomProps {
-    chat: IChat;
+    chat: SharedTypes.IChat;
     display: MantineStyleSystemProps['display'];
 }
 
@@ -22,7 +22,7 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chat, display }) => {
 
     const scrollRef = useRef<HTMLDivElement>(null)
 
-    const isDesktop = useMediaQuery(`(min-width: ${DESKTOP_WIDTH})`);
+    const isDesktop = useMediaQuery(`(min-width: ${SharedConsts.DESKTOP_WIDTH})`);
 
     const childrenHeight = isDesktop ? '60px' : '7rem'
 

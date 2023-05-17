@@ -10,10 +10,10 @@ import { useUserStore } from '../../User'
 
 
 import { api } from '../../../app'
-import { IStoreFeedback, getRandomArbitrary as getRandomArbitrary, handleRequest } from '../../../shared'
+import { SharedTypes, SharedHelpers } from '../../../shared';
 import { useInboxStore } from '../..';
 
-export type StoreType = IMessageStore & IStoreFeedback
+export type StoreType = IMessageStore & SharedTypes.IStoreFeedback
 
 const initialState = {
     items: [],
@@ -44,7 +44,7 @@ export const useMessageStore = create<StoreType>((set, get) => ({
 
         const request = () => api.get(`content/chat/${chatId}/messages/?offset=${offset + userSentMessageCount}&limit=${limit}`);
 
-        const newMessages = await handleRequest<IMessagesApiResponse>(request, set);
+        const newMessages = await SharedHelpers.handleRequest<IMessagesApiResponse>(request, set);
 
         if (!newMessages) return;
 
@@ -74,7 +74,7 @@ export const useMessageStore = create<StoreType>((set, get) => ({
         const request = () =>
             api.get(`content/chat/${chatId}/attachments/?limit=${limit}&offset=${offset}`);
 
-        const newAttachments = await handleRequest<IMessagesApiResponse>(request, set);
+        const newAttachments = await SharedHelpers.handleRequest<IMessagesApiResponse>(request, set);
 
         if (!newAttachments) return;
 
@@ -117,7 +117,7 @@ export const useMessageStore = create<StoreType>((set, get) => ({
                 body: formData,
             });
 
-        const response = await handleRequest<IListMessage>(request, set);
+        const response = await SharedHelpers.handleRequest<IListMessage>(request, set);
 
         const updateMessageStatus = (status: SentStatuses) => {
             set(
@@ -151,7 +151,7 @@ export const useMessageStore = create<StoreType>((set, get) => ({
                     attachment: attachment,
                 },
             });
-        const newAttachment = await handleRequest<IListMessage>(request, set);
+        const newAttachment = await SharedHelpers.handleRequest<IListMessage>(request, set);
 
         if (!newAttachment) return;
 

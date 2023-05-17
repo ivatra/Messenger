@@ -1,4 +1,4 @@
-export default interface IStoreFeedback{
+export interface IStoreFeedback{
     isLoading:boolean
     isError:boolean
 }

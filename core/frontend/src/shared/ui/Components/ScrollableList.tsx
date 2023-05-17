@@ -1,7 +1,10 @@
-import { Group, Loader, ScrollArea, ScrollAreaProps, Stack } from "@mantine/core";
 import { useState } from "react";
-import { DESKTOP_WIDTH, ScrollShevron } from "../..";
+
+import { Group, Loader, ScrollArea, ScrollAreaProps, Stack } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
+
+import { DESKTOP_WIDTH } from "../../consts";
+import { ScrollShevron } from "..";
 
 const scrollAreaProps: ScrollAreaProps = {
     scrollHideDelay: 300,

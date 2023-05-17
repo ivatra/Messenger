@@ -63,7 +63,7 @@ function transform(fileInfo: FileInfo, api: API) {
                 }
             }
         });
-
+    
     return root.toSource();
 };
 

@@ -1,7 +1,7 @@
 import { IEvent } from "../types/Event";
 
 import { useChatStore, useContactListStore, useInboxStore, useMessageStore } from "../../../entities";
-import { WS_URL } from "../../../shared";
+import { SharedConsts } from "../../../shared";
 
 
 function handleEvent(event: IEvent) {
@@ -118,7 +118,7 @@ function handleEvent(event: IEvent) {
 }
 
 export function subscribeToEvents(socket: React.MutableRefObject<WebSocket | null>, userId: string) {
-    socket.current = new WebSocket(WS_URL);
+    socket.current = new WebSocket(SharedConsts.WS_URL);
 
     socket.current.onopen = () => {
         const message = {

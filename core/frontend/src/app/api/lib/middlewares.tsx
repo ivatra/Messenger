@@ -2,7 +2,7 @@ import ky from "ky";
 
 import { useCaptchaStore } from "../../../features"
 import { useUserStore } from "../../../entities";
-import { SharedConsts } from "../../../shared";
+import {SharedConsts} from "../../../shared";
 
 export const setHeader = (request: Request) => {
     const token = localStorage.getItem('accessToken');

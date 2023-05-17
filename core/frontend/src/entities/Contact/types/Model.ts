@@ -1,9 +1,9 @@
-import { IUser } from "../../../shared"
+import { SharedTypes } from "../../../shared"
 
 
 export type IContactStatus = 'pending' | 'accepted' | 'outgoing' | null
 
-export interface IContact extends IUser {
+export interface IContact extends SharedTypes.IUser {
     id: string
     status: IContactStatus
 }

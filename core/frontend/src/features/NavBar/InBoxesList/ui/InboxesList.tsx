@@ -1,13 +1,13 @@
 import { Group, Paper, Stack } from "@mantine/core";
-import { useDebouncedState, useDidUpdate, useMergedRef } from "@mantine/hooks";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useDidUpdate, useMergedRef } from "@mantine/hooks";
+import { useRef, useState } from "react";
 
 import { useInboxesList } from "../hooks/useInboxesList";
 import useInboxesPagination from "../hooks/useInboxesPagination";
 import { GroupChatButton } from "./GroupChatButton";
 
-import { Inbox, useInboxStore } from "../../../../entities";
-import { SideBarItemSkeleton, ScrollableList, NothingFoundView, Search, CenterLoader } from "../../../../shared";
+import { useInboxStore } from "../../../../entities";
+import { SharedUi } from "../../../../shared";
 
 
 
@@ -28,22 +28,22 @@ export const InboxesList = () => {
     }, [searchValue]);
 
     return (
-        <Paper display='flex' ref={mergedRef} h='100%' w='100%' >
+        (<Paper display='flex' ref={mergedRef} h='100%' w='100%' >
             <Stack spacing={0} w={'100%'}>
                 <Group noWrap spacing={'0px'} mb={0}>
-                    <Search
+                    <SharedUi.Search
                         value={searchValue}
                         setValue={setSearchValue}
                         placeholder='Write something...' />
                     <GroupChatButton />
                 </Group>
-                <ScrollableList
+                <SharedUi.ScrollableList
                     scrollRef={scrollViewPort}
                     EntitiesList={inboxesComponent}
-                    Skeleton={SideBarItemSkeleton}
+                    Skeleton={SharedUi.SideBarItemSkeleton}
                     isLoading={isLoading} />
             </Stack>
-        </Paper>
+        </Paper>)
     );
 }
 

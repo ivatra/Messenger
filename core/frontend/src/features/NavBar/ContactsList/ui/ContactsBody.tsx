@@ -1,6 +1,6 @@
 import { useMemo } from "react"
 import { useContactListStore } from "../../../../entities"
-import { NothingFoundView, ScrollableList, SideBarItemSkeleton } from "../../../../shared"
+import { SharedUi } from "../../../../shared";
 import { ContactTab } from "../../../../entities/Contact/ui/ContactTab"
 
 interface IContactsBodyProps {
@@ -15,19 +15,19 @@ export const ContactsBody: React.FC<IContactsBodyProps> = ({ onScrollPositionCha
         const contactsComponent = visibleContacts.map((contact) => <ContactTab key={contact.id} contact={contact} />)
         
         return (
-            <ScrollableList
+            (<SharedUi.ScrollableList
                 EntitiesList={contactsComponent}
-                Skeleton={SideBarItemSkeleton}
+                Skeleton={SharedUi.SideBarItemSkeleton}
                 scrollRef={scrollRef}
                 isLoading={isLoading}
                 onScrollPosChange={onScrollPositionChange}
-            />
-        )
+            />)
+        );
     }, [visibleContacts])
 
     const ContactsBody = (
         !visibleContacts.length && !isLoading
-            ? <NothingFoundView subject={searchTerm || filter} />
+            ? <SharedUi.NothingFoundView subject={searchTerm || filter} />
             : VisibleContacts
     )
     return ContactsBody

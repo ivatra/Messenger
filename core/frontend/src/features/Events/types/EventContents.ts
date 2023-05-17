@@ -1,7 +1,7 @@
 import { IContact, IGroupChatUpdatebleFields } from "../../../entities"
 import { IContactStatus } from "../../../entities/Contact/types/Model"
 import { IListMessage } from "../../../entities/Message/types/Model"
-import { IChat, IChatParticipant, IMessage } from "../../../shared"
+import { SharedTypes } from "../../../shared";
 
 export interface IReceivedMessageEvent {
     type: 'received_message'
@@ -41,7 +41,7 @@ export interface IParticipantInvitedEvent {
     type: 'participant_invited'
     data: {
         chatId: number
-        participant: IChatParticipant
+        participant: SharedTypes.IChatParticipant
         inviterId:string
     }
 }
@@ -66,7 +66,7 @@ export interface IInvitedToChat {
     type: 'invited_to_chat'
     data: {
         invitedId:string
-        chat: IChat
+        chat: SharedTypes.IChat
     }
 }
 

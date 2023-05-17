@@ -8,7 +8,7 @@ import { IconCircleCheck } from "@tabler/icons-react"
 
 import { Counter } from "./Counter"
 
-import { HoverableText } from "../../../shared"
+import { SharedUi } from "../../../shared"
 
 export const SuccesfullContent = () => {
     const [isCounterFinished, setCounterFinished] = useState<boolean>(false)
@@ -25,7 +25,7 @@ export const SuccesfullContent = () => {
     }, [isCounterFinished])
 
     return (
-        <Stack h='20%' >
+        (<Stack h='20%' >
             <Modal.Title>
                 <Group >
                     <IconCircleCheck size={24} color='green' />
@@ -42,11 +42,11 @@ export const SuccesfullContent = () => {
                         setCounterFinished={() => setCounterFinished(true)} />
                 </Group>
                 <Text>If redirect didn't happen go by {' '}
-                    <HoverableText  onClick={() => redirectToChat()}>
+                    <SharedUi.HoverableText  onClick={() => redirectToChat()}>
                         your own
-                    </HoverableText>
+                    </SharedUi.HoverableText>
                 </Text>
             </Stack>
-        </Stack>
-    )
+        </Stack>)
+    );
 }

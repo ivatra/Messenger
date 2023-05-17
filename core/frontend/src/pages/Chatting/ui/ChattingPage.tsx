@@ -4,13 +4,14 @@ import { MemoziedChattingPage } from "./ChattingContent"
 
 import { useWebSocket } from "../helpers/useWebSocket"
 
-import { WS_URL } from "../../../shared";
 import { useUserStore } from "../../../entities";
+import { SharedConsts } from "../../../shared";
+
 
 export const ChattingPage = (): JSX.Element => {
     const {id} = useUserStore().profile
 
-    const socket = useWebSocket(WS_URL,id)
+    const socket = useWebSocket(SharedConsts.WS_URL,id)
 
     return (
         <SocketContext.Provider value={socket}>

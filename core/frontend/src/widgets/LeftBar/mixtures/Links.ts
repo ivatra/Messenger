@@ -2,10 +2,11 @@ import {
     IconAddressBook, IconBell, IconMessageCircle
 } from "@tabler/icons-react";
 import { sections } from "../types/Sections";
-import { TablerIcon } from "../../../shared";
+
+import {SharedTypes} from "../../../shared";
 
 export interface ILinks {
-    Icon: TablerIcon
+    Icon: SharedTypes.ITablerIcon
     section: sections
 }
 

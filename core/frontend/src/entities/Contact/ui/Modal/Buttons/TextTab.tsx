@@ -1,10 +1,11 @@
 import { Group, Stack, Text } from "@mantine/core";
-import { TablerIcon } from "../../../../../shared";
+
+import { SharedTypes } from "../../../../../shared";
 
 interface ITabProps {
     content: string
     label: string
-    Icon: TablerIcon
+    Icon: SharedTypes.ITablerIcon
 }
 
 export const TextTab: React.FC<ITabProps> = ({ content, label, Icon }) => {

@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Drawer, DrawerProps, Group, Loader, Stack } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { EditInputsList } from "./EditInputsList";
-import { useLoader } from '../../../shared/lib/hooks/useLoader';
-import { CenterLoader } from '../../../shared';
+import { SharedUi, SharedHooks } from '../../../shared';
 
 interface IEditUserProps {
     opened: boolean;

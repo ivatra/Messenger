@@ -5,11 +5,11 @@ import { IContact } from '../types/Model';
 import { IContactInteractionsStore } from '../types/Store';
 
 import { api } from '../../../app';
-import { IStoreFeedback, handleRequest } from '../../../shared';
+import { SharedTypes, SharedHelpers } from '../../../shared';
 
 const baseUrl = 'content/pages/contacts';
 
-export type StoreType = IContactInteractionsStore & IStoreFeedback;
+export type StoreType = IContactInteractionsStore & SharedTypes.IStoreFeedback;
 
 const initialState = {
     isLoading: false,
@@ -27,7 +27,7 @@ export const useContactInteractionStore = create<StoreType>((set, get) => ({
         const { currentContact } = get()
 
         const request = () => api.post(`${baseUrl}/${contactId}/add`)
-        const response = await handleRequest<IContact>(request, set);
+        const response = await SharedHelpers.handleRequest<IContact>(request, set);
 
         if (!response || get().isError || !currentContact) return;
 
@@ -42,7 +42,7 @@ export const useContactInteractionStore = create<StoreType>((set, get) => ({
         const { currentContact } = get()
 
         const request = () => api.put(`${baseUrl}/${contactId}/update?status=accepted`);
-        const response = await handleRequest<IContact>(request, set);
+        const response = await SharedHelpers.handleRequest<IContact>(request, set);
 
         if (!response || get().isError || !currentContact) return;
 
@@ -56,7 +56,7 @@ export const useContactInteractionStore = create<StoreType>((set, get) => ({
         const { currentContact } = get()
 
         const request = () => api.delete(`${baseUrl}/${contactId}/remove`);
-        const response = await handleRequest<IContact>(request, set);
+        const response = await SharedHelpers.handleRequest<IContact>(request, set);
 
         if (!response || get().isError || !currentContact) return;
 
@@ -67,7 +67,7 @@ export const useContactInteractionStore = create<StoreType>((set, get) => ({
         removeContact(contactId)
     },
     receiveContactById: async (id: string) => {
-        const response = await handleRequest<IContact>(() => api.get(`${baseUrl}/${id}`), set);
+        const response = await SharedHelpers.handleRequest<IContact>(() => api.get(`${baseUrl}/${id}`), set);
 
         if (!response || get().isError) return;
 

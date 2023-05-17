@@ -8,7 +8,8 @@ import { ButtonTab } from "./ButtonTab";
 import { useContactInteractionStore } from "../../../store/ContactInteractionStore";
 import { IContactStatus } from "../../../types/Model";
 import { getInteractionByStatus } from "../../../helpers/getInteractionByStatus";
-import { TablerIcon } from "../../../../../shared";
+
+import { SharedTypes } from "../../../../../shared";
 
 
 interface IButtonTabLogicProps {
@@ -26,7 +27,7 @@ export const InteractionButton: React.FC<IButtonTabLogicProps> = ({ status, cont
 
 
     const [label,setLabel] = useState<string>('')
-    const [Icon,setIcon] = useState<TablerIcon>(IconLoader)
+    const [Icon,setIcon] = useState<SharedTypes.ITablerIcon>(IconLoader)
 
     useEffect(()=>{
         const { label, Icon } = getInteractionByStatus(status);
