@@ -160,7 +160,7 @@ export const useMessageStore = create<StoreType>((set, get) => ({
             state.attachments[chatId] = chatAttachments;
         }));
     },
-    addItemExternal: (chatId, contentItem) => {
+    addItemWS: (chatId, contentItem) => {
         set(produce((state) => {
             const chatItems = createOrFindItem(state, chatId);
             chatItems.items.unshift(contentItem);

@@ -124,7 +124,7 @@ export const useChatStore = create<StoreType>()((set, get) => ({
             })
         );
     },
-    addParticipantExternal: async (chatId, participant) => {
+    addParticipantWS: async (chatId, participant) => {
         const chats = get().chats;
 
         if (!chats[chatId]) return;
@@ -152,7 +152,7 @@ export const useChatStore = create<StoreType>()((set, get) => ({
         );
     },
 
-    removeParticipantExternal: async (chatId, participantId) => {
+    removeParticipantWS: async (chatId, participantId) => {
         const chats = get().chats;
 
         if (!chats[chatId]) return;
@@ -166,7 +166,7 @@ export const useChatStore = create<StoreType>()((set, get) => ({
         );
     },
 
-    editGroupChatExternal: async (chatId, fields) => {
+    editGroupChatWS: async (chatId, fields) => {
         if (!get().chats[chatId]) return;
 
         set(

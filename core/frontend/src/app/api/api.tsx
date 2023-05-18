@@ -1,6 +1,6 @@
 import ky from "ky";
 
-import { setHeader, refreshToken, showCaptcha } from "./lib/middlewares";
+import { setHeader, refreshToken, showCaptcha } from "./helpers/middlewares";
 
 import { Messages, SharedConsts } from "../../shared";
 

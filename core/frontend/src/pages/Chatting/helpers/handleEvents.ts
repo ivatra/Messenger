@@ -1,10 +1,8 @@
-import { IEvent } from "../types/Event";
+import { IEvent } from "../../../features/Events/types/Event";
 
 import { useChatStore, useContactListStore, useInboxStore, useMessageStore } from "../../../entities";
-import { SharedConsts } from "../../../shared";
 
-
-function handleEvent(event: IEvent) {
+export function handleEvent(event: IEvent) {
     console.log(event.type)
     switch (event.type) {
         case 'received_message': {
@@ -115,29 +113,4 @@ function handleEvent(event: IEvent) {
             throw Error('Unexpected event')
     }
     // notifications.show({ message: `Event ${event.type}` })
-}
-
-export function subscribeToEvents(socket: React.MutableRefObject<WebSocket | null>, userId: string) {
-    socket.current = new WebSocket(SharedConsts.WS_URL);
-
-    socket.current.onopen = () => {
-        const message = {
-            type: 'initial',
-            data: {
-                userId: userId,
-            },
-        };
-        socket?.current?.send(JSON.stringify(message));
-    };
-
-    socket.current.onmessage = (message: MessageEvent) => {
-        const events: IEvent[] = JSON.parse(message.data)
-        events.forEach((event) => handleEvent(event))
-    };
-
-    socket.current.onclose = () => {
-        socket.current = null
-        console.log('WebSocket disconnected');
-    };
-    
 }

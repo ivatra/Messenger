@@ -128,7 +128,7 @@ const useInboxStore = create<StoreType>()((set, get) => ({
             foundInbox.countUnreadMsgs--
         }));
     },
-    updateMessage: (message, chatId, isExternal) => {
+    updateMessage: (message, chatId, isWS) => {
         const { receiveByChat } = get()
 
         set(produce((
@@ -140,7 +140,7 @@ const useInboxStore = create<StoreType>()((set, get) => ({
                 receiveByChat(chatId)
             } else {
                 foundInbox.message = message
-                if (isExternal) {
+                if (isWS) {
                     foundInbox.countUnreadMsgs++
                 }
             }

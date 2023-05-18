@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 
 
-import { SharedTypes,Messages } from "../../../shared"
+import { handleEvent } from "./handleEvents";
+
+import { SharedTypes, Messages } from "../../../shared"
+
 
 const maxCountOfRetries = 6
 
@@ -33,11 +36,12 @@ export const useWebSocket = (url: string, userId: string):SocketActions => {
 
         socket.onmessage = (message) => {
             const events = JSON.parse(message.data);
-            // Handle events...
+            for (var event of events){
+                handleEvent(event)
+            }
         };
 
         socket.onclose = () => {
-            // Handle closure...
             console.log('WebSocket disconnected');
             setCountOfRetries(prevCount => prevCount + 1);
             socketRef.current = null;

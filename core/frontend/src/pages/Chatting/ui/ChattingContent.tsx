@@ -1,25 +1,22 @@
-import React, { useEffect, useMemo } from "react";
-import { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
 
-import { useDidUpdate, useMediaQuery } from "@mantine/hooks";
-import { AppShell, AppShellProps, Group, Loader } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
+import { AppShell, AppShellProps, Group } from "@mantine/core";
 
 
 import { MobileNavBar, DesktopNavBar, sections, ChatView, EditUserProvider, SideBar } from "../../../widgets";
-
-import { SharedUi, SharedConsts } from "../../../shared";
-import { useParams } from "react-router-dom";
 import { useChatStore } from "../../../entities";
-
+import { SharedUi, SharedConsts } from "../../../shared";
 
 
 export const ChattingContent = () => {
     const [section, setSection] = useState<sections>("Chats");
     const { chatId } = useParams()
 
-    const { setCurrentChatId } = useChatStore()
-
     const isDesktop = useMediaQuery(`(min-width: ${SharedConsts.DESKTOP_WIDTH})`);
+
+    const { setCurrentChatId } = useChatStore()
 
     useEffect(() => {
         setCurrentChatId(chatId ? +chatId : undefined)
@@ -42,8 +39,8 @@ export const ChattingContent = () => {
         }
 
         const sideBarVisible = isDesktop || !chatId
-
         const chatViewVisible = Boolean(isDesktop || chatId);
+
         return (
             <>
                 <SideBar section={section} isDisplayed={sideBarVisible} />

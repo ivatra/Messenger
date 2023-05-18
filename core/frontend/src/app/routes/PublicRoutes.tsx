@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 
-import { AccountActivation } from '../../../pages';
+import { AccountActivation } from '../../pages';
 
 
 const PublicRoutes = () => {

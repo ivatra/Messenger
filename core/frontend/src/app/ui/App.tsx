@@ -1,6 +1,6 @@
 import { Notifications } from "@mantine/notifications"
-import { ChattingPage } from "../../pages/Chatting"
-import { AppRoutes } from "./Routes/AppRoutes"
+
+import { AppRoutes } from "../routes/AppRoutes"
 import StylesProvider from "./StylesProvider"
 
 

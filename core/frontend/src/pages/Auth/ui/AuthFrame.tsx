@@ -5,13 +5,13 @@ import { useMediaQuery } from '@mantine/hooks';
 
 import { SharedUi, SharedConsts } from '../../../shared';
 
+
 const mobilePaperProps: PaperProps = {
     display: 'block',
 };
 
 const desktopPaperProps: PaperProps = {
     display: 'flex',
-
 };
 
 interface AuthFrameProps {

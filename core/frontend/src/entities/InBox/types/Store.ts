@@ -19,5 +19,5 @@ export interface IInboxStore {
     receiveMatched: (message: string) => void
 
     decrementCountUnreadMsgs:(chatId:number) => void
-    updateMessage: (message: SharedTypes.IMessage, chatId: number,isExternal:boolean) => void // events feature ought to update this 
+    updateMessage: (message: SharedTypes.IMessage, chatId: number,isWS:boolean) => void // events feature ought to update this 
 }
