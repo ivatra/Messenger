@@ -36,7 +36,8 @@ export const TypesItems = [
     'IAttachement',
     'IStoreFeedback',
     'IChat',
-    'IEventRequest'
+    'IEventRequest',
+    'ITablerIcon'
 ];
 
 
@@ -44,7 +45,6 @@ export const TypesItems = [
 export const UiItems = [
     'errorIcon',
     'iconBaseProps',
-    'TablerIcon',
     'loaderIcon',
     'successIcon',
     'Search',

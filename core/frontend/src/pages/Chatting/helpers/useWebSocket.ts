@@ -1,17 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 
-import { useCounter } from "@mantine/hooks"
 
-import { showInternalErrorMessage } from "../../../shared/lib/helpers/messages"
+import { handleEvent } from "./handleEvents";
 
-import { subscribeToEvents } from "../../../features"
-import { useUserStore } from "../../../entities"
-import { IEventRequest } from "../../../shared"
+import { SharedTypes, Messages } from "../../../shared"
+
 
 const maxCountOfRetries = 6
 
 interface SocketActions {
-    send: (data: IEventRequest) => void
+    send: (data: SharedTypes.IEventRequest) => void
 }
 
 export const useWebSocket = (url: string, userId: string):SocketActions => {
@@ -20,7 +18,7 @@ export const useWebSocket = (url: string, userId: string):SocketActions => {
 
     const connect = useCallback(() => {
         if (countOfRetries >= maxCountOfRetries) {
-            showInternalErrorMessage()
+            Messages.showInternalErrorMessage()
             return;
         }
 
@@ -38,11 +36,12 @@ export const useWebSocket = (url: string, userId: string):SocketActions => {
 
         socket.onmessage = (message) => {
             const events = JSON.parse(message.data);
-            // Handle events...
+            for (var event of events){
+                handleEvent(event)
+            }
         };
 
         socket.onclose = () => {
-            // Handle closure...
             console.log('WebSocket disconnected');
             setCountOfRetries(prevCount => prevCount + 1);
             socketRef.current = null;
@@ -50,7 +49,7 @@ export const useWebSocket = (url: string, userId: string):SocketActions => {
 
         socket.onerror = () => {
             socket.close();
-            showInternalErrorMessage()
+            Messages.showInternalErrorMessage()
         };
 
         socketRef.current = socket;
@@ -66,7 +65,7 @@ export const useWebSocket = (url: string, userId: string):SocketActions => {
     }, [connect]);
 
     return {
-        send: (data:IEventRequest) => {
+        send: (data:SharedTypes.IEventRequest) => {
             if (socketRef.current) {
                 socketRef.current.send(JSON.stringify(data));
             }

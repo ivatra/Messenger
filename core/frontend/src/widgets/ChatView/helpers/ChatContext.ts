@@ -1,5 +1,5 @@
 import { createContext } from "react";
 
-import { IChat } from "../../../shared";
+import { SharedTypes } from "../../../shared";
 
-export const ChatContext = createContext<IChat>({} as IChat)
+export const ChatContext = createContext<SharedTypes.IChat>({} as SharedTypes.IChat)

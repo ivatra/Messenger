@@ -3,11 +3,11 @@ import { useState } from "react"
 import { ActionIcon, ActionIconProps, DefaultMantineColor } from "@mantine/core"
 
 
-import { TablerIcon } from "../../../../../shared"
+import {SharedTypes} from "../../../../../shared";
 
 
 interface IPickButton {
-    Icon: TablerIcon
+    Icon: SharedTypes.ITablerIcon
     onClick: () => void
 }
 

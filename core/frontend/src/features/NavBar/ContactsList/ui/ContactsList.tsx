@@ -6,7 +6,7 @@ import useContactsLoading from "../hooks/useContactsLoading";
 
 import { ContactsListHeader } from "./ContactsHeader";
 import { useScrollOnTabSwitch } from "../hooks/useScrollOnTabSwitch";
-import { useDynamicLimit } from "../../../../shared";
+import { SharedHooks } from "../../../../shared";
 import { useManageVisibleContacts } from "../hooks/useManageContacts";
 import { IContact } from "../../../../entities";
 import { ContactTab } from "../../../../entities/Contact/ui/ContactTab";
@@ -29,7 +29,7 @@ const contact: IContact = {
 export const ContactsList = (): JSX.Element => {
     const [scrollPosition, onScrollPositionChange] = useState({ x: 0, y: 0 });
 
-    const { limit, sizeRef } = useDynamicLimit({ subjectSize: averageContactSize })
+    const { limit, sizeRef } = SharedHooks.useDynamicLimit({ subjectSize: averageContactSize })
 
     const scrollViewPort = useScrollOnTabSwitch()
 

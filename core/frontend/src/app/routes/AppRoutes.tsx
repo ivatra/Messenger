@@ -4,7 +4,7 @@ import AuthenticatedRoutes from './AuthenticatedRoutes';
 import NotAuthorizedRoutes from './NotAuthorizedRoutes';
 import ActivationRoutes from './ActivationRoutes';
 
-import { useUserStore } from '../../../entities';
+import { useUserStore } from '../../entities';
 
 
 export const AppRoutes = () => {

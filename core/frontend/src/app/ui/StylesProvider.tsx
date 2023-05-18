@@ -1,5 +1,7 @@
-import { MantineProvider } from "@mantine/core"
 import React from "react";
+
+import { MantineProvider } from "@mantine/core"
+
 
 
 interface StylesProps {

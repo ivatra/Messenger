@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 
-import { EmailActivationHint } from '../../../features';
-import { AccountActivation } from '../../../pages';
+import { EmailActivationHint } from '../../features';
+import { AccountActivation } from '../../pages';
 
 
 const ActivationRoutes: React.FC = () => (

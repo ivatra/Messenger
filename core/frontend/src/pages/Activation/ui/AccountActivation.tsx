@@ -3,10 +3,12 @@ import { useParams } from 'react-router-dom';
 
 import { Modal } from '@mantine/core';
 
-import { useUserStore } from '../../../entities';
-import { CenterLoader } from '../../../shared';
 import { SuccesfullContent } from './SuccesfulContent';
 import { FailedContent } from './FailedContent';
+
+import { useUserStore } from '../../../entities';
+import { SharedUi } from '../../../shared';
+
 
 export const AccountActivation = () => {
     const { activate, isActivated,isAnotherAccountActivated, isLoading } = useUserStore();
@@ -21,12 +23,12 @@ export const AccountActivation = () => {
 
 
     return (
-        <Modal onClose={() => { }} opened={true} withCloseButton={false}>
+        (<Modal onClose={() => { }} opened={true} withCloseButton={false}>
             {isLoading
-                ? <CenterLoader />
+                ? <SharedUi.CenterLoader />
                 : isActivated || isAnotherAccountActivated
                     ? <SuccesfullContent />
                     : <FailedContent />}
-        </Modal>
+        </Modal>)
     );
 };

@@ -1,11 +1,14 @@
 import { useState } from "react";
+
 import { ActionIcon, Group } from "@mantine/core";
+
 import { UpdateProfileParams } from "../types/Store";
-import { EditFileInput } from "../../../shared/ui/Components/EditFileInput";
 import { IProfile } from "..";
 import { IEditInputs } from "../model/EditInputProps";
 import { EditTextInput } from "./EditTextInput";
 import { wrapInitialIcon, titleCaseWord, getPlaceholder } from "../helpers/propsHelper";
+
+import { SharedUi } from "../../../shared";
 
 interface IEditInputProps {
     onSubmit: ({ field, value }: UpdateProfileParams) => void
@@ -40,7 +43,7 @@ export const BaseEditInput: React.FC<IEditInputProps> = ({
     
     const Input = (
         props.type === 'file'
-            ? <EditFileInput
+            ? <SharedUi.EditFileInput
                 {...props}
                 label={label}
                 placeholder={placeholder}

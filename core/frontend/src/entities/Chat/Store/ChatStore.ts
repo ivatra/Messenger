@@ -2,11 +2,11 @@ import { create } from 'zustand';
 import produce from "immer";
 
 import { IChatStore } from '../types/Store';
-
 import { api } from '../../../app';
-import { IChat, IStoreFeedback, handleRequest } from '../../../shared';
 
-export type StoreType = IChatStore & IStoreFeedback
+import { SharedTypes, SharedHelpers } from '../../../shared';
+
+export type StoreType = IChatStore & SharedTypes.IStoreFeedback
 
 const baseUrl = 'content/chat/'
 
@@ -25,7 +25,7 @@ export const useChatStore = create<StoreType>()((set, get) => ({
     },
     receiveChatWithUser: async (userId) => {
         const request = () => api.get(baseUrl + 'individual/?participantId=' + userId);
-        const chatId = await handleRequest<number>(request, set);
+        const chatId = await SharedHelpers.handleRequest<number>(request, set);
 
         if (!chatId) return;
 
@@ -36,7 +36,7 @@ export const useChatStore = create<StoreType>()((set, get) => ({
 
         const request = () => api.get(baseUrl + chatId);
 
-        const chat = await handleRequest<IChat>(request, set);
+        const chat = await SharedHelpers.handleRequest<SharedTypes.IChat>(request, set);
 
         if (!chat || get().chats[chatId]) return;
 
@@ -49,7 +49,7 @@ export const useChatStore = create<StoreType>()((set, get) => ({
                     participantId: participant.user.id,
                 },
             });
-        const response = await handleRequest(request, set);
+        const response = await SharedHelpers.handleRequest(request, set);
 
         const foundParticipant = get().chats[chatId].participants.find((part) => part.id === participant.id);
 
@@ -63,7 +63,7 @@ export const useChatStore = create<StoreType>()((set, get) => ({
     },
     removeParticipant: async (chatId, userId) => {
         const request = () => api.delete(baseUrl + chatId + `/participants/${userId}`);
-        const response = await handleRequest(request, set);
+        const response = await SharedHelpers.handleRequest(request, set);
 
         if (!response) return;
 
@@ -88,7 +88,7 @@ export const useChatStore = create<StoreType>()((set, get) => ({
         formData.append('participants', JSON.stringify(participants));
 
         const request = () => api.post(baseUrl + 'group', { body: formData });
-        const response = await handleRequest<IChat>(request, set);
+        const response = await SharedHelpers.handleRequest<SharedTypes.IChat>(request, set);
 
         if (!response) return;
 
@@ -114,7 +114,7 @@ export const useChatStore = create<StoreType>()((set, get) => ({
                 body: formData,
             });
 
-        const response = await handleRequest(request, set);
+        const response = await SharedHelpers.handleRequest(request, set);
 
         if (!response) return;
 
@@ -124,7 +124,7 @@ export const useChatStore = create<StoreType>()((set, get) => ({
             })
         );
     },
-    addParticipantExternal: async (chatId, participant) => {
+    addParticipantWS: async (chatId, participant) => {
         const chats = get().chats;
 
         if (!chats[chatId]) return;
@@ -152,7 +152,7 @@ export const useChatStore = create<StoreType>()((set, get) => ({
         );
     },
 
-    removeParticipantExternal: async (chatId, participantId) => {
+    removeParticipantWS: async (chatId, participantId) => {
         const chats = get().chats;
 
         if (!chats[chatId]) return;
@@ -166,7 +166,7 @@ export const useChatStore = create<StoreType>()((set, get) => ({
         );
     },
 
-    editGroupChatExternal: async (chatId, fields) => {
+    editGroupChatWS: async (chatId, fields) => {
         if (!get().chats[chatId]) return;
 
         set(

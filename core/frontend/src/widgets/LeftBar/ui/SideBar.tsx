@@ -7,7 +7,7 @@ import { SectionContent } from "./Content/SectionContent";
 import { useDrawer } from "../hooks/EditUserContext";
 import { EditUserDrawer } from "../../../entities/User/ui/EditUserDrawer";
 
-import { SharedConsts } from "../../../shared";
+import {SharedConsts} from "../../../shared";
 
 
 const paperProps: PaperProps = {

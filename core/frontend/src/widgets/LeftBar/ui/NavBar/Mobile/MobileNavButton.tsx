@@ -1,10 +1,10 @@
 import { Text, Stack } from "@mantine/core";
 import { NavButton } from "../NavButton";
-import { TablerIcon } from "../../../../../shared";
+import {SharedTypes} from "../../../../../shared";
 
 interface INavButtonProps {
     title: string;
-    Icon: TablerIcon
+    Icon: SharedTypes.ITablerIcon
     active?: boolean;
     onClick: () => void;
 }

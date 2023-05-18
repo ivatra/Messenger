@@ -1,6 +1,6 @@
 import { fetchSender } from "./fetchSender";
 import { IContentItem, Message, ParticipantAction } from "../../../../entities";
-import { IChat } from "../../../../shared";
+import { SharedTypes } from "../../../../shared";
 import { RefObject, cloneElement } from "react";
 
 
@@ -20,7 +20,7 @@ interface IRenderItemCache {
 
 const renderItemCache: IRenderItemCache = {};
 
-const renderItem = async (chat: IChat, containerRef: RefObject<HTMLDivElement>, userAgentId: string, message: IContentItem) => {
+const renderItem = async (chat: SharedTypes.IChat, containerRef: RefObject<HTMLDivElement>, userAgentId: string, message: IContentItem) => {
     if (message.type === "Message") {
         const messageData = message.data
         const cacheItem = renderItemCache[messageData.id]

@@ -1,15 +1,14 @@
 import { useContext, useRef } from "react";
 
-import { Text, Box, Group, Stack } from "@mantine/core"
+import { Text, Box, Group, Stack } from "@mantine/core";
 
-import { IListMessage } from "../types/Model"
-import { useMessageStore } from "../Store/MessageStore";
+import { IListMessage } from "../types/Model";
 import { ChatContext } from "../../../widgets";
 import { SocketContext } from "../../../pages";
 import { sendMessageReadEvent } from "../helpers/sendMessageReadEvent";
-
-import { CustomAvatar, IMessage, IUser, formatDate, useIntersectionObserver } from "../../../shared"
 import { useInboxStore } from "../../InBox";
+
+import { SharedTypes, SharedHooks, SharedHelpers } from "../../../shared";
 
 const observerOptions: IntersectionObserverInit = {
     root: null,
@@ -22,7 +21,7 @@ interface IMessageProps {
     message: IListMessage
     scrollAreaRef: React.RefObject<HTMLDivElement>
     isSentBySelf: boolean
-    sender: IUser
+    sender: SharedTypes.IUser
 }
 
 export const Message: React.FC<IMessageProps> = ({ message, sender, isSentBySelf, scrollAreaRef }) => {
@@ -39,7 +38,7 @@ export const Message: React.FC<IMessageProps> = ({ message, sender, isSentBySelf
             decrementCountUnreadMsgs(chat.id)
         }
     }
-    useIntersectionObserver({
+    SharedHooks.useIntersectionObserver({
         targetRef: ref,
         isObserved: !message.isRead && !isSentBySelf,
         options: { ...observerOptions, root: scrollAreaRef.current },
@@ -62,7 +61,7 @@ export const Message: React.FC<IMessageProps> = ({ message, sender, isSentBySelf
                     <Group>
                         <Text>{sender.name}</Text>
                         <Text>{message.isRead ? 'read' : 'not read'}</Text>
-                        <Text> {formatDate(message.createdAt)}</Text>
+                        <Text> {SharedHelpers.formatDate(message.createdAt)}</Text>
                     </Group>
                     {/* {message.attachement && <CustomAvatar size='xl' avatarSrc={message.attachement?.url} />} */}
                     <Group>

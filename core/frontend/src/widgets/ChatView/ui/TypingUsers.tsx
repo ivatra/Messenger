@@ -1,9 +1,9 @@
-import { IChatParticipant, IUser } from "../../../shared"
+import { SharedTypes } from "../../../shared";
 
 import { Text } from "@mantine/core"
 
 interface ITypingUsersProps {
-    typingUsers: IChatParticipant[]
+    typingUsers: SharedTypes.IChatParticipant[]
 }
 
 export const TypingUsers: React.FC<ITypingUsersProps> = ({ typingUsers }) => {

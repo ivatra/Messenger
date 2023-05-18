@@ -3,7 +3,8 @@ import React from 'react';
 import { useMantineTheme, PaperProps, Paper } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 
-import { CenterLoader, DESKTOP_WIDTH } from '../../../shared';
+import { SharedUi, SharedConsts } from '../../../shared';
+
 
 const mobilePaperProps: PaperProps = {
     display: 'block',
@@ -11,7 +12,6 @@ const mobilePaperProps: PaperProps = {
 
 const desktopPaperProps: PaperProps = {
     display: 'flex',
-
 };
 
 interface AuthFrameProps {
@@ -21,7 +21,7 @@ interface AuthFrameProps {
 
 export const AuthFrame = React.forwardRef<HTMLDivElement, AuthFrameProps>(
     ({ children }, ref) => {
-        const isDesktop = useMediaQuery(`(min-width: ${DESKTOP_WIDTH})`);
+        const isDesktop = useMediaQuery(`(min-width: ${SharedConsts.DESKTOP_WIDTH})`);
         const theme = useMantineTheme();
 
         const paperProps: PaperProps = {
@@ -39,12 +39,11 @@ export const AuthFrame = React.forwardRef<HTMLDivElement, AuthFrameProps>(
         };
 
         return (
-            <Paper {...paperProps} ref={ref}>
+            (<Paper {...paperProps} ref={ref}>
                 {isDesktop === undefined
-                    ? <CenterLoader />
+                    ? <SharedUi.CenterLoader />
                     : children}
-
-            </Paper>
+            </Paper>)
         );
     }
 );

@@ -1,9 +1,9 @@
-import { IChat, IMessage } from "../../../shared"
+import { SharedTypes } from "../../../shared";
 
 export interface IInbox {
     id: number
     countUnreadMsgs: number
     isPinned: boolean
-    message: IMessage
-    chat: IChat
+    message: SharedTypes.IMessage
+    chat: SharedTypes.IChat
 }

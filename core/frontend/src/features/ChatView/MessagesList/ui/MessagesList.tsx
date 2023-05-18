@@ -5,7 +5,7 @@ import { useRenderMessages } from "../helpers/hooks/useRenderMessages";
 import { useHandleScroll } from "../helpers/hooks/useHandleScroll";
 
 import { IContentItem } from "../../../../entities";
-import { CenterLoader } from "../../../../shared";
+import { SharedUi } from "../../../../shared";
 
 
 /*
@@ -80,14 +80,13 @@ export const MessagesList: React.FC<IMessagesListProps> = ({
         return <Box h='100%'>Nothing found</Box>
     } else {
         return (
-            <ScrollArea {...scrollAreaProps}>
-                {isMessagesLoading && <CenterLoader />}
+            (<ScrollArea {...scrollAreaProps}>
+                {isMessagesLoading && <SharedUi.CenterLoader />}
                 <Stack {...itemsContainerProps} >
                     {renderedItems}
                 </Stack>
                 {/* <ScrollShevron onClick={() => scrollToBottom()} position="bottom" pos={{ bottom: '1rem', right: '1rem' }} visible={true} /> */}
-            </ScrollArea>
-
-        )
+            </ScrollArea>)
+        );
     }
 };

@@ -6,7 +6,7 @@ import { ChatRoom } from "./ChatRoom";
 import { ChatStart } from "./ChatStart";
 
 import { useChatStore } from "../../../entities";
-import { CenterLoader, IChat } from "../../../shared";
+import { SharedUi, SharedTypes } from "../../../shared";
 
 //Atachement view overlay
 //Attachements view overlay
@@ -23,7 +23,7 @@ export const ChatView: React.FC<IChatViewProps> = ({ chatId,isDisplayed }) => {
     useEffect(() => {
         if (!chatId) return
 
-        const chatExists: IChat | undefined = chats[+chatId]
+        const chatExists: SharedTypes.IChat | undefined = chats[+chatId]
 
         if (!chatExists) receiveChat(+chatId)
 
@@ -37,10 +37,10 @@ export const ChatView: React.FC<IChatViewProps> = ({ chatId,isDisplayed }) => {
     }, [chatId, chats])
     
     return (
-        <Box pos="relative" w="100%" display={isDisplayed ? 'block' : 'none'} h='100%' >
+        (<Box pos="relative" w="100%" display={isDisplayed ? 'block' : 'none'} h='100%' >
             {!chatId && <ChatStart />}
-            {isLoading &&  <CenterLoader />} 
+            {isLoading &&  <SharedUi.CenterLoader />}
             {chatRoomComponent}
-        </Box>
-    )
+        </Box>)
+    );
 }

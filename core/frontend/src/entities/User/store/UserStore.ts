@@ -3,7 +3,7 @@ import { persist } from "zustand/middleware"
 import { immer } from 'zustand/middleware/immer'
 
 import { IUserStore } from "../types/Store";
-import { IStoreFeedback, handleRequest, extractCommonFields, WEBSITE_URL } from "../../../shared"
+import { SharedTypes, SharedHelpers, SharedConsts } from "../../../shared";
 import { api } from "../../../app";
 import { IProfile } from "../types/Model";
 import { IActivateAccResponse, IAuthApiResponse, ICheckActivationResponse } from "../types/ApiResponse";
@@ -18,7 +18,7 @@ const initialState = {
     isError: false
 }
 
-type StoreType = IUserStore & IStoreFeedback
+type StoreType = IUserStore & SharedTypes.IStoreFeedback
 
 export const useUserStore = create<StoreType>()(
     persist(
@@ -34,11 +34,11 @@ export const useUserStore = create<StoreType>()(
 
                 const request = () => api.post("auth/logout")
 
-                const response = await handleRequest(request, set)
+                const response = await SharedHelpers.handleRequest(request, set)
 
                 if (!response) return
 
-                window.location.href = WEBSITE_URL + '/auth'
+                window.location.href = SharedConsts.WEBSITE_URL + '/auth'
             },
             updateProfile: async (field, value) => {
                 const formData = new FormData();
@@ -48,11 +48,11 @@ export const useUserStore = create<StoreType>()(
                     body: formData
                 })
 
-                const complementedProfile = await handleRequest(request, set)
+                const complementedProfile = await SharedHelpers.handleRequest(request, set)
 
                 if (!complementedProfile) return
 
-                const [updatedProfile, isCommon] = extractCommonFields<IProfile>(initialState.profile, complementedProfile)
+                const [updatedProfile, isCommon] = SharedHelpers.extractCommonFields<IProfile>(initialState.profile, complementedProfile)
 
                 if (isCommon) set({ profile: updatedProfile as IProfile }) // I claim it's safe!
             },
@@ -62,7 +62,7 @@ export const useUserStore = create<StoreType>()(
 
                 const request = () => api.post(`auth/activate/${link}/?userId=${id}`)
 
-                const response = await handleRequest<IActivateAccResponse>(request, set)
+                const response = await SharedHelpers.handleRequest<IActivateAccResponse>(request, set)
 
                 if (!response) return
 
@@ -76,7 +76,7 @@ export const useUserStore = create<StoreType>()(
             checkActivation: async () => {
                 const request = () => api.get("auth/activation")
 
-                const response = await handleRequest<ICheckActivationResponse>(request, set)
+                const response = await SharedHelpers.handleRequest<ICheckActivationResponse>(request, set)
 
                 if (!response) return
 
@@ -86,7 +86,7 @@ export const useUserStore = create<StoreType>()(
             refreshActivation: async () => {
                 const request = () => api.get("auth/refreshActivation")
 
-                const response = await handleRequest<string>(request, set)
+                const response = await SharedHelpers.handleRequest<string>(request, set)
 
                 if (!response) return
             },
@@ -100,7 +100,7 @@ export const useUserStore = create<StoreType>()(
                     body: formData
                 })
 
-                const response = await handleRequest<IAuthApiResponse>(request, set)
+                const response = await SharedHelpers.handleRequest<IAuthApiResponse>(request, set)
 
                 if (!response) return
 
@@ -112,7 +112,7 @@ export const useUserStore = create<StoreType>()(
                     isAuth: true
                 })
 
-                window.location.href = WEBSITE_URL + '/chat'
+                window.location.href = SharedConsts.WEBSITE_URL + '/chat'
             },
             register: async (name, login, email, pass, avatar) => {
                 // name = 'ivatra'
@@ -134,7 +134,7 @@ export const useUserStore = create<StoreType>()(
                     body: formData
                 })
 
-                const response = await handleRequest<IAuthApiResponse>(request, set)
+                const response = await SharedHelpers.handleRequest<IAuthApiResponse>(request, set)
 
                 if (!response) return
 
@@ -146,7 +146,7 @@ export const useUserStore = create<StoreType>()(
                     isAuth: true
                 })
 
-                window.location.href = WEBSITE_URL + '/chat'
+                window.location.href = SharedConsts.WEBSITE_URL + '/chat'
             }
 
         })), {

@@ -2,10 +2,12 @@ import { Group } from "@mantine/core"
 
 import { Date } from "./Date"
 import { Options } from "./Options"
-import { UserName } from "../../../../shared/ui/Components/UserName"
+
 import { PinnedIcon } from "./PinnedIcon"
 import useInboxStore from "../../store/InboxStore"
 import { IInbox } from "../../types/Model"
+
+import { SharedUi } from "../../../../shared"
 
 interface ITitleProps {
     name: string
@@ -25,17 +27,16 @@ export const MessageHeader: React.FC<ITitleProps> = ({ name, inbox, messageSentD
             messageSentDate={messageSentDate} />
 
     return (
-        <Group w='100%' position='apart' spacing={0} m={0} noWrap>
+        (<Group w='100%' position='apart' spacing={0} m={0} noWrap>
             <Group m={0} spacing={0} noWrap >
                 {inbox.isPinned && PinnedIcon}
-                <UserName name={name} />
+                <SharedUi.UserName name={name} />
             </Group>
             <Group ml='xs' noWrap>
                 {rightSide}
             </Group>
-        </Group>
-
-    )
+        </Group>)
+    );
 }
 
 

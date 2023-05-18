@@ -1,4 +1,4 @@
-import { IAttachement, IMessage } from "../../../shared";
+import { SharedTypes } from "../../../shared";
 
 export interface IMessageContentItem {
     type: "Message";
@@ -21,11 +21,11 @@ export type IMessageAction = {
 } & (IParticipantAction);
 
 
-export interface IListMessage extends IMessage{
+export interface IListMessage extends SharedTypes.IMessage{
     index:number
     status?: SentStatuses
     isMentioned?:boolean
-    attachement?:IAttachement
+    attachement?:SharedTypes.IAttachement
 }
 
 export type IContentItem = IMessageContentItem | IMessageActionContentItem

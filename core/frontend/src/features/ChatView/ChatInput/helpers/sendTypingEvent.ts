@@ -1,9 +1,8 @@
+import { SharedTypes } from "../../../../shared"
 
-import { IEventRequest } from "../../../../shared"
 
-
-export function sendTypingEvent(socket: WebSocket,isTyping:boolean,chatId:number){
-    const event: IEventRequest = {
+export function sendTypingEvent(socket: SharedTypes.ISocketActions, isTyping: boolean, chatId: number) {
+    const event: SharedTypes.IEventRequest = {
         type: 'typing',
         data: {
             chatId: chatId,
@@ -12,5 +11,5 @@ export function sendTypingEvent(socket: WebSocket,isTyping:boolean,chatId:number
 
     }
 
-    socket.send(JSON.stringify(event))
+    socket.send(event)
 }

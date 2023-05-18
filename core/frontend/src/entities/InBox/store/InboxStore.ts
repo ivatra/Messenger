@@ -2,13 +2,13 @@ import { create } from 'zustand'
 import produce from "immer";
 
 import { IInboxStore } from '../types/Store'
-import { IStoreFeedback, handleRequest } from '../../../shared'
+import { SharedTypes, SharedHelpers } from '../../../shared'
 import { api } from '../../../app'
 import { IInbox } from '../types/Model'
 import { IMatchedInboxesResponse, IInboxesResponse, IPinnedInboxesResponse } from '../types/ApiResponse'
 import { useChatStore } from '../../Chat';
 
-export type StoreType = IInboxStore & IStoreFeedback
+export type StoreType = IInboxStore & SharedTypes.IStoreFeedback
 
 const baseUrl = 'content/pages/inbox'
 
@@ -32,7 +32,7 @@ const useInboxStore = create<StoreType>()((set, get) => ({
     pin: async (id) => {
         const request = () => api.post(`${baseUrl}/${id}/pin`);
 
-        await handleRequest<IInbox>(request, set);
+        await SharedHelpers.handleRequest<IInbox>(request, set);
 
         if (get().isError) return;
 
@@ -67,7 +67,7 @@ const useInboxStore = create<StoreType>()((set, get) => ({
 
         const request = () => api.get(`${baseUrl}?limit=${limit}&offset=${inboxesLen}`);
 
-        const response = await handleRequest<IInboxesResponse>(request, set)
+        const response = await SharedHelpers.handleRequest<IInboxesResponse>(request, set)
 
         if (!response) return
 
@@ -79,7 +79,7 @@ const useInboxStore = create<StoreType>()((set, get) => ({
     receivePinned: async () => {
         const request = () => api.get(baseUrl + '/pinned');
 
-        const response = await handleRequest<IPinnedInboxesResponse>(request, set)
+        const response = await SharedHelpers.handleRequest<IPinnedInboxesResponse>(request, set)
 
         if (!response) return
 
@@ -90,7 +90,7 @@ const useInboxStore = create<StoreType>()((set, get) => ({
         const addChat = useChatStore.getState().addChat
         const request = () => api(baseUrl + `/bychat/?chatId=${chatId}`)
 
-        const response = await handleRequest<IInbox>(request, set)
+        const response = await SharedHelpers.handleRequest<IInbox>(request, set)
 
         if (!response) return
 
@@ -107,7 +107,7 @@ const useInboxStore = create<StoreType>()((set, get) => ({
     },
     receiveMatched: async (message) => {
         const request = () => api.get(`content/search/inbox/?message=${message}`);
-        const inboxes = await handleRequest<IMatchedInboxesResponse>(request, set);
+        const inboxes = await SharedHelpers.handleRequest<IMatchedInboxesResponse>(request, set);
 
         if (get().isError || inboxes === undefined) return;
 
@@ -128,7 +128,7 @@ const useInboxStore = create<StoreType>()((set, get) => ({
             foundInbox.countUnreadMsgs--
         }));
     },
-    updateMessage: (message, chatId, isExternal) => {
+    updateMessage: (message, chatId, isWS) => {
         const { receiveByChat } = get()
 
         set(produce((
@@ -140,7 +140,7 @@ const useInboxStore = create<StoreType>()((set, get) => ({
                 receiveByChat(chatId)
             } else {
                 foundInbox.message = message
-                if (isExternal) {
+                if (isWS) {
                     foundInbox.countUnreadMsgs++
                 }
             }

@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 
-import { AccountActivation, AuthenticationPage } from '../../../pages';
+import { AccountActivation, AuthenticationPage } from '../../pages';
 
 
 

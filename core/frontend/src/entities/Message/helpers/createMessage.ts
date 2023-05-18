@@ -1,12 +1,12 @@
 import { FileWithPath } from "@mantine/dropzone";
 import { IListMessage } from "../types/Model";
-import { IAttachement } from "../../../shared";
+import { SharedTypes } from "../../../shared";
 
 export function createMessage(userId: string, index: number, attachement: FileWithPath | undefined, message: string): IListMessage {
     const createdAt = new Date().toISOString();
     const updatedAt = createdAt;
 
-    const newAttachement: IAttachement | undefined = attachement
+    const newAttachement: SharedTypes.IAttachement | undefined = attachement
         ? {
             id: index,
             type: 'image',

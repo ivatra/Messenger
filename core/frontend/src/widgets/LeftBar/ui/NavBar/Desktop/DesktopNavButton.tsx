@@ -1,11 +1,12 @@
 import { useMantineTheme } from "@mantine/core";
-import { CustomToolTip } from "../../../../../shared/ui/Components/CustomToolTip";
+
 import { NavButton } from "../NavButton";
-import { TablerIcon } from "../../../../../shared";
+
+import { SharedUi, SharedTypes } from "../../../../../shared";
 
 interface INavButtonProps {
     title: string;
-    Icon: TablerIcon
+    Icon: SharedTypes.ITablerIcon
     active?: boolean;
     onClick: () => void;
 }
@@ -24,8 +25,8 @@ export const DesktopNavButton: React.FC<INavButtonProps> = ({
     }
 
     return (
-        <CustomToolTip label={title}>
+        <SharedUi.CustomToolTip label={title}>
             <NavButton Icon={Icon} onClick={onClick} active={active} />
-        </CustomToolTip>
+        </SharedUi.CustomToolTip>
     );
 };

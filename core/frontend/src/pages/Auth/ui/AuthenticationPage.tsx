@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 
 import { useForm } from '@mantine/form';
-import { Button, LoadingOverlay } from '@mantine/core';
+import {LoadingOverlay } from '@mantine/core';
 import { useHotkeys } from '@mantine/hooks';
 
 import { RegisterForm } from './RegisterForm';
@@ -24,6 +24,7 @@ export interface IFormValues {
 export const AuthenticationPage: React.FC = () => {
     const [formType, setFormType] = useState<'register' | 'login'>('register');
     const paperRef = useRef<HTMLDivElement>(null)
+
     const { isLoading, register, login } = useUserStore()
 
     const form = useForm<IFormValues>({

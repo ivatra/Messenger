@@ -1,8 +1,6 @@
 import { FileWithPath } from "@mantine/dropzone"
-import { IMessage } from "../../../shared"
+
 import { IContentItem, IListMessage } from "./Model"
-
-
 
 
 export interface IChatContent {
@@ -43,5 +41,5 @@ export interface IMessageStore {
     setPage:(chatId:number,page:number) => void
     
     increaseCommunicationMessagesTally:(chatId:number) => void
-    addItemExternal: (chatId: number,content:IContentItem) => void;
+    addItemWS: (chatId: number,content:IContentItem) => void;
 }

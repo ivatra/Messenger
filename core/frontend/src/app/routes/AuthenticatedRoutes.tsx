@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 
-import { ChattingPage } from '../../../pages/Chatting';
-import { AccountActivation } from '../../../pages';
+import { AccountActivation, ChattingPage } from '../../pages';
+
 
 const AuthenticatedRoutes = () => {
     return (

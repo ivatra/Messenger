@@ -1,10 +1,10 @@
 import { createContext } from "react";
 
-import { IEventRequest } from "../../../shared";
+import { SharedTypes } from "../../../shared";
 
 
 interface SocketActions {
-    send: (data: IEventRequest) => void
+    send: (data: SharedTypes.IEventRequest) => void
 }
 
 type SocketType = SocketActions | null
