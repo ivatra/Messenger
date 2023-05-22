@@ -2,7 +2,8 @@ const { Sequelize } = require("../postgre")
 const { Op } = require('sequelize')
 
 const { Attachement } = require("../models/attachementModel")
-const { Message, MessageVector } = require("../models/messageModel")
+const { Message, MessageVector, MessageMeta } = require("../models/messageModel")
+const { User } = require("../models/userModel")
 
 class messageQueries {
     async createMessage(chatId, content, senderId) {
@@ -20,16 +21,26 @@ class messageQueries {
         })
     }
 
+    async createMessageMeta(messageId, userId, isMentioned) {
+        return await MessageMeta.create({
+            messageId,
+            userId,
+            isMentioned
+        })
+    }
+
 
 
     async receiveMessage(messageId) {
         return await Message.findOne({
             where: {
                 id: messageId,
-            }, include: {
+            }, include: [{
                 model: Attachement,
                 attributes: ['type', 'url',]
-            }
+            }, {
+                model: MessageMeta,
+            }]
         })
     }
 
@@ -40,15 +51,40 @@ class messageQueries {
             }
         })
     }
-    async receiveByChat(chatId, limit, offset) {
+
+    async updateMessageMetaRead(messageId,userId){
+        return await MessageMeta.update({isRead:true},{
+            where:{
+                userId,
+                messageId
+            }
+        })
+    }
+
+    async markMessageRead(startMessageId) {
+        const message = await Message.findByPk(startMessageId)
+
+        return await Message.update({ isRead: true }, {
+            where: {
+                isRead: false,
+                chatId: message.dataValues.chatId,
+                index: {
+                    [Op.gt]: message.dataValues.index
+                }
+            }
+        })
+    }
+    async receiveByChat(chatId, userId, limit, offset) {
         return await Message.findAndCountAll({
             where: {
                 chatId: chatId
             },
-            include: {
-                model: Attachement,
-                attributes: ['id', 'type', 'url']
-            },
+            include: [
+                {
+                    model: Attachement,
+                    attributes: ['id', 'type', 'url']
+                },
+            ],
             attributes: [
                 'id',
                 'content',
@@ -63,6 +99,7 @@ class messageQueries {
             order: [['id', 'DESC']]
         });
     }
+
     async receiveMessagesIdsThatSatisfyMessage(chatsWhereUserIn, likeMessage, plainMessage) {
         return await Message.findAll({
             attributes: ["id", 'chatId'],

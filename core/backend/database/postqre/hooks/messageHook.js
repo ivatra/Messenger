@@ -35,26 +35,34 @@ function assignAttachementToMessage(attachement, message) {
 }
 async function sendMessageReceivedEvent(message) {
   const users = await chatQueries.receiveParticipantsByChat(message.chatId)
-  const loginArray = users.map(obj => obj.user.login);
-  const mentionedUsers = await checkForMention(message.content, loginArray)
+  const senderLogin = users.find((user) => user.userId === message.dataValues.senderId).user.login
 
+  const loginArray = users
+    .map(obj => obj.user.login)
+    .filter((login) => login !== senderLogin)
+
+  const mentionedUsers = await checkForMention(message.content, loginArray)
+  
   const promises = users.map(async (user) => {
-    const { id, login } = user.user;
+    const { id: participantId, login } = user.user;
     const userMentioned = mentionedUsers.includes(login);
 
     const attachement = await getMessageAttachements(message.id)
     const messageWithAttachement = assignAttachementToMessage(attachement, message.dataValues)
 
-    if (message.senderId !== id){
-      await inboxQueries.updateUnreadMsgs(id, message.chatId, 'increment')
-      await eventsQueries.createReceivedMessageEvent(id,
+    if (message.senderId !== participantId) {
+      await inboxQueries.updateUnreadMsgs(participantId, message.chatId, 'increment')
+
+      await messageQueries.createMessageMeta(message.id, participantId, userMentioned)
+
+      await eventsQueries.createReceivedMessageEvent(participantId,
         { ...messageWithAttachement, isMentioned: userMentioned },
         messageWithAttachement.chatId,
         userMentioned)
     }
-  
-        
-    await inboxQueries.updateMessage(id, message.chatId, message.id)
+
+
+    await inboxQueries.updateMessage(participantId, message.chatId, message.id)
   });
   await Promise.all(promises);
 }
@@ -73,7 +81,7 @@ const declareMessageTrigger = async () => {
 
     await createMessagesVector(message.id, filteredMessage)
   });
-  Message.addHook('beforeCreate',async (message, options) => {
+  Message.addHook('beforeCreate', async (message, options) => {
     const lastMessage = await Message.findOne({
       where: { chatId: message.chatId },
       order: [['index', 'DESC']],

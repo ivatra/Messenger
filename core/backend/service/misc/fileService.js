@@ -13,7 +13,11 @@ class fileService {
     }
 
     async getFileType(fileName) {
-        return mime.lookup(fileName).startsWith('image/') ? "image" : "file";
+        const mimeType = mime.lookup(fileName)
+        if(!mimeType){
+            throw ApiError.badRequest('Something is wrong with image')
+        }
+        return mimeType.startsWith('image/') ? "image" : "file";
     }
 
     async checkForImage(fileName) {

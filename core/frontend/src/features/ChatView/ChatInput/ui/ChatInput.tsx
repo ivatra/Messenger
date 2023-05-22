@@ -25,12 +25,10 @@ export const ChatInput: React.FC<IChatInputProps> = ({ parentHeight, isDragging,
     const openAttachementPickRef = useRef<() => void>(null);
 
     const [files, setFiles] = useState<FileWithPath[]>([]);
-    const [isInboxChecked, setInboxChecked] = useState<boolean>(false)
     const [messageInput, setMessageInput] = useState<string>('')
     const [messageSending, setMessageSending] = useState<boolean>(false)
 
     const { sendMessage, isLoading, isError, increaseCommunicationMessagesTally } = useMessageStore()
-    const { receiveByChat } = useInboxStore()
 
     const chat = useContext(ChatContext)
 
@@ -49,18 +47,6 @@ export const ChatInput: React.FC<IChatInputProps> = ({ parentHeight, isDragging,
 
     const handleMessageSend = () => {
         if (messageInput.length < 1) return
-
-        if (!isInboxChecked) {
-            const { inboxes, pinnedInboxes } = useInboxStore.getState()
-
-            const isFound = inboxes.find((inbox) => inbox.chat.id === chat.id)
-                || pinnedInboxes.find((inbox) => inbox.chat.id === chat.id)
-
-            if (!isFound) receiveByChat(chat.id)
-
-            setInboxChecked(true)
-        }
-
         setMessageSending(true)
         increaseCommunicationMessagesTally(chat.id)
         sendMessage(chat.id, messageInput, files[0])

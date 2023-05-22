@@ -1,4 +1,4 @@
-import { RefObject, useContext, useEffect, useState } from "react";
+import { RefObject, useContext, useState } from "react";
 
 import { useDidUpdate } from "@mantine/hooks";
 
@@ -6,8 +6,6 @@ import renderItem from "../renderMessageItem";
 
 import { ChatContext } from "../../../../../widgets";
 import { IContentItem, useUserStore } from "../../../../../entities";
-
-
 
 
 interface IUseRenderMessagesProps {
@@ -28,13 +26,13 @@ export const useRenderMessages = ({ items,turnOffLoading, scrollRef }: IUseRende
         const fetchAndRenderItems = async () => {
             if (!items) return
 
-            const itemsComponent = await Promise.all(items.map((item) => renderItem(
+            const itemsComponents = await Promise.all(items.map((item) => renderItem(
                 chat,
                 scrollRef,
                 userAgentId,
                 item
             )))
-            setRenderedItems(itemsComponent);
+            setRenderedItems(itemsComponents);
             turnOffLoading()
         };
 

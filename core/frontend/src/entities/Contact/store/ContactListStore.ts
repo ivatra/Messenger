@@ -3,10 +3,11 @@ import { create } from 'zustand';
 import { IContactInteractions, IContactListStore } from '../types/Store';
 import { IReceiveContactsResponse } from '../types/ApiResponse';
 
-import { api } from '../../../app';
-import { SharedTypes, SharedHelpers } from '../../../shared';
 import { sortByIsContact } from '../helpers/sortSearchedContacts';
 import { updateContactList } from '../helpers/mutateContactList';
+
+import { api } from '../../../app';
+import { SharedTypes, SharedHelpers } from '../../../shared';
 
 const baseUrl = 'content/pages/contacts';
 
@@ -85,7 +86,6 @@ export const useContactListStore = create<StoreType>((set, get) => ({
 
     pushContact: (contact) => {
         const { contacts,searchedContacts,searchTerm} = get()
-
         if(contacts.includes(contact)) return
         
         set({contacts: [...contacts, contact]})

@@ -36,6 +36,10 @@ interface IMessagesListProps {
     isLoading: boolean;
 }
 
+
+/* 
+    after 1 enter to  chat scroll above not read messages
+*/
 export const MessagesList: React.FC<IMessagesListProps> = ({
     items,
     page,

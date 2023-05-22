@@ -2,12 +2,12 @@ import { create } from 'zustand'
 import produce from "immer";
 
 import { IInboxStore } from '../types/Store'
-import { SharedTypes, SharedHelpers } from '../../../shared'
-import { api } from '../../../app'
 import { IInbox } from '../types/Model'
 import { IMatchedInboxesResponse, IInboxesResponse, IPinnedInboxesResponse } from '../types/ApiResponse'
 import { useChatStore } from '../../Chat';
 
+import { api } from '../../../app'
+import { SharedTypes, SharedHelpers } from '../../../shared'
 export type StoreType = IInboxStore & SharedTypes.IStoreFeedback
 
 const baseUrl = 'content/pages/inbox'

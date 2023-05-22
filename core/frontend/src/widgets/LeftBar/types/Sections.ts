@@ -1,1 +1,1 @@
-export type sections = 'Chats' | 'Contacts' | 'Notifications'
+export type sections = 'Chats' | 'Contacts'

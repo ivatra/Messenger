@@ -22,7 +22,6 @@ export const SectionContent: React.FC<IContentProps> = ({ section }) => {
     const sectionComponents: Record<sections, React.FC> = {
         Chats: InboxesList,
         Contacts: ContactsList,
-        Notifications: NotificationsList,
     };
 
     const Sections = Object.entries(sectionComponents).map(([key, Component]) => (

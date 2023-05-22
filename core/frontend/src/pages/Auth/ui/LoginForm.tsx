@@ -13,6 +13,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ form }) => {
         <>
             <TextInput
                 mt="md"
+                data-autofocus
                 required
                 placeholder="Your email"
                 label="Email"

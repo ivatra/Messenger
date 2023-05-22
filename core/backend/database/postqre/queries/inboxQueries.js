@@ -3,7 +3,7 @@ const { Sequelize } = require("../postgre")
 
 const { Chat, GroupChat, IndividualChat, ChatParticipant } = require("../models/chatModel");
 const { InBox } = require("../models/inBoxModel");
-const { Message } = require("../models/messageModel");
+const { Message, MessageMeta } = require("../models/messageModel");
 const { User, UserVector } = require("../models/userModel");
 
 class inBoxQueries {
@@ -198,7 +198,7 @@ class inBoxQueries {
 
     return await inbox.update({ messageId: messageId })
   }
-  async updateUnreadMsgs(userId, chatId, property) {
+  async updateUnreadMsgs(userId, chatId, property, count = 1) {
     if (property !== 'increment' && property !== 'decrement') {
       throw new Error('Invalid property value. Must be either "increment" or "decrement".');
     }
@@ -206,13 +206,23 @@ class inBoxQueries {
     const inbox = await InBox.findOne(
       { where: { chatId, userId } }
     )
-    
-    if(inbox.dataValues.countUnreadMsgs < 0) return
-    
-    if(property === 'increment'){
-      await inbox.increment('countUnreadMsgs')
-    }else{
-      await inbox.decrement('countUnreadMsgs')
+
+    if (property === 'increment') {
+      await inbox.increment('countUnreadMsgs', { by: count })
+    } else {
+      if (inbox.dataValues.countUnreadMsgs >= 0) {
+        const { count, rows } = await Message.findAndCountAll({
+          where:chatId,
+          include:{
+            model:MessageMeta,
+            where:{
+              userId:userId
+            }
+          }
+        })
+
+        await inbox.update({countUnreadMsgs:count})
+      }
     }
   }
 }

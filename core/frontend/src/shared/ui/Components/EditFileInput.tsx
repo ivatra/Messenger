@@ -1,4 +1,4 @@
-import { FileInput, FileInputProps, MantineStyleSystemProps } from "@mantine/core";
+import { FileInput, FileInputProps, MantineStyleSystemProps,Text } from "@mantine/core";
 
 interface IEditFileInputProps {
     mt?: MantineStyleSystemProps['mt'],
@@ -24,6 +24,7 @@ export const EditFileInput: React.FC<IEditFileInputProps> = ({
         icon: <PlaceholderIcon size={"1.3rem"} />,
         multiple: false,
         label: label,
+        styles:{input:{wordWrap:'break-word'}},
         onChange: setValue,
         value: value ? value : null,
         placeholder: placeholder

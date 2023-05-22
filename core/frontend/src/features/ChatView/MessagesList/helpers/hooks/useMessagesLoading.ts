@@ -66,7 +66,6 @@ export const useMessagesLoading = ({ hasMore, page, totalCount, items, chatId, s
         }
     }
 
-
     useEffect(() => {
         if (scrollRef.current){
             handlePagination()

@@ -4,7 +4,10 @@ import { IProfile } from "..";
 import { IEditInputs } from "../model/EditInputProps";
 
 export function wrapInitialIcon(Icon: React.ElementType) {
-    return <Icon {...SharedUi.iconBaseProps} />;
+    return (
+        <Icon
+            {...SharedUi.iconBaseProps}
+        />)
 }
 export function titleCaseWord(string: string): string {
     return string.charAt(0).toUpperCase() + string.slice(1);

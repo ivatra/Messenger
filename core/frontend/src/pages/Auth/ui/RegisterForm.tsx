@@ -24,7 +24,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ form }) => {
 
     return (<>
         <Group grow>
-            <TextInput
+            <TextInput 
                 data-autofocus
                 required
                 placeholder="Your name"

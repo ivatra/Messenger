@@ -48,8 +48,8 @@ class eventService {
     }
 
     async setMessageRead(userId, messageId, chatId) {
-        await validateOnReadMessage(chatId, messageId)
         await chatService.checkForMemberingInChat(userId, chatId)
+        await validateOnReadMessage(chatId, messageId)
 
         const message = await messageQueries.receiveMessage(messageId)
 
@@ -57,27 +57,22 @@ class eventService {
             throw ApiError.badRequest('You cant read your own messages')
         }
 
-        const isMessageNoted = await this.messageArleadyNotedRead(messageId)
+        const [affectedRowsCount] = await messageQueries.markMessageRead(messageId)
 
-        if (isMessageNoted) {
-            throw ApiError.badRequest('Message arleady read')
-        }
+        await messageQueries.updateMessageMetaRead(messageId,userId)
+        await inboxQueries.updateUnreadMsgs(userId, chatId, 'decrement', affectedRowsCount)
         
-        await inboxQueries.updateUnreadMsgs(userId, chatId, 'decrement')
-
         const participants = await chatQueries.receiveParticipantsByChat(chatId)
         for (var participant of participants) {
             eventsQueries.createReadMessageEvent(participant.user.id, chatId, messageId)
-            await messageQueries.updateMessage(messageId, { isRead: true })
-
         }
     }
 
     async messageArleadyNotedRead(messageId) {
-            const message = await messageQueries.receiveMessage(messageId)
-            return message.isRead
-        }
+        const message = await messageQueries.receiveMessage(messageId)
+        return message.isRead
     }
+}
 
 
 module.exports = new eventService()

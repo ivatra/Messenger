@@ -25,7 +25,7 @@ export const BaseEditInput: React.FC<IEditInputProps> = ({
 }) => {
     const wrapedInitialIcon = wrapInitialIcon(props.SubmitInitialIcon)
 
-    const [value, setValue] = useState<string | File>(''); 
+    const [value, setValue] = useState<string | File>('');
 
     const submitUpdate = () => {
         if (value) onSubmit({ field: props.field, value: value })
@@ -33,14 +33,13 @@ export const BaseEditInput: React.FC<IEditInputProps> = ({
     }
 
     const actionIconProps = {
-        pt: "lg",
         onClick: submitUpdate
     }
 
     const label = titleCaseWord(props.field)
     const placeholder = getPlaceholder(props, profile)
 
-    
+
     const Input = (
         props.type === 'file'
             ? <SharedUi.EditFileInput
@@ -59,9 +58,9 @@ export const BaseEditInput: React.FC<IEditInputProps> = ({
     )
 
     return (
-        <Group noWrap align="center" spacing="xs">
+        <Group noWrap spacing="xs" align = 'center'>
             {Input}
-            <ActionIcon {...actionIconProps}>
+            <ActionIcon  {...actionIconProps} >
                 {outcomeIcon || wrapedInitialIcon}
             </ActionIcon>
         </Group>

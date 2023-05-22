@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { Stack } from "@mantine/core";
 import { useDidUpdate } from "@mantine/hooks";
@@ -8,13 +8,15 @@ import { UpdateProfileParams, ProfileFields } from "../types/Store";
 import { useUserStore } from "..";
 import { BaseEditInput } from "./BaseEditInput";
 
-import { SharedUi } from "../../../shared";
+import { SharedHooks, SharedUi } from "../../../shared";
 
 type IOutcomeIcons = {
     [key in ProfileFields]?: JSX.Element;
 };
 
 export const EditInputsList = () => {
+    const stackRef = useRef<HTMLDivElement>(null)
+    
     const { profile, updateProfile, isError, isLoading } = useUserStore();
     const [fieldUpdated, setFieldUpdated] = useState<string>("");
     const [outcomeIcons, setOutcomeIcons] = useState<IOutcomeIcons>({});
@@ -23,6 +25,8 @@ export const EditInputsList = () => {
         setFieldUpdated(field);
         await updateProfile(field, value);
     };
+
+    SharedHooks.useNavigationByArrows({parentRef:stackRef,tolerance:15})
 
     useDidUpdate(() => {
         var iconOnUpdate: JSX.Element;
@@ -38,7 +42,7 @@ export const EditInputsList = () => {
     }, [isLoading, isError]);
 
     return (
-        <Stack>
+        <Stack ref = {stackRef}>
             {EditInputProps.map((Input) => (
                 <BaseEditInput
                     key={Input.field}

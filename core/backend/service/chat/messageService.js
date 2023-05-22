@@ -1,3 +1,4 @@
+const { MessageMeta } = require("../../database/postqre/models/messageModel");
 const { User } = require("../../database/postqre/models/userModel");
 const messageQueries = require("../../database/postqre/queries/messageQueries");
 const attachementService = require("../chat/attachementService")
@@ -29,11 +30,24 @@ async function handleMentioned(messages, userId) {
 class MessageService {
     async fetchMessages(userId, chatId, limit, offset) {
         await chatService.checkForMemberingInChat(userId, chatId)
-        const {count,rows:messages} = await messageQueries.receiveByChat(chatId, limit, offset)
 
-        const mentionedMessages = await handleMentioned(messages, userId)
+        const {count,rows:messages} = await messageQueries.receiveByChat(chatId,userId, limit, offset)
 
-        return {data:mentionedMessages,count:count}
+        for await (var message of messages){
+            if (userId !== message.senderId) {
+                const msgMeta = await MessageMeta.findOne({ where: { messageId: message.id } })
+                if(msgMeta){
+                    message.dataValues.isRead  = msgMeta.isRead
+                    message.dataValues.isMentioned = msgMeta.isMentioned
+                }
+            } else {
+                message.dataValues.isMentioned = false
+            }
+        }
+
+        // const mentionedMessages = await handleMentioned(messages, userId)
+
+        return { data: messages,count:count}
     }
 
     async createMessage(content, attachement, senderId, chatId) {

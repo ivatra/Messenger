@@ -2,8 +2,8 @@ import { create } from 'zustand';
 import produce from "immer";
 
 import { IChatStore } from '../types/Store';
-import { api } from '../../../app';
 
+import { api } from '../../../app';
 import { SharedTypes, SharedHelpers } from '../../../shared';
 
 export type StoreType = IChatStore & SharedTypes.IStoreFeedback

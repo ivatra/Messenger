@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Drawer, DrawerProps, Group, Loader, Stack } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { EditInputsList } from "./EditInputsList";
@@ -21,6 +21,7 @@ export const EditUserDrawer: React.FC<IEditUserProps> = ({ opened, closeDrawer }
         withOverlay: false,
         size: isLargeScreen ? "25%" : "100%"
     };
+  
 
     return (
         <Drawer {...drawerProps}>

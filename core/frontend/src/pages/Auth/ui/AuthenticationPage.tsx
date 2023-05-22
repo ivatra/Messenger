@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
 
 import { useForm } from '@mantine/form';
-import {LoadingOverlay } from '@mantine/core';
-import { useHotkeys } from '@mantine/hooks';
+import { LoadingOverlay } from '@mantine/core';
+import { useFocusTrap, useHotkeys, useMergedRef } from '@mantine/hooks';
 
 import { RegisterForm } from './RegisterForm';
 import { LoginForm } from './LoginForm';
@@ -10,6 +10,7 @@ import { FormToggle } from './FormToggle';
 import { AuthFrame } from './AuthFrame';
 
 import { useUserStore } from '../../../entities';
+import { SharedHooks } from '../../../shared';
 
 export interface IFormValues {
     name: string;
@@ -23,7 +24,10 @@ export interface IFormValues {
 
 export const AuthenticationPage: React.FC = () => {
     const [formType, setFormType] = useState<'register' | 'login'>('register');
-    const paperRef = useRef<HTMLDivElement>(null)
+
+    const paperRef = useRef<HTMLFormElement>(null)
+    const focusTrapRef = useFocusTrap(true)
+    const mergedRef = useMergedRef(paperRef, focusTrapRef)
 
     const { isLoading, register, login } = useUserStore()
 
@@ -56,7 +60,6 @@ export const AuthenticationPage: React.FC = () => {
             name,
             password } = form.values
 
-
         if (formType === 'register') {
             const { hasErrors } = form.validate()
             if (!hasErrors)
@@ -70,15 +73,13 @@ export const AuthenticationPage: React.FC = () => {
         }
     }
 
-    useHotkeys([
-        ['enter', () => handleSubmit()],
-    ])
+    SharedHooks.useNavigationByArrows({ parentRef: paperRef, nodesReclusteringCause: formType })
 
     const updateFormType = () => setFormType((formType) => formType === 'register' ? 'login' : 'register')
 
     return (
-        <AuthFrame ref={paperRef}>
-            <form onSubmit={form.onSubmit(handleSubmit)}>
+        <AuthFrame>
+            <form onSubmit={form.onSubmit(handleSubmit)} ref={mergedRef} >
                 <LoadingOverlay visible={isLoading} />
                 {formType === 'register'
                     ? <RegisterForm form={form} />

@@ -40,9 +40,10 @@ export const AuthFrame = React.forwardRef<HTMLDivElement, AuthFrameProps>(
 
         return (
             (<Paper {...paperProps} ref={ref}>
-                {isDesktop === undefined
-                    ? <SharedUi.CenterLoader />
-                    : children}
+                    {isDesktop === undefined
+                        ? <SharedUi.CenterLoader />
+                        : children}
+          
             </Paper>)
         );
     }

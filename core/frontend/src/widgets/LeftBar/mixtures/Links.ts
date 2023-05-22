@@ -13,5 +13,4 @@ export interface ILinks {
 export const CenterLinks: ILinks[] = [
     { Icon: IconMessageCircle, section: "Chats" },
     { Icon: IconAddressBook, section: "Contacts" },
-    { Icon: IconBell, section: "Notifications" },
 ];

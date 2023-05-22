@@ -10,12 +10,12 @@ import { useInboxStore } from "../../InBox";
 
 import { SharedTypes, SharedHooks, SharedHelpers } from "../../../shared";
 
+
 const observerOptions: IntersectionObserverInit = {
     root: null,
     rootMargin: "0px",
     threshold: 0.1
 };
-
 
 interface IMessageProps {
     message: IListMessage
@@ -38,6 +38,7 @@ export const Message: React.FC<IMessageProps> = ({ message, sender, isSentBySelf
             decrementCountUnreadMsgs(chat.id)
         }
     }
+    
     SharedHooks.useIntersectionObserver({
         targetRef: ref,
         isObserved: !message.isRead && !isSentBySelf,
@@ -61,6 +62,7 @@ export const Message: React.FC<IMessageProps> = ({ message, sender, isSentBySelf
                     <Group>
                         <Text>{sender.name}</Text>
                         <Text>{message.isRead ? 'read' : 'not read'}</Text>
+                        <Text>{message.isMentioned && 'mentioned'}</Text>
                         <Text> {SharedHelpers.formatDate(message.createdAt)}</Text>
                     </Group>
                     {/* {message.attachement && <CustomAvatar size='xl' avatarSrc={message.attachement?.url} />} */}
