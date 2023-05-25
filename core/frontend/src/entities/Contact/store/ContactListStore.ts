@@ -8,6 +8,7 @@ import { updateContactList } from '../helpers/mutateContactList';
 
 import { api } from '../../../app';
 import { SharedTypes, SharedHelpers } from '../../../shared';
+import { IContact } from '../types/Model';
 
 const baseUrl = 'content/pages/contacts';
 
@@ -35,7 +36,7 @@ export const useContactListStore = create<StoreType>((set, get) => ({
 
         const offset = contacts.length
 
-        const request = () => api.get(`${baseUrl}/?limit=${limit}&offset=${contacts.length}`); 
+        const request = () => api.get(`${baseUrl}/?limit=${limit}&offset=${contacts.length}`);
 
         const response = await SharedHelpers.handleRequest<IReceiveContactsResponse>(request, set);
 
@@ -59,11 +60,11 @@ export const useContactListStore = create<StoreType>((set, get) => ({
         const request = () => api.get(`content/search/contacts/?message=${searchTerm}&limit=${limit}&offset=${offset}`);
 
         const response = await SharedHelpers.handleRequest<IReceiveContactsResponse>(request, set);
-        
+
         if (!response) return;
 
-    const sortedContacts = sortByIsContact([...searchedContacts,...response.data])
-    
+        const sortedContacts = sortByIsContact([...searchedContacts, ...response.data])
+
         set({
             searchedContacts: sortedContacts,
             searchHasMore: offset + limit < response.count
@@ -73,7 +74,6 @@ export const useContactListStore = create<StoreType>((set, get) => ({
 
     updateVisibleContacts: (contactsList) => {
         const { filter, setVisibleContacts } = get()
-        const value = contactsList.filter((contact) => contact.name === 'Brandy')
 
         if (filter !== 'all') {
             const filteredContacts = contactsList.filter((contact) => contact.status === filter)
@@ -85,12 +85,12 @@ export const useContactListStore = create<StoreType>((set, get) => ({
     },
 
     pushContact: (contact) => {
-        const { contacts,searchedContacts,searchTerm} = get()
-        if(contacts.includes(contact)) return
-        
-        set({contacts: [...contacts, contact]})
+        const { contacts, searchedContacts, searchTerm } = get()
+        if (contacts.includes(contact)) return
 
-        if(searchTerm){
+        set({ contacts: [...contacts, contact] })
+
+        if (searchTerm) {
             const updatedSearched = updateContactList(searchedContacts, contact.id, 'outgoing')
             set({ searchedContacts: updatedSearched })
         }
@@ -99,7 +99,7 @@ export const useContactListStore = create<StoreType>((set, get) => ({
     updateContactStatus: (contactId, status) => {
         const { contacts, searchedContacts, searchTerm } = get()
 
-        var newContacts
+        let newContacts:IContact[]
 
         if (searchTerm) {
             newContacts = updateContactList(searchedContacts, contactId, status)
@@ -111,7 +111,6 @@ export const useContactListStore = create<StoreType>((set, get) => ({
     },
     removeContact: (contactId) => {
         const { contacts, searchTerm, searchedContacts } = get()
-
 
         const filteredContacts = contacts.filter((contact) => contact.id !== contactId)
         set({ contacts: filteredContacts })

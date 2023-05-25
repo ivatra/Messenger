@@ -27,15 +27,15 @@ class ChatController {
 
   async update(req, res) {
     const { chatId } = req.params
-    const { name } = req.form
+    const { name } = req.body
     var avatar
     if (req.files) {
       avatar = req.files.avatar
     }
 
-    const elements = await chatService.updateChat(chatId, name, avatar)
-
-    return res.json(`${elements} in chat ${chatId} succecsfuly updated.`);
+    const outcame = await chatService.updateChat(chatId, name, avatar)
+    console.log('13')
+    return res.json(outcame)
   }
 
   async addChatParticipant(req, res) {

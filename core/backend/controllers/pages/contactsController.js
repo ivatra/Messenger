@@ -10,7 +10,7 @@ class contactsController {
         async getOne(req, res) {
                 const { id } = req.params
                 const { status } = req.query
-                const contact = await contactsService.getContact(id)
+                const contact = await contactsService.getContact(req.user.id,id)
                 return res.json(contact)
         }
 

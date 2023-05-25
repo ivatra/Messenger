@@ -1,14 +1,14 @@
-import { Group } from "@mantine/core";
 
-import { FilterSelector } from "./FilterSelector";
+
 import { useContactListStore } from "../../../../entities";
 import { SharedUi } from "../../../../shared";
 
+
 interface IHeaderProps {
-    limit:number
+    limit: number
 }
 
-export const ContactsListHeader:React.FC<IHeaderProps> = ({limit}) => {
+export const ContactsSearchBar: React.FC<IHeaderProps> = ({ limit }) => {
     const {
         searchTerm,
 
@@ -28,9 +28,11 @@ export const ContactsListHeader:React.FC<IHeaderProps> = ({limit}) => {
         else setVisibleContacts(contacts)
     }
     return (
-        (<Group noWrap spacing="0px" mb={0}>
-            <SharedUi.Search value={searchTerm} setValue={handleSearch} placeholder="Write something..." />
-            <FilterSelector />
-        </Group>)
+
+        <SharedUi.Search
+            value={searchTerm}
+            setValue={handleSearch}
+            placeholder="Write something..." />
+
     );
 };

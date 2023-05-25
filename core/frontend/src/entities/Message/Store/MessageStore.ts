@@ -174,7 +174,9 @@ export const useMessageStore = create<StoreType>((set, get) => ({
     },
     increaseCommunicationMessagesTally: (chatId) => {
         set(produce((state: StoreType) => {
-            state.items[chatId].communicationMessagesTally++;
+            if (state.items[chatId]){
+                state.items[chatId].communicationMessagesTally++;
+            }
         }));
     },
     setMessageRead: (chatId, messageId) => {

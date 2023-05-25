@@ -33,9 +33,26 @@ class contactsService {
     return { data: newContacts, count }
   }
 
-  async getContact(userId) {
-    const contactInfo = await userQueries.receiveUserById(userId)
-    return contactInfo
+  async getContact(userId, contactId) {
+    const userInfo = await userQueries.receiveUserById(contactId)
+    const contactInfo = await contactsQueries.receiveContact(userId, contactId)
+
+    var merged
+    if (contactInfo) {
+      const status = contactInfo.dataValues.status
+      const sender = contactInfo.dataValues.senderId
+
+      if (sender === userId && status === 'pending') {
+        merged = { ...userInfo.dataValues, status: 'outgoing' }
+      }
+      else {
+        merged = { ...userInfo.dataValues, status: status }
+      }
+
+    } else {
+      merged = { ...userInfo.dataValues, status: null }
+    }
+    return merged || userInfo.dataValues
   }
 
   async sendContactRequest(userId, contactId) {

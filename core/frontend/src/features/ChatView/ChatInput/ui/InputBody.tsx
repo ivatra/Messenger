@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from "react";
 
 import { Group } from "@mantine/core";
-import { useFocusTrap } from "@mantine/hooks";
+import { useDidUpdate, useFocusTrap } from "@mantine/hooks";
 
 import { PickEmodji } from "./Buttons/PickEmodji";
 import { PickAttachement } from "./Buttons/PickAttachement";
@@ -31,7 +31,7 @@ export const InputBody: React.FC<IInputBodyProps> = ({ attachementRef, inputValu
     const chat = useContext(ChatContext)
     const socket = useContext(SocketContext)
 
-    useEffect(() => {
+    useDidUpdate(() => {
         const isInputEmpty = inputValue.length === 0
         if (isInputEmpty !== isTyping) {
 

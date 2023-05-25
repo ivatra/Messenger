@@ -32,6 +32,7 @@ export const useRenderMessages = ({ items,turnOffLoading, scrollRef }: IUseRende
                 userAgentId,
                 item
             )))
+            
             setRenderedItems(itemsComponents);
             turnOffLoading()
         };

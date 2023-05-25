@@ -13,6 +13,7 @@ const baseUrl = 'content/chat/'
 const initialState = {
     chats: [],
     currentChatId: 0,
+    isGroupChatCreationOpened: false,
 
     isError: false,
     isLoading: false
@@ -100,7 +101,7 @@ export const useChatStore = create<StoreType>()((set, get) => ({
     },
     editGroupChat: async (chatId, fields) => {
         const formData = new FormData();
-
+        //TODO: implement web socket request on group chat change
         if (fields.avatar) {
             formData.append('avatar', fields.avatar);
         }
@@ -114,15 +115,8 @@ export const useChatStore = create<StoreType>()((set, get) => ({
                 body: formData,
             });
 
-        const response = await SharedHelpers.handleRequest(request, set);
+         await SharedHelpers.handleRequest(request, set);
 
-        if (!response) return;
-
-        set(
-            produce((state: StoreType) => {
-                state.chats[chatId].groupChat = { ...state.chats[chatId].groupChat, ...fields };
-            })
-        );
     },
     addParticipantWS: async (chatId, participant) => {
         const chats = get().chats;
@@ -166,12 +160,12 @@ export const useChatStore = create<StoreType>()((set, get) => ({
         );
     },
 
-    editGroupChatWS: async (chatId, fields) => {
-        if (!get().chats[chatId]) return;
+    editGroupChatWS: async (chatId, name, avatar) => {
+        if (!get().chats[chatId] || (!name && !avatar)) return;
 
         set(
             produce((state: StoreType) => {
-                state.chats[chatId].groupChat = { ...state.chats[chatId].groupChat, ...fields };
+                state.chats[chatId].groupChat = { ...state.chats[chatId].groupChat, ...{ name, avatar } };
             })
         );
     },
@@ -202,6 +196,10 @@ export const useChatStore = create<StoreType>()((set, get) => ({
                 chat.typingUsers = chat.typingUsers.filter((participant) => participant.user.id !== userId);
             })
         );
+    },
+
+    setGroupChatCreationOpened: (value) => {
+        set({ isGroupChatCreationOpened: value })
     }
 }))
 

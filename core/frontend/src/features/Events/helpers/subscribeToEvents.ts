@@ -103,12 +103,12 @@ function handleEvent(event: IEvent) {
         }
         case 'chat_updated': {
             const chatUpdatedData = event.data;
-            const updatedFields = chatUpdatedData.fields;
+            const {name,avatar} = chatUpdatedData;
             const updatedChatId = chatUpdatedData.chatId;
 
             const { editGroupChatWS } = useChatStore.getState()
 
-            editGroupChatWS(updatedChatId, updatedFields)
+            editGroupChatWS(updatedChatId, name,avatar)
             break;
         }
         default:

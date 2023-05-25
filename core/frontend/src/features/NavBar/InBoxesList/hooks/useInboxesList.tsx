@@ -6,11 +6,6 @@ import { IInbox, Inbox, useChatStore, useInboxStore, useMessageStore, IMessageCo
 import { SharedUi } from "../../../../shared";
 
 
-const filterMessageContentItems = (items: IContentItem[]) =>
-    items.filter((item) => item.type === "Message") as IMessageContentItem[];
-
-const getLastMessageContentItem = (items: IMessageContentItem[]) => items[0].data;
-
 interface IInboxesProps {
     ref: (element: any) => void;
     searchValue: string
@@ -23,6 +18,7 @@ export const useInboxesList = ({ ref, searchValue }: IInboxesProps) => {
         isMatched,
         matchedInboxes,
     } = useInboxStore();
+    
 
     const { currentChatId } = useChatStore();
     const { items } = useMessageStore();
@@ -32,7 +28,7 @@ export const useInboxesList = ({ ref, searchValue }: IInboxesProps) => {
             <Inbox
                 key={inbox.id}
                 inbox={inbox}
-                active={currentChatId === inbox.chat.id}
+                active={currentChatId === inbox.chatId}
             />
         );
 
@@ -42,7 +38,7 @@ export const useInboxesList = ({ ref, searchValue }: IInboxesProps) => {
         if (pinnedInboxes.length < 1 && inboxes.length < 1) {
             return <SharedUi.NothingFoundView subject="inboxes" />;
         }
-
+        console.log(pinnedInboxes)
         const sortedPinned = [...pinnedInboxes].sort((a, b) => Date.parse(b.message.createdAt) - Date.parse(a.message.createdAt));
         const sortedInboxes = [...inboxes].sort((a, b) => Date.parse(b.message.createdAt) - Date.parse(a.message.createdAt));
 

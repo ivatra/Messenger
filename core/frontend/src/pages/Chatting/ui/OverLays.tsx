@@ -1,9 +1,7 @@
 import React, { useCallback } from "react"
 
-import { Notifications } from "@mantine/notifications"
-
-import { SessionExpiredModal, Captcha, useCaptchaStore, EmailActivationHint } from "../../../features"
-import { useContactInteractionStore, useUserStore, ContactModal } from "../../../entities"
+import { SessionExpiredModal, Captcha, useCaptchaStore, EmailActivationHint, GroupChatCreation } from "../../../features"
+import { useContactInteractionStore, useUserStore, ContactModal, useChatStore } from "../../../entities"
 
 
 interface IOverlays {
@@ -13,15 +11,17 @@ interface IOverlays {
 }
 
 const OverLays = (): JSX.Element => {
-    const { isSessionExpired,isActivated } = useUserStore()
-    const { isCaptcha } = useCaptchaStore()
-    const { contactModalisOpened } = useContactInteractionStore()
+    const { isSessionExpired, isActivated } = useUserStore()
+    const isCaptcha = useCaptchaStore(state => state.isCaptcha)
+    const contactModalisOpened = useContactInteractionStore(state => state.contactModalisOpened)
+    const isGroupChatCreationOpened = useChatStore(state => state.isGroupChatCreationOpened)
 
     const overlays: IOverlays[] = [
         { component: EmailActivationHint, condition: !isActivated, priority: 4 },
         { component: SessionExpiredModal, condition: isSessionExpired, priority: 3 },
         { component: Captcha, condition: isCaptcha, priority: 2 },
         { component: ContactModal, condition: contactModalisOpened, priority: 1 },
+        { component: GroupChatCreation, condition: isGroupChatCreationOpened, priority: 4 }
     ];
 
     const getVisibleComponent = useCallback(() => {

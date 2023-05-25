@@ -134,12 +134,13 @@ class eventQueries {
         insertEvent(event);
     }
 
-    async createChatUpdatedEvent(recipientId, fields, chatId) {
+    async createChatUpdatedEvent(recipientId, name,avatar, chatId) {
         const event = {
             type: 'chat_updated',
             recipientId: recipientId,
             data: {
-                fields: fields,
+                name:name,
+                avatar:avatar,
                 chatId: chatId
             },
             notify: false

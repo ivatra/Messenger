@@ -1,5 +1,4 @@
 const ApiError = require('../../error/ApiError');
-const { GroupChat, IndividualChat, ChatParticipant } = require("../../database/postqre/models/chatModel");
 
 
 const chatQueries = require('../../database/postqre/queries/chatQueries');
@@ -9,6 +8,7 @@ const fileService = require('../misc/fileService');
 const messageService = require('./messageService');
 const messageQueries = require('../../database/postqre/queries/messageQueries');
 
+const {ChatParticipant,Chat,GroupChat,IndividualChat} = require('../../database/postqre/models/chatModel')
 const { InBox } = require('../../database/postqre/models');
 
 
@@ -58,7 +58,7 @@ class ChatService {
 
     await inboxQueries.createInbox(chatId, participantId)
 
-    const chat = await chatQueries.receiveChatContent(chatId,invitedId)
+    const chat = await chatQueries.receiveChatContent(chatId, invitedId)
 
     if (eventNeeded) {
       await this.notifyAllUsersAboutNewParticipant(chatId, participant)
@@ -77,31 +77,30 @@ class ChatService {
   }
 
   async updateChat(chatId, name, avatar) {
-    const groupChat = await this.checkForGroupChat(chatId)
-    var message = ''
+    const isGroupChat = await this.checkForGroupChat(chatId)
 
-    if (!groupChat)
+    if (!isGroupChat)
       throw ApiError.badRequest('Chat is not group to be updated.')
 
     if (!name && !avatar)
       throw ApiError.badRequest(`No name or avatar has been sent for chat ${chatId} `)
 
     if (avatar) {
-      console.log(avatar)
       await fileService.checkForImage(avatar.name)
       const avatarName = await fileService.saveFile(avatar, avatar.name, 'chatAvatars')
       await chatQueries.updateGroupChatAvatar(chatId, avatarName)
-
-      message += 'avatar [' + avatar.name + ' ], '
     }
 
     if (name) {
       await chatQueries.updateGroupChatName(chatId, name)
-
-      message += 'name [' + name + ' ],'
     }
 
-    return message
+    const participants = await chatQueries.receiveParticipantsByChat(chatId)
+    const chat = await chatQueries.receiveChatContent(chatId)
+    for ( var part of participants) {
+      await eventsQueries.createChatUpdatedEvent(part.user.id, chat.groupChat.name, chat.groupChat.avatar, chatId)
+    }
+    return 'Chat succesfuly updated'
   }
 
   async destroyParticipantFromChat(chatId, participantId, destroyerId) {
@@ -121,10 +120,10 @@ class ChatService {
 
     const participants = await chatQueries.receiveParticipantsByChat(chatId)
 
-    for(var participant of participants){
+    for (var participant of participants) {
       await eventsQueries.createParticipantRemovedEvent(participant.user.id, chatId, participantId, destroyerId)
     }
-    
+
     await eventsQueries.createExcludedFromChatEvent(participantId, chat.dataValues.id, destroyerId)
   }
 
@@ -141,7 +140,7 @@ class ChatService {
     const participants = await chatQueries.receiveParticipantsByChat(chatId)
     const chat = chatQueries.receiveChatByPk(chatId)
     for (var participant of participants) {
-      await eventsQueries.createParticipantInvitedEvent(participant.userId, chat.dataValues.id, )
+      await eventsQueries.createParticipantInvitedEvent(participant.userId, chat.dataValues.id,)
     }
   }
 

@@ -1,8 +1,9 @@
-import { fetchSender } from "./fetchSender";
-import { IContentItem, Message, ParticipantAction } from "../../../../entities";
-import { SharedTypes } from "../../../../shared";
 import { RefObject, cloneElement } from "react";
 
+import { fetchSender } from "./fetchSender";
+
+import { IContentItem, Message, ParticipantAction } from "../../../../entities";
+import { SharedTypes } from "../../../../shared";
 
 const checkAttributesChanged = (oldAttributes: { [key: string]: any }, newAttributes: { [key: string]: any }): boolean => {
     for (const key in oldAttributes) {

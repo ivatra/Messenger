@@ -59,7 +59,6 @@ export const useContactInteractionStore = create<StoreType>((set, get) => ({
         const response = await SharedHelpers.handleRequest<IContact>(request, set);
 
         if (!response || get().isError || !currentContact) return;
-
         
         const updatedContact = {...currentContact,status:null} as IContact
 

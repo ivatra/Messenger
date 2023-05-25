@@ -2,13 +2,14 @@ export { Message, useMessageStore,ParticipantAction ,type IContentItem,type IMes
 
 export { useInboxStore, type IInbox, Inbox } from "./InBox";
 export { useUserStore, type IProfile } from "./User";
-export { useChatStore, type IGroupChatUpdatebleFields } from "./Chat"
+export { useChatStore, type IGroupChatUpdatebleFields } from "./Chat/types"
 export {
     type IContact,
     useContactListStore,
     Contact,
     type IContactInteractions,
     useContactInteractionStore,
-    ContactModal
+    ContactModal,
+    ContactTab
 } from "./Contact";
 

@@ -25,7 +25,7 @@ interface IMessageProps {
 }
 
 export const Message: React.FC<IMessageProps> = ({ message, sender, isSentBySelf, scrollAreaRef }) => {
-    const {decrementCountUnreadMsgs} = useInboxStore.getState()
+    const { decrementCountUnreadMsgs } = useInboxStore.getState()
 
     const ref = useRef<HTMLDivElement>(null);
 
@@ -33,12 +33,12 @@ export const Message: React.FC<IMessageProps> = ({ message, sender, isSentBySelf
     const socket = useContext(SocketContext)
 
     const handleMessageRead = () => {
-        if(socket){
+        if (socket) {
             sendMessageReadEvent(socket, chat.id, message.id)
             decrementCountUnreadMsgs(chat.id)
         }
     }
-    
+
     SharedHooks.useIntersectionObserver({
         targetRef: ref,
         isObserved: !message.isRead && !isSentBySelf,
@@ -48,6 +48,7 @@ export const Message: React.FC<IMessageProps> = ({ message, sender, isSentBySelf
 
     return (
         <Box
+            data-key={message.index}
             style={{
                 marginLeft: isSentBySelf ? 'auto' : 0,
                 marginRight: isSentBySelf ? 0 : 'auto',

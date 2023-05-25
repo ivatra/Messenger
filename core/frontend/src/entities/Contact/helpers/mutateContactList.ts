@@ -2,7 +2,9 @@ import { IContact, IContactStatus } from "../types/Model";
 
 
 export function updateContactList(list: IContact[], contactId: string, status: IContactStatus): IContact[] {
-    return list.map((contact) =>
-        contact.id === contactId ? { ...contact, status:status } : contact
-    );
+    const correspondingContact = [...list].find((contact) => contact.id === contactId)
+    if (correspondingContact) {
+        correspondingContact.status = status
+    }
+    return list
 }

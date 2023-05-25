@@ -4,7 +4,7 @@ import produce from "immer";
 import { IInboxStore } from '../types/Store'
 import { IInbox } from '../types/Model'
 import { IMatchedInboxesResponse, IInboxesResponse, IPinnedInboxesResponse } from '../types/ApiResponse'
-import { useChatStore } from '../../Chat';
+import { useChatStore } from '../../Chat/types';
 
 import { api } from '../../../app'
 import { SharedTypes, SharedHelpers } from '../../../shared'
@@ -23,8 +23,8 @@ const initialState = {
 }
 
 function findInboxByChat(state: StoreType, chatId: number) {
-    return state.inboxes.find((inbox) => inbox.chat.id === chatId)
-        || state.pinnedInboxes.find((inbox) => inbox.chat.id === chatId)
+    return state.inboxes.find((inbox) => inbox.chatId === chatId)
+        || state.pinnedInboxes.find((inbox) => inbox.chatId === chatId)
 }
 
 const useInboxStore = create<StoreType>()((set, get) => ({
@@ -64,7 +64,6 @@ const useInboxStore = create<StoreType>()((set, get) => ({
 
     receive: async (limit) => {
         const inboxesLen = get().inboxes.length
-
         const request = () => api.get(`${baseUrl}?limit=${limit}&offset=${inboxesLen}`);
 
         const response = await SharedHelpers.handleRequest<IInboxesResponse>(request, set)
@@ -80,14 +79,13 @@ const useInboxStore = create<StoreType>()((set, get) => ({
         const request = () => api.get(baseUrl + '/pinned');
 
         const response = await SharedHelpers.handleRequest<IPinnedInboxesResponse>(request, set)
-
+        
         if (!response) return
 
         set({ pinnedInboxes: response })
 
     },
     receiveByChat: async (chatId) => {
-        const addChat = useChatStore.getState().addChat
         const request = () => api(baseUrl + `/bychat/?chatId=${chatId}`)
 
         const response = await SharedHelpers.handleRequest<IInbox>(request, set)
@@ -103,7 +101,6 @@ const useInboxStore = create<StoreType>()((set, get) => ({
                 state.inboxes.push(response)
             }));
         }
-        addChat(response.chat)
     },
     receiveMatched: async (message) => {
         const request = () => api.get(`content/search/inbox/?message=${message}`);

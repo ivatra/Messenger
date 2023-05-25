@@ -28,9 +28,7 @@ export const EditUserDrawer: React.FC<IEditUserProps> = ({ opened, closeDrawer }
             <Group position="right">
                 <Drawer.CloseButton />
             </Group>
-            <Stack>
                 <EditInputsList />
-            </Stack>
         </Drawer>
     );
 };

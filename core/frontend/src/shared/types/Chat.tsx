@@ -14,7 +14,7 @@ interface IIndividualChat {
 interface IGroupChat {
     name: string
     avatar: string
-    countParticipants: number
+    participiantsCount: number
 }
 
 

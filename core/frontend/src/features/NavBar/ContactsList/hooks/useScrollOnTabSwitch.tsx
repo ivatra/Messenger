@@ -1,8 +1,8 @@
-import { useDidUpdate } from "@mantine/hooks";
-import { useContactListStore } from "../../../../entities";
-import { IContactInteractions } from "../../../../entities";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
+import { useDidUpdate } from "@mantine/hooks";
+
+import { useContactListStore } from "../../../../entities";
 
 
 export const useScrollOnTabSwitch = () => {

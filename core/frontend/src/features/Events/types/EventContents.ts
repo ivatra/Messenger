@@ -70,10 +70,11 @@ export interface IInvitedToChat {
     }
 }
 
-interface IChatUpdatedEvent {
+interface IGroupChatUpdatedEvent {
     type: 'chat_updated'
     data: {
-        fields: IGroupChatUpdatebleFields
+        name:string
+        avatar:string
         chatId: number
     }
 }
@@ -88,6 +89,6 @@ export type IEvents = IInvitedToChat
     | IParticipantRemovedEvent
     | IExcludedFromChat
     | IInvitedToChat
-    | IChatUpdatedEvent
+    | IGroupChatUpdatedEvent
 
 

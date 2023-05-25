@@ -6,7 +6,7 @@ import { IconMessageForward, IconSquarePlus } from "@tabler/icons-react";
 import { ButtonTab } from "./Buttons/ButtonTab";
 import { IContact } from "../../types/Model";
 import { InteractionButton } from "./Buttons/InteractionButton";
-import { useChatStore } from "../../../Chat";
+import { useChatStore } from "../../../Chat/types";
 import { useNavigate } from "react-router-dom";
 import { useContactInteractionStore } from "../../store/ContactInteractionStore";
 

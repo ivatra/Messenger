@@ -1,35 +1,63 @@
-import { ActionIcon, Group, MantineStyleSystemProps, Text } from "@mantine/core"
-import { SharedConsts, SharedTypes } from "../../../shared"
-import { IconArrowLeft } from "@tabler/icons-react"
-import { useMediaQuery } from "@mantine/hooks"
+import { useCallback } from "react"
 import { useNavigate } from "react-router-dom"
+
+import { ActionIcon, Group, Stack, Text, Button } from "@mantine/core"
+import { IconArrowLeft, IconChalkboard, IconPaperclip, IconSearch, IconUser } from "@tabler/icons-react"
+import { useMediaQuery } from "@mantine/hooks"
+
+import { generateBottomTitle } from "../helpers/fetchBottomTitle"
+import { useContactInteractionStore } from "../../../entities"
+import { SharedConsts, SharedHelpers, SharedTypes, SharedUi } from "../../../shared"
 
 
 interface IChatHeaderProps {
     chat: SharedTypes.IChat
-    height: MantineStyleSystemProps['h']
+    height: string
 }
 
-
-export const ChatHeader: React.FC<IChatHeaderProps> = ({ chat,height }) => {
-    const isDesktop = useMediaQuery(`(min-width: ${SharedConsts.DESKTOP_WIDTH})`);
-
+export const ChatHeader: React.FC<IChatHeaderProps> = ({ chat, height }) => {
+    const isDesktop = useMediaQuery(`(min-width: ${SharedConsts.DESKTOP_WIDTH})`)
     const navigate = useNavigate()
 
-    const handleArrowClick = () => {
-        navigate(`/chat`)
-    }   
+    const { openContactModal, receiveContactById } = useContactInteractionStore.getState()
+    const { name, avatar: avatarUrl, userId } = SharedHelpers.fetchChatProps(chat)
+    
+    const bottomTitle = generateBottomTitle(chat)
+
+    const handleArrowClick = useCallback(() => navigate(`/chat`), [navigate])
+
+    const onUserProfileClick = useCallback(() => {
+        if (!userId) return
+        receiveContactById(userId).then((contact) => contact && openContactModal(contact))
+    }, [userId, receiveContactById, openContactModal])
 
     const backToNavbarButton = (
         <ActionIcon size='2rem' onClick={handleArrowClick}>
             <IconArrowLeft size='2rem' />
         </ActionIcon>
     )
-    return (
-        <Group h={height} bg='red' >
-            {!isDesktop && backToNavbarButton}
-            <Text style={{ margin: '0', alignSelf: 'center' }}>hello world</Text>
-        </Group >
-    )
 
+    return (
+        <Group h={height} position="apart" >
+            <Group>
+                {!isDesktop && backToNavbarButton}
+                <SharedUi.CustomAvatar avatarSrc={avatarUrl} size='md' />
+                <Stack spacing={0}>
+                    <SharedUi.UserName name={name} />
+                    <Text size='sm'>{bottomTitle}</Text>
+                </Stack>
+            </Group>
+            <Group>
+                <ActionIcon>
+                    <IconSearch />
+                </ActionIcon>
+                <ActionIcon onClick={onUserProfileClick}>
+                    {chat.type === 'individual' ? <IconUser /> : <IconChalkboard />}
+                </ActionIcon>
+                <ActionIcon>
+                    <IconPaperclip />
+                </ActionIcon>
+            </Group>
+        </Group>
+    )
 }

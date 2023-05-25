@@ -1,3 +1,5 @@
+export { fetchChatProps } from "./fetchChatProps";
+
 export { handleRequest } from "./handleRequest";
 
 export { extractCommonFields } from "./extractCommonFields";

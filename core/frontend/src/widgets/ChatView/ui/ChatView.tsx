@@ -24,7 +24,6 @@ export const ChatView: React.FC<IChatViewProps> = ({ chatId,isDisplayed }) => {
         if (!chatId) return
 
         const chatExists: SharedTypes.IChat | undefined = chats[+chatId]
-
         if (!chatExists) receiveChat(+chatId)
 
     }, [chatId])

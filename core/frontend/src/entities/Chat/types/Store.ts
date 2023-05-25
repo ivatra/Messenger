@@ -12,13 +12,15 @@ export interface ITypingUsers {
 }
 
 export interface IGroupChatUpdatebleFields {
-    avatar?: string
+    avatar?: File
     name?: string
 }
 
 export interface IChatStore {
     chats: IStoreChat
     currentChatId: number
+
+    isGroupChatCreationOpened:boolean
 
     setCurrentChatId: (chatId: number | undefined) => void
 
@@ -29,16 +31,19 @@ export interface IChatStore {
     removeParticipant: (chatId: number, userId: string) => void
     editGroupChat: (chatId: number, fields: IGroupChatUpdatebleFields) => void
 
-    createGroupChat: (participants: IContact[], fields: IGroupChatUpdatebleFields) => void
+    createGroupChat: (participants: IContact[], fields:IGroupChatUpdatebleFields) => void
 
     addChat: (chat: SharedTypes.IChat) => void
     removeChat: (chatId: number) => void
 
     addParticipantWS: (chatId: number, participant: SharedTypes.IChatParticipant) => void
     removeParticipantWS: (chatId: number, participantId: number) => void
-    editGroupChatWS: (chatId: number, fields: IGroupChatUpdatebleFields) => void
+    editGroupChatWS: (chatId: number, name:string,avatar:string) => void
 
     addTypingUser: (chatId: number, userId: string) => void
     removeTypingUser: (chatId: number, userId: string) => void
+
+    setGroupChatCreationOpened:(value:boolean) => void
+    
 
 }
