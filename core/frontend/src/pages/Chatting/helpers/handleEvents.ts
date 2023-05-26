@@ -105,8 +105,10 @@ export function handleEvent(event: IEvent) {
             const updatedChatId = chatUpdatedData.chatId;
 
             const { editGroupChatWS } = useChatStore.getState()
-
+            const {updateApperance} = useInboxStore.getState()
+            console.log(chatUpdatedData)
             editGroupChatWS(updatedChatId, name, avatar)
+            updateApperance(updatedChatId,name,avatar)
             break;
         }
         default:

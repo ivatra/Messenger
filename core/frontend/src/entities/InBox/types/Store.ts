@@ -20,4 +20,5 @@ export interface IInboxStore {
 
     decrementCountUnreadMsgs:(chatId:number) => void
     updateMessage: (message: SharedTypes.IMessage, chatId: number,isWS:boolean) => void // events feature ought to update this 
+    updateApperance:(chatId:number,name:string,avatar:string) => void
 }

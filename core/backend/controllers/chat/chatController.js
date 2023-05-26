@@ -12,11 +12,14 @@ class ChatController {
   }
 
   async createGroupChat(req, res) {
-    const { participants, chatAvatar, chatName } = req.body;
-
-    const chat = await chatService.createGroupChat(req.user.id, participants, chatAvatar, chatName);
+    const { participants, name } = req.body;
+    var avatar
+    if (req.files) {
+      avatar = req.files.avatar
+    }
+    const chat = await chatService.createGroupChat(req.user.id, participants, avatar, name);
     
-    return res.json(chat.id);
+    return res.json(chat);
   }
 
   async getChatContent(req, res) {
@@ -34,14 +37,12 @@ class ChatController {
     }
 
     const outcame = await chatService.updateChat(chatId, name, avatar)
-    console.log('13')
     return res.json(outcame)
   }
 
   async addChatParticipant(req, res) {
     const { participantId } = req.body
     const { chatId } = req.params
-    console.log('chat id = ', chatId)
     await chatService.addParticipantToChat(chatId, participantId, true)
     return res.json(`Participant ${participantId} added to chat ${chatId}`)
   }

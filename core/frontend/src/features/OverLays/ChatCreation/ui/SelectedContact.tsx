@@ -12,8 +12,6 @@ interface IProps{
 }
 
 export const SelectedContact:React.FC<IProps>= ({span,contact,removeContact}) =>{
-
-
     const contactNameProps:TextProps = {
         sx: {'&:hover':{ fontWeight:'bold',textDecorationLine:'line-through' , cursor:'pointer'}},
         size:'sm',

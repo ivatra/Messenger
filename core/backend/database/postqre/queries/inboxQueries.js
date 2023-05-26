@@ -17,7 +17,7 @@ class inBoxQueries {
 
   async receiveInboxByChatId(userId, chatId) {
     const inbox = await InBox.findOne({ where: { chatId: chatId, userId: userId } })
-    const result = await this.receiveInboxesByIds([inbox.dataValues.id], userId)
+    const result = await this.receiveInboxesByIds([inbox.id], userId)
     return result
   }
 
@@ -143,7 +143,7 @@ class inBoxQueries {
       where: {
         chatId: {
           [Op.in]: chatsWhereUserIn
-        }
+        },
       },
       attributes: ['id'],
       include: [

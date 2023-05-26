@@ -38,7 +38,7 @@ export const useInboxesList = ({ ref, searchValue }: IInboxesProps) => {
         if (pinnedInboxes.length < 1 && inboxes.length < 1) {
             return <SharedUi.NothingFoundView subject="inboxes" />;
         }
-        console.log(pinnedInboxes)
+
         const sortedPinned = [...pinnedInboxes].sort((a, b) => Date.parse(b.message.createdAt) - Date.parse(a.message.createdAt));
         const sortedInboxes = [...inboxes].sort((a, b) => Date.parse(b.message.createdAt) - Date.parse(a.message.createdAt));
 

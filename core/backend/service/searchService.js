@@ -11,28 +11,26 @@ const ApiError = require("../error/ApiError");
 const stringService = require("./misc/stringService");
 const contactsService = require("./pages/contactsService");
 
-function getInboxesId(inboxes) {
-    return inboxes.
-        map(inbox => inbox.id);
-}
-
 async function receiveMessageContentByIds(messageIds) {
     return await Promise.all(messageIds.map(async (message) =>
         await messageQueries.receiveMessage(message.id)
     ))
 }
 
-function makeContactsUnique(contacts) {
-    let unique = {}
-    contacts.filter(item => {
-        let id = item.id;
-        if (unique[id]) {
-            return item.isClient || unique[id].isClient;
+function fetchProps(inboxes) {
+    var arr = []
+    for (var inbox of inboxes) {
+        var obj = { id: inbox.id, chatId: inbox.chat.id, countUnreadMsgs: inbox.countUnreadMsgs, isPinned: inbox.isPinned, message: inbox.message.dataValues }
+
+        if (inbox.chat.groupChat) {
+            obj = { ...obj, name: inbox.chat.groupChat.name, avatar: inbox.chat.groupChat.avatar, chatType: 'group' }
+        } else {
+            obj = { ...obj, name: inbox.chat.participants[0].user.name, avatar: inbox.chat.participants[0].user.avatar, chatType: "individual" }
         }
-        unique[id] = item;
-        return true;
-    });
-    return unique
+        arr.push(obj)
+    }
+    return arr
+
 }
 
 function sortContactsByIsContact(contacts) {
@@ -63,7 +61,7 @@ async function findInboxIdsByMessageIds(messages, userId) {
 }
 
 async function searchUsers(senderId,searchTerm,limit,offset) {
-    const users = await User.findAll({limit:limit,offset:offset})
+    const users = await User.findAll()
     const searchResults = users.filter(user => {
         const userName = user.dataValues.name.toLowerCase();
         const search = searchTerm.toLowerCase();
@@ -71,7 +69,6 @@ async function searchUsers(senderId,searchTerm,limit,offset) {
     });
 
     const count = searchResults.length;
-
     return { users: searchResults, count };
 }
 
@@ -107,13 +104,10 @@ class searchService {
 
         const likeString = stringService.convertToLikeStructure(message)
 
-        const messages = await messageQueries.receiveMessagesIdsThatSatisfyMessage(chatIdsWhereUserIn, likeString, message)
+        const messages = await messageQueries.receiveMessagesIdsThatSatisfyMessage(senderId,chatIdsWhereUserIn, likeString, message)
         const messagesContented = await receiveMessageContentByIds(messages)
 
         const messagedInboxesId = await findInboxIdsByMessageIds(messagesContented, senderId)
-
-        // const inboxes = await inboxQueries.receiveInboxesWhichSatisfyMessage(chatIdsWhereUserIn, message, likeString)
-        // const inboxesId = getInboxesId(inboxes)
 
         const augmentedInboxes = await inboxQueries.receiveInboxesByIds(messagedInboxesId, senderId);
 
@@ -124,7 +118,8 @@ class searchService {
             }
         }
 
-        return augmentedInboxes
+        const newInboxes = fetchProps(augmentedInboxes)
+        return newInboxes
     }
 
     async searchInChat(chatId, message) {

@@ -1,4 +1,5 @@
-export { GroupChatCreation } from "./OverLays/GroupChatCreation";
+export { ChatCreation } from "./OverLays/ChatCreation/ui/ChatCreation";
+
 
 export { subscribeToEvents } from "./Events";
 

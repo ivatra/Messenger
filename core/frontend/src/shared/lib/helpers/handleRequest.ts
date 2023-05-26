@@ -26,7 +26,7 @@ export const handleRequest = async <T>(
     } catch(e) {
         set((state) => ({ ...state, isError: true })); // Handling internal error
         console.log(e)
-        await showInternalErrorMessage()
+        showInternalErrorMessage()
     } finally {
         set((state) => ({ ...state, isLoading: false }));
     }

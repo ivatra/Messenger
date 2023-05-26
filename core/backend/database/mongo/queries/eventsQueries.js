@@ -4,7 +4,6 @@ const events = mongoClient.db('Messenger').collection('events');
 const { userSockets } = require('../../../websocket/userSocket')
 
 function insertEvent(event) {
-    event.sent = false;
     event.createdAt = new Date();
     const ws = userSockets.get(event.recipientId);
     if (ws && ws.isAlive) {

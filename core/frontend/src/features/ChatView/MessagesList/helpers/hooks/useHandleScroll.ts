@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 
 import { IContentItem, IMessageContentItem, useUserStore } from "../../../../../entities";
 
 
 export const useHandleScroll = (renderedItems: JSX.Element[], chatId: number, items: IContentItem[] | undefined, scrollRef: React.RefObject<HTMLDivElement>, page: number) => {
-    const [hasScrolledToUnread, setHasScrolledToUnread] = useState(false);
+    const hasScrolledToUnread = useRef<boolean>(false);
 
     const { id: userId } = useUserStore.getState().profile
 
     const scrollToBottom = () => scrollRef?.current?.scrollTo({ top: scrollRef.current.scrollHeight });
 
     useEffect(() => {
-        if (hasScrolledToUnread || !items || !scrollRef.current) return
+        if (hasScrolledToUnread.current || !items || !scrollRef.current) return
 
         const lastReadMessage = [...items].reverse().find((item) => item.type === 'Message'
             && !item.data.isRead
@@ -26,6 +26,6 @@ export const useHandleScroll = (renderedItems: JSX.Element[], chatId: number, it
             scrollToBottom();
         }
 
-        setHasScrolledToUnread(true);
+        hasScrolledToUnread.current = true;
     }, [renderedItems]);
 };

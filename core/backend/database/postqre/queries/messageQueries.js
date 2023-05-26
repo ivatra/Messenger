@@ -100,12 +100,15 @@ class messageQueries {
         });
     }
 
-    async receiveMessagesIdsThatSatisfyMessage(chatsWhereUserIn, likeMessage, plainMessage) {
+    async receiveMessagesIdsThatSatisfyMessage(senderId,chatsWhereUserIn, likeMessage, plainMessage) {
         return await Message.findAll({
             attributes: ["id", 'chatId'],
             where: {
                 chatId: {
                     [Sequelize.Op.in]: chatsWhereUserIn //
+                },
+                senderId:{
+                    [Op.ne]: senderId
                 }
             },
             include: [{

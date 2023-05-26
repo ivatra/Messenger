@@ -5,6 +5,7 @@ import { IChatStore } from '../types/Store';
 
 import { api } from '../../../app';
 import { SharedTypes, SharedHelpers } from '../../../shared';
+import { useInboxStore } from '../../InBox';
 
 export type StoreType = IChatStore & SharedTypes.IStoreFeedback
 
@@ -77,6 +78,9 @@ export const useChatStore = create<StoreType>()((set, get) => ({
         );
     },
     createGroupChat: async (participants, fields) => {
+        console.log(fields)
+        const { receiveByChat } = useInboxStore.getState()
+
         const formData = new FormData();
 
         if (fields.avatar) {
@@ -86,9 +90,13 @@ export const useChatStore = create<StoreType>()((set, get) => ({
         if (fields.name) {
             formData.append('name', fields.name);
         }
-        formData.append('participants', JSON.stringify(participants));
 
-        const request = () => api.post(baseUrl + 'group', { body: formData });
+        const participantsIds = participants.map((part) => part.id)
+
+        formData.append('participants', JSON.stringify(participantsIds));
+        
+        const request = () => api.post(baseUrl + 'group',{body:formData});
+
         const response = await SharedHelpers.handleRequest<SharedTypes.IChat>(request, set);
 
         if (!response) return;
@@ -96,8 +104,10 @@ export const useChatStore = create<StoreType>()((set, get) => ({
         set(
             produce((state: StoreType) => {
                 state.chats[response.id] = { ...response, typingUsers: [] };
+                state.isGroupChatCreationOpened = false
             })
         );
+        receiveByChat(response.id)
     },
     editGroupChat: async (chatId, fields) => {
         const formData = new FormData();
@@ -114,8 +124,7 @@ export const useChatStore = create<StoreType>()((set, get) => ({
             api.put(baseUrl + chatId, {
                 body: formData,
             });
-
-         await SharedHelpers.handleRequest(request, set);
+        await SharedHelpers.handleRequest(request, set);
 
     },
     addParticipantWS: async (chatId, participant) => {

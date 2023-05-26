@@ -25,7 +25,7 @@ import StylesProvider from "./StylesProvider"
 
 
 
-Group chat creation/messages search/attachements modal,chat info modal/update group chat/add chat participant
+messages search/attachements modal,chat info modal/update group chat/add chat participant
 // Handle activation
 */
 const App = (): JSX.Element => {

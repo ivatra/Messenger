@@ -35,7 +35,7 @@ export const MessageHeader: React.FC<ITitleProps> = ({ name, inbox, messageSentD
 
     const rightSide = inboxSelected
         ? <Options
-            isContactViewAvaliable={inbox.chatType === 'individual'}
+            isContactViewAvailable={inbox.chatType === 'individual'}
             openContactView={openProfile}
             pinInbox={pinInbox}
             isInboxPinned={inbox.isPinned} />

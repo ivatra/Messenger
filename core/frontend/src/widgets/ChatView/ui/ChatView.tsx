@@ -18,8 +18,8 @@ interface IChatViewProps {
     isDisplayed: boolean
 }
 
-export const ChatView: React.FC<IChatViewProps> = ({ chatId,isDisplayed }) => {
-    const { receiveChat, chats, isLoading, setCurrentChatId } = useChatStore()
+export const ChatView: React.FC<IChatViewProps> = ({ chatId, isDisplayed }) => {
+    const { receiveChat, chats, isLoading } = useChatStore()
     useEffect(() => {
         if (!chatId) return
 
@@ -30,15 +30,18 @@ export const ChatView: React.FC<IChatViewProps> = ({ chatId,isDisplayed }) => {
 
     const chatRoomComponent = useMemo(() => {
         return Object.entries(chats).map(([key, chat]) => (
-            <ChatRoom chat={chat} key={chat.id} display={chat.id === (chatId ? +chatId : -1)  ? 'flex' : 'none'} />
+            <ChatRoom
+                chat={chat}
+                key={chat.id}
+                display={chat.id === (chatId ? +chatId : -1) ? 'flex' : 'none'} />
         ))
 
     }, [chatId, chats])
-    
+
     return (
         (<Box pos="relative" w="100%" display={isDisplayed ? 'block' : 'none'} h='100%' >
             {!chatId && <ChatStart />}
-            {isLoading &&  <SharedUi.CenterLoader />}
+            {isLoading && <SharedUi.CenterLoader />}
             {chatRoomComponent}
         </Box>)
     );

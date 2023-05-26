@@ -5,7 +5,7 @@ interface IProps {
     title:string
 }
 
-export const GroupChatCreationButton: React.FC<IProps> = ({ onClick,title }) => {
+export const CC_Button: React.FC<IProps> = ({ onClick,title }) => {
 
     const buttonProps: ButtonProps = {
         size: 'sm',

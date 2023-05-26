@@ -22,7 +22,7 @@ interface IProps {
     file: File | null
 }
 
-export const GroupChatImagePreview: React.FC<IProps> = ({ file, setFile }) => {
+export const CC_ImagePreview: React.FC<IProps> = ({ file, setFile }) => {
     const [isHovered, setIsHovered] = useState(false);
 
     const unstyledButtonProps: UnstyledButtonProps = {

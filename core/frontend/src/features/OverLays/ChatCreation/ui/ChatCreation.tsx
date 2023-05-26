@@ -4,21 +4,24 @@ import { Modal, Group, Stack } from "@mantine/core";
 
 import AppearanceMode from "./ApperanceMode";
 import ParticipantsMode from "./ParticipantsMode";
-import { GroupChatCreationButton } from "./GroupChatCreationButton";
+import { CC_Button } from "./CC.Button";
 
 import { IContact, useChatStore } from "../../../../entities";
 
-export const GroupChatCreation = () => {
+export const ChatCreation = () => {
     const { setGroupChatCreationOpened, isGroupChatCreationOpened, createGroupChat } = useChatStore();
 
     const [name, setName] = useState<string>("");
-    const [nameChoosen, setNameNotChoosen] = useState<boolean>(false)
     const [file, setFile] = useState<File | null>(null);
-    const [selectedContacts, setSelectedContacts] = useState<IContact[]>([]);
     const [creationMode, setCreationMode] = useState<"apperance" | "participants">("apperance");
 
+    const [nameChoosen, setNameNotChoosen] = useState<boolean>(false)
+    const [selectedContacts, setSelectedContacts] = useState<IContact[]>([]);
+
     const confirmCreation = () => {
-        // createGroupChat(selectedContacts, { avatar: file ? file : undefined, name: name })
+        if(selectedContacts.length > 0){
+            createGroupChat(selectedContacts, { avatar: file ? file : undefined, name: name })
+        }
     }
 
     const changeCreationMode = () => {
@@ -46,14 +49,14 @@ export const GroupChatCreation = () => {
                         setFile={setFile} />
                     : <ParticipantsMode selectedContacts={selectedContacts} setSelectedContacts={setSelectedContacts} />}
                 <Group position="right" >
-                    <GroupChatCreationButton onClick={closeModal} title="Cancel" />
+                    <CC_Button onClick={closeModal} title="Cancel" />
                     {creationMode === 'participants'
                         ?
                         <>
-                            <GroupChatCreationButton onClick={changeCreationMode} title="Back" />
-                            <GroupChatCreationButton onClick={confirmCreation} title="Confirm" />
+                            <CC_Button onClick={changeCreationMode} title="Back" />
+                            <CC_Button onClick={confirmCreation} title="Confirm" />
                         </>
-                        : <GroupChatCreationButton onClick={changeCreationMode} title="Next" />
+                        : <CC_Button onClick={changeCreationMode} title="Next" />
                     }
                 </Group>
             </Stack>

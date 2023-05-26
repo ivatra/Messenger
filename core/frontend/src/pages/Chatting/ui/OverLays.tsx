@@ -1,6 +1,6 @@
 import React, { useCallback } from "react"
 
-import { SessionExpiredModal, Captcha, useCaptchaStore, EmailActivationHint, GroupChatCreation } from "../../../features"
+import { SessionExpiredModal, Captcha, useCaptchaStore, EmailActivationHint, ChatCreation } from "../../../features"
 import { useContactInteractionStore, useUserStore, ContactModal, useChatStore } from "../../../entities"
 
 
@@ -21,7 +21,7 @@ const OverLays = (): JSX.Element => {
         { component: SessionExpiredModal, condition: isSessionExpired, priority: 3 },
         { component: Captcha, condition: isCaptcha, priority: 2 },
         { component: ContactModal, condition: contactModalisOpened, priority: 1 },
-        { component: GroupChatCreation, condition: isGroupChatCreationOpened, priority: 4 }
+        { component: ChatCreation, condition: isGroupChatCreationOpened, priority: 4 }
     ];
 
     const getVisibleComponent = useCallback(() => {

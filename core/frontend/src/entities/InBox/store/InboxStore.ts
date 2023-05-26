@@ -79,7 +79,7 @@ const useInboxStore = create<StoreType>()((set, get) => ({
         const request = () => api.get(baseUrl + '/pinned');
 
         const response = await SharedHelpers.handleRequest<IPinnedInboxesResponse>(request, set)
-        
+
         if (!response) return
 
         set({ pinnedInboxes: response })
@@ -90,8 +90,10 @@ const useInboxStore = create<StoreType>()((set, get) => ({
 
         const response = await SharedHelpers.handleRequest<IInbox>(request, set)
 
-        if (!response) return
+        console.log(response?.message.createdAt)
 
+        if (!response) return
+        
         if (response.isPinned) {
             set(produce((state: StoreType) => {
                 state.pinnedInboxes.push(response)
@@ -143,6 +145,16 @@ const useInboxStore = create<StoreType>()((set, get) => ({
             }
         }));
     },
+    updateApperance: (chatId, name, avatar) => {
+        set(produce((
+            state: StoreType) => {
+            const foundInbox = findInboxByChat(state, chatId)
+            if (foundInbox) {
+                foundInbox.name = name
+                foundInbox.avatar = avatar
+            }
+        }));
+    }
 }))
 
 export default useInboxStore

@@ -4,12 +4,15 @@ const ApiError = require('../../error/ApiError');
 const chatQueries = require('../../database/postqre/queries/chatQueries');
 const eventsQueries = require('../../database/mongo/queries/eventsQueries');
 const inboxQueries = require('../../database/postqre/queries/inboxQueries');
+
 const fileService = require('../misc/fileService');
 const messageService = require('./messageService');
 const messageQueries = require('../../database/postqre/queries/messageQueries');
 
 const {ChatParticipant,Chat,GroupChat,IndividualChat} = require('../../database/postqre/models/chatModel')
 const { InBox } = require('../../database/postqre/models');
+const contactsService = require('../pages/contactsService');
+const { validateAndSaveAvatar } = require('../userService');
 
 
 async function filterChatParticipants(chat, firstUser, secondUser) {
@@ -34,25 +37,32 @@ class ChatService {
     return chat;
   }
 
-  async createGroupChat(userId, participants, chatAvatar, chatName) {
-    if (!participants)
-      return ApiError.badRequest("Should be at least 1 participant ");
+  async createGroupChat(userId, participantsIds, chatAvatar, chatName) {
+    participantsIds = JSON.parse(participantsIds)
 
+    if (!participantsIds)
+      throw ApiError.badRequest("Should be at least 1 participant");
     if (!chatName)
-      return ApiError.badRequest("Chat should have a name");
+      throw ApiError.badRequest("Chat should have a name");
+
+    if (chatAvatar) {
+      chatAvatar = await validateAndSaveAvatar(chatAvatar);
+    }
 
     const chat = await chatQueries.createChat("group");
     await chatQueries.createGroupChat(chat.id, chatAvatar, chatName);
     await this.addParticipantToChat(chat.id, userId, false, userId, 'ADMIN')
-    await participants.forEach(async (participant) => this.addParticipantToChat(chat.id, participant, true, userId, 'USER'))
+    
+    for(var partId of participantsIds){
+      await this.addParticipantToChat(chat.id, partId, true, userId, 'USER')
+    }
     await messageQueries.createMessage(chat.id, 'I have just created a chat. Hello guys!', userId)
 
-    return chat;
+    return await chatQueries.receiveChatContent(chat.id,userId);
   }
 
   async addParticipantToChat(chatId, participantId, eventNeeded = false, invitedId, role = 'USER') {
     const [participant, created] = await chatQueries.createParticipant(chatId, participantId, role)
-
     if (!created)
       throw ApiError.badRequest(`Participant ${participantId} arleady exists in ${chatId} or chat doesn't exist`);
 
@@ -60,9 +70,11 @@ class ChatService {
 
     const chat = await chatQueries.receiveChatContent(chatId, invitedId)
 
+    const part = await contactsService.getContact(invitedId,participantId)
+
     if (eventNeeded) {
-      await this.notifyAllUsersAboutNewParticipant(chatId, participant)
-      await eventsQueries.createInvitedToChatEvent(participantId, chat.dataValues)
+      await this.notifyAllUsersAboutNewParticipant(chatId, part)
+      await eventsQueries.createInvitedToChatEvent(participantId, chat.dataValues,invitedId)
     }
   }
 
@@ -98,7 +110,7 @@ class ChatService {
     const participants = await chatQueries.receiveParticipantsByChat(chatId)
     const chat = await chatQueries.receiveChatContent(chatId)
     for ( var part of participants) {
-      await eventsQueries.createChatUpdatedEvent(part.user.id, chat.groupChat.name, chat.groupChat.avatar, chatId)
+      await eventsQueries.createChatUpdatedEvent(part.user.id, chat.groupChat.name, chat.groupChat.avatar, +chatId)
     }
     return 'Chat succesfuly updated'
   }
@@ -138,9 +150,8 @@ class ChatService {
 
   async notifyAllUsersAboutNewParticipant(chatId, participant) {
     const participants = await chatQueries.receiveParticipantsByChat(chatId)
-    const chat = chatQueries.receiveChatByPk(chatId)
     for (var participant of participants) {
-      await eventsQueries.createParticipantInvitedEvent(participant.userId, chat.dataValues.id,)
+      await eventsQueries.createParticipantInvitedEvent(participant.userId, chatId,)
     }
   }
 

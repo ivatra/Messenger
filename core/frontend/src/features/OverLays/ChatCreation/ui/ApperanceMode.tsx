@@ -1,6 +1,6 @@
 import { Group, Stack, TextInput } from "@mantine/core";
 
-import { GroupChatImagePreview } from "./GroupChatImagePreview";
+import { CC_ImagePreview } from "./CC.ImagePreview";
 
 interface IProps {
     name: string;
@@ -21,7 +21,7 @@ const AppearanceMode = ({ name, setName, file, setFile, setError, isError }: IPr
 
     return (
         <Group h='8rem'>
-            <GroupChatImagePreview file={file} setFile={setFile} />
+            <CC_ImagePreview file={file} setFile={setFile} />
             <Stack>
                 <TextInput
                     error={isError}
