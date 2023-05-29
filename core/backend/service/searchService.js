@@ -104,17 +104,17 @@ class searchService {
 
         const likeString = stringService.convertToLikeStructure(message)
 
-        const messages = await messageQueries.receiveMessagesIdsThatSatisfyMessage(senderId,chatIdsWhereUserIn, likeString, message)
-        const messagesContented = await receiveMessageContentByIds(messages)
+        const messagesIds = await messageQueries.receiveMessagesIdsThatSatisfyMessage(senderId,chatIdsWhereUserIn, likeString, message)
+        const fullMessages = await receiveMessageContentByIds(messagesIds)
 
-        const messagedInboxesId = await findInboxIdsByMessageIds(messagesContented, senderId)
+        const inboxesIdsWithMessage = await findInboxIdsByMessageIds(fullMessages, senderId)
 
-        const augmentedInboxes = await inboxQueries.receiveInboxesByIds(messagedInboxesId, senderId);
+        const augmentedInboxes = await inboxQueries.receiveInboxesByIds(inboxesIdsWithMessage, senderId);
 
         for (let i = 0; i < augmentedInboxes.length; i++) {
-            const msg = messagesContented.filter((msg) => msg.dataValues.chatId === augmentedInboxes[i].dataValues.chat.id)
+            const msg = fullMessages.filter((msg) => msg.chatId === augmentedInboxes[i].chat.id)
             if (msg) {
-                augmentedInboxes[i].dataValues.message = msg[0]
+                augmentedInboxes[i].message = msg[0]
             }
         }
 

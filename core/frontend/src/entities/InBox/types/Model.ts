@@ -10,6 +10,6 @@ export interface IInbox {
     chatId: number
     chatType: 'individual' | 'group'
 
-    message: SharedTypes.IMessage
+    message: SharedTypes.IMessage 
   
 }

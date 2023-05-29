@@ -42,13 +42,13 @@ async function sendMessageReceivedEvent(message) {
     .filter((login) => login !== senderLogin)
 
   const mentionedUsers = await checkForMention(message.content, loginArray)
-  
+
+  const attachement = await getMessageAttachements(message.id)
+  const messageWithAttachement = assignAttachementToMessage(attachement, message.dataValues)
+
   const promises = users.map(async (user) => {
     const { id: participantId, login } = user.user;
     const userMentioned = mentionedUsers.includes(login);
-
-    const attachement = await getMessageAttachements(message.id)
-    const messageWithAttachement = assignAttachementToMessage(attachement, message.dataValues)
 
     if (message.senderId !== participantId) {
       await inboxQueries.updateUnreadMsgs(participantId, message.chatId, 'increment')

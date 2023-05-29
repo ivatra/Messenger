@@ -1,4 +1,4 @@
-import { useRef, useState, FC,memo } from "react";
+import { useRef, useState, FC, memo } from "react";
 
 import { MantineStyleSystemProps, Stack, StackProps } from "@mantine/core";
 import { useElementSize, useMediaQuery } from "@mantine/hooks";
@@ -14,10 +14,11 @@ import { SharedConsts, SharedTypes } from "../../../shared";
 
 interface IChatRoomProps {
     chat: SharedTypes.IChat;
+    msgIndex: number | null
     display: MantineStyleSystemProps['display'];
 }
 
-export const ChatRoom: FC<IChatRoomProps> = ({ chat, display }) => {
+export const ChatRoom: FC<IChatRoomProps> = memo(({ chat, msgIndex, display }) => {
     const [isDragging, setIsDragging] = useState<boolean>(false)
 
     const scrollRef = useRef<HTMLDivElement>(null)
@@ -27,13 +28,13 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chat, display }) => {
     const childrenHeight = isDesktop ? '60px' : '7rem'
 
     const { ref: elementSizeRef, width, height } = useElementSize();
-    const { isLoading,  items } = useMessageStore()
+    const { items } = useMessageStore()
 
     const scrollToBottom = () => scrollRef?.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
 
     const stackProps: StackProps = {
         w: "100%",
-        h:'100%',
+        h: '100%',
         display: display,
         spacing: 0,
         onDragEnter: () => setIsDragging(true),
@@ -41,13 +42,12 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chat, display }) => {
     };
 
     return (
-        <ChatContext.Provider value={chat}>
+        <ChatContext.Provider value={{ chat, msgIndex }}>
             <Stack {...stackProps} ref={elementSizeRef}>
                 <ChatHeader chat={chat} height={childrenHeight} />
                 <MessagesList
                     {...items[chat.id]}
-                    chatId = {chat.id}
-                    isLoading={isLoading}
+                    chatId={chat.id}
                     scrollRef={scrollRef} />
                 <TypingUsers typingUsers={chat.typingUsers} />
                 <ChatInput
@@ -59,6 +59,6 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chat, display }) => {
         </ChatContext.Provider>
 
     );
-};
+})
 
 

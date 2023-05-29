@@ -1,13 +1,13 @@
-import { create } from 'zustand'
+import { create } from 'zustand';
 import produce from "immer";
 
-import { IInboxStore } from '../types/Store'
-import { IInbox } from '../types/Model'
-import { IMatchedInboxesResponse, IInboxesResponse, IPinnedInboxesResponse } from '../types/ApiResponse'
-import { useChatStore } from '../../Chat/types';
+import { IInboxStore } from '../types/Store';
+import { IInbox } from '../types/Model';
+import { IMatchedInboxesResponse, IInboxesResponse, IPinnedInboxesResponse } from '../types/ApiResponse';
 
-import { api } from '../../../app'
-import { SharedTypes, SharedHelpers } from '../../../shared'
+import { api } from '../../../app';
+import { SharedTypes, SharedHelpers } from '../../../shared';
+
 export type StoreType = IInboxStore & SharedTypes.IStoreFeedback
 
 const baseUrl = 'content/pages/inbox'
@@ -89,8 +89,6 @@ const useInboxStore = create<StoreType>()((set, get) => ({
         const request = () => api(baseUrl + `/bychat/?chatId=${chatId}`)
 
         const response = await SharedHelpers.handleRequest<IInbox>(request, set)
-
-        console.log(response?.message.createdAt)
 
         if (!response) return
         

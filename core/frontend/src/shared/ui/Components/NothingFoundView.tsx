@@ -6,7 +6,7 @@ interface NothingFoundTextProps {
 }
 
 const textProps: TextProps = {
-    display: 'flex',
+    display: 'block',
     style: {
         justifySelf: "center",
         alignSelf: "center",

@@ -18,15 +18,16 @@ export const useInboxesList = ({ ref, searchValue }: IInboxesProps) => {
         isMatched,
         matchedInboxes,
     } = useInboxStore();
-    
+
 
     const { currentChatId } = useChatStore();
     const { items } = useMessageStore();
 
-    const processInbox = (inbox: IInbox) => {
+    const processInbox = (inbox: IInbox, matched: boolean) => {
         return (
             <Inbox
                 key={inbox.id}
+                isMatched={matched}
                 inbox={inbox}
                 active={currentChatId === inbox.chatId}
             />
@@ -42,8 +43,8 @@ export const useInboxesList = ({ ref, searchValue }: IInboxesProps) => {
         const sortedPinned = [...pinnedInboxes].sort((a, b) => Date.parse(b.message.createdAt) - Date.parse(a.message.createdAt));
         const sortedInboxes = [...inboxes].sort((a, b) => Date.parse(b.message.createdAt) - Date.parse(a.message.createdAt));
 
-        const pinnedInboxesItems = sortedPinned.map(processInbox)
-        const inboxesListItems = sortedInboxes.map(processInbox);
+        const pinnedInboxesItems = sortedPinned.map((inbox) => processInbox(inbox, false));
+        const inboxesListItems = sortedInboxes.map((inbox) => processInbox(inbox, false));
         const intersectionBox = <Box ref={ref} h={0} w={0} />
 
         return (
@@ -58,7 +59,7 @@ export const useInboxesList = ({ ref, searchValue }: IInboxesProps) => {
     const matchedInboxesComponent = useMemo(() => {
         if (!isMatched) return <SharedUi.NothingFoundView subject={searchValue} />;
 
-        return matchedInboxes.map(processInbox)
+        return matchedInboxes.map((inbox) => processInbox(inbox, true));
     }, [isMatched, matchedInboxes, currentChatId, items]);
 
     return searchValue ? matchedInboxesComponent : allInboxesComponent

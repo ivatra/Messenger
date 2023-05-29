@@ -1,11 +1,15 @@
+import { useContext, useEffect, useState } from "react";
+
 import { Box, ScrollArea, ScrollAreaProps, Stack, StackProps } from "@mantine/core";
 
 import { useMessagesLoading } from "../helpers/hooks/useMessagesLoading";
 import { useRenderMessages } from "../helpers/hooks/useRenderMessages";
-import { useHandleScroll } from "../helpers/hooks/useHandleScroll";
+import { useManageOverflowLocation } from "../helpers/hooks/useHandleScroll";
+import { IChatContent } from "../../../../entities/Message/types/Store";
 
-import { IContentItem } from "../../../../entities";
+import { ChatContext } from "../../../../widgets";
 import { SharedUi } from "../../../../shared";
+import { usePrevious } from "@mantine/hooks";
 
 
 /*
@@ -17,8 +21,8 @@ when clicking on inbox also should be redirect to message as in search for chat
 
 inbox additional option - open user profile or group profile
 
-
 */
+
 const itemsContainerProps: StackProps = {
     align: 'center',
     style: { flexDirection: 'column-reverse' },
@@ -26,33 +30,33 @@ const itemsContainerProps: StackProps = {
 }
 
 
-interface IMessagesListProps {
-    items: IContentItem[] | undefined;
+interface IMessagesListProps extends IChatContent {
     page: number
     chatId: number
-    hasMore: boolean
-    totalCount: number | undefined
     scrollRef: React.RefObject<HTMLDivElement>
-    isLoading: boolean;
 }
 
 
-/* 
-    after 1 enter to  chat scroll above not read messages
-*/
 export const MessagesList: React.FC<IMessagesListProps> = ({
     items,
     page,
+    loadedPages,
     totalCount,
     hasMore,
     chatId,
     scrollRef
 }): JSX.Element => {
+    const { msgIndex, chat } = useContext(ChatContext)
+    const previousMsgIndex = usePrevious(msgIndex);
+
     const { isMessagesLoading, turnOffLoading, onScrollPositionChange } = useMessagesLoading({
+        msgIndex,
         hasMore,
         items,
+        loadedPages,
         totalCount,
         page,
+        previousMsgIndex,
         chatId,
         scrollRef
     })
@@ -64,13 +68,13 @@ export const MessagesList: React.FC<IMessagesListProps> = ({
         turnOffLoading,
     })
 
-    useHandleScroll(
-        renderedItems,
-        chatId,
+    useManageOverflowLocation({
         items,
+        previousMsgIndex,
+        renderedItems,
         scrollRef,
-        page
-    )
+        msgIndex
+    })
 
     const scrollAreaProps: ScrollAreaProps = {
         viewportRef: scrollRef,

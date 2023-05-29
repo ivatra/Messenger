@@ -9,9 +9,9 @@ import { SharedConsts } from "../../../shared";
 
 
 export const ChattingPage = (): JSX.Element => {
-    const {id} = useUserStore().profile
+    const { id } = useUserStore().profile
 
-    const socket = useWebSocket(SharedConsts.WS_URL,id)
+    const socket = useWebSocket(SharedConsts.WS_URL, id)
 
     return (
         <SocketContext.Provider value={socket}>

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 
 import { useMediaQuery } from "@mantine/hooks";
 import { AppShell, AppShellProps, Group } from "@mantine/core";
@@ -13,6 +13,7 @@ import { SharedUi, SharedConsts } from "../../../shared";
 
 export const ChattingContent = () => {
     const [section, setSection] = useState<sections>("Chats");
+
     const { chatId } = useParams()
 
     const isDesktop = useMediaQuery(`(min-width: ${SharedConsts.DESKTOP_WIDTH})`);
@@ -45,7 +46,10 @@ export const ChattingContent = () => {
         return (
             <>
                 <SideBar section={section} isDisplayed={sideBarVisible} />
-                <ChatView chatId={chatId ? +chatId : undefined} isDisplayed={chatViewVisible} />
+                <ChatView
+                    chatId={chatId ? +chatId : undefined}
+                    isDisplayed={chatViewVisible}
+                />
             </>
         );
     }, [chatId, isDesktop, section]);
@@ -53,7 +57,7 @@ export const ChattingContent = () => {
     return (
         <EditUserProvider>
             <AppShell {...appShellProps}>
-                <Group noWrap mah = '100vh' h = '100vh'>
+                <Group noWrap mah='100vh' h='100vh'>
                     {body}
                 </Group>
             </AppShell>

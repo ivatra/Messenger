@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import produce from "immer";
 
 import { IAttachementsContent, IChatContent, IMessageStore, IStoreAttachement, IStoreMessage } from '../types/Store'
-import { IContentItem, IListMessage, SentStatuses } from '../types/Model'
+import { IListMessage, SentStatuses } from '../types/Model'
 import { IMessagesApiResponse } from '../types/ApiResponse'
 import { createMessage } from '../helpers/createMessage'
 import { useUserStore } from '../../User'
@@ -10,6 +10,7 @@ import { useInboxStore } from '../..';
 import { api } from '../../../app'
 
 import { SharedTypes, SharedHelpers } from '../../../shared';
+import { handleMessages } from '../helpers/handleMessages';
 
 
 export type StoreType = IMessageStore & SharedTypes.IStoreFeedback
@@ -23,48 +24,46 @@ const initialState = {
     isError: false
 }
 
-function createOrFindItem(state: StoreType, chatId: number): IChatContent {
-    return state.items[chatId] || ({ items: [], page: 1, hasMore: true, totalCount: undefined, communicationMessagesTally: 0 } as IChatContent);
+export function createOrFindItem(state: StoreType, chatId: number): IChatContent {
+    return state.items[chatId] || ({ items: [], page: 1, hasMore: true, totalCount: undefined, communicationMessagesTally: 0, loadedPages: [] } as IChatContent);
 }
 
 function createOrFindAttachement(state: StoreType, chatId: number): IAttachementsContent {
     return state.attachments[chatId] || { attachments: [], page: 1, hasMore: true, totalCount: undefined } as IAttachementsContent;
 }
 
-
 export const useMessageStore = create<StoreType>((set, get) => ({
     ...initialState,
-    receiveMessages: async (chatId, offset, limit) => {
-        const { items } = get()
+    receiveByOffset: async (chatId, page, limit) => {
+        const currentChat = get().items[chatId];
+        const userSentMessageCount = currentChat ? currentChat.communicationMessagesTally : 0;
 
-        const currentChat = items[chatId]
-
-        const userSentMessageCount = currentChat ? currentChat.communicationMessagesTally : 0
-
-        const request = () => api.get(`content/chat/${chatId}/messages/?offset=${offset + userSentMessageCount}&limit=${limit}`);
+        const offset = page * limit + userSentMessageCount
+        const request = () => api.get(`content/chat/${chatId}/messages/?offset=${offset}&limit=${limit}`);
 
         const newMessages = await SharedHelpers.handleRequest<IMessagesApiResponse>(request, set);
 
-        if (!newMessages) return;
+        if (!newMessages) return
 
-        const convertedMessages: IContentItem[] = newMessages.data.map((message) => ({
-            type: 'Message',
-            data: message,
-        }));
 
-        set(
-            produce((state: StoreType) => {
-                const chatItems = createOrFindItem(state, chatId);
-                chatItems.items.push(...convertedMessages);
+        await handleMessages(chatId, newMessages, page, set);
 
-                const sorted = chatItems.items.sort()
-                const messagesLen = chatItems.items.filter((item) => item.type === 'Message').length
+    },
+    receiveByMsg: async (chatId, msgIndex, limit) => {
+        const currentChat = get().items[chatId];
 
-                chatItems.hasMore = messagesLen < newMessages.count;
-                chatItems.totalCount = newMessages.count
-                state.items[chatId] = { ...chatItems, items: sorted };
-            })
-        );
+        const request = () => api.get(`content/chat/${chatId}/messages/?msg_index=${msgIndex}&limit=${limit}`);
+        const newMessages = await SharedHelpers.handleRequest<IMessagesApiResponse>(request, set);
+
+        if (!newMessages) return
+
+        const currentPage = Math.max(1, (newMessages.count - msgIndex) / limit);
+
+        if (!currentChat || !currentChat.loadedPages.includes(currentPage)) {
+            await handleMessages(chatId, newMessages, currentPage, set);
+        }
+
+
     },
     receiveAttachments: async (chatId, limit) => {
         const page = get().attachments[chatId] ? get().attachments[chatId].page : 1;
@@ -165,7 +164,14 @@ export const useMessageStore = create<StoreType>((set, get) => ({
             const chatItems = createOrFindItem(state, chatId);
             chatItems.items.unshift(contentItem);
         }));
-        get().increaseCommunicationMessagesTally(chatId)
+        if (contentItem.type === 'Message') {
+            get().increaseCommunicationMessagesTally(chatId)
+        }
+    },
+    addLoadedPage(chatId, page) {
+        set(produce((state) => {
+            state.items[chatId].loadedPages.push(page);
+        }));
     },
     setPage: (chatId, page) => {
         set(produce((state) => {
@@ -174,7 +180,7 @@ export const useMessageStore = create<StoreType>((set, get) => ({
     },
     increaseCommunicationMessagesTally: (chatId) => {
         set(produce((state: StoreType) => {
-            if (state.items[chatId]){
+            if (state.items[chatId]) {
                 state.items[chatId].communicationMessagesTally++;
             }
         }));

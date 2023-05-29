@@ -4,8 +4,9 @@ import produce from "immer";
 import { IChatStore } from '../types/Store';
 
 import { api } from '../../../app';
-import { SharedTypes, SharedHelpers } from '../../../shared';
 import { useInboxStore } from '../../InBox';
+
+import { SharedTypes, SharedHelpers } from '../../../shared';
 
 export type StoreType = IChatStore & SharedTypes.IStoreFeedback
 
@@ -78,7 +79,6 @@ export const useChatStore = create<StoreType>()((set, get) => ({
         );
     },
     createGroupChat: async (participants, fields) => {
-        console.log(fields)
         const { receiveByChat } = useInboxStore.getState()
 
         const formData = new FormData();

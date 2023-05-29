@@ -1,6 +1,6 @@
 import { useContext, useRef } from "react";
 
-import { Text, Box, Group, Stack } from "@mantine/core";
+import { Text, Box, Group, Stack, Image } from "@mantine/core";
 
 import { IListMessage } from "../types/Model";
 import { ChatContext } from "../../../widgets";
@@ -29,7 +29,7 @@ export const Message: React.FC<IMessageProps> = ({ message, sender, isSentBySelf
 
     const ref = useRef<HTMLDivElement>(null);
 
-    const chat = useContext(ChatContext);
+    const { chat } = useContext(ChatContext);
     const socket = useContext(SocketContext)
 
     const handleMessageRead = () => {
@@ -64,6 +64,7 @@ export const Message: React.FC<IMessageProps> = ({ message, sender, isSentBySelf
                         <Text>{sender.name}</Text>
                         <Text>{message.isRead ? 'read' : 'not read'}</Text>
                         <Text>{message.isMentioned && 'mentioned'}</Text>
+                        {message.attachement &&<Image src={message.attachement.url}/>}
                         <Text> {SharedHelpers.formatDate(message.createdAt)}</Text>
                     </Group>
                     {/* {message.attachement && <CustomAvatar size='xl' avatarSrc={message.attachement?.url} />} */}

@@ -18,7 +18,7 @@ interface IUseRenderMessagesProps {
 export const useRenderMessages = ({ items,turnOffLoading, scrollRef }: IUseRenderMessagesProps) => {
     const [renderedItems, setRenderedItems] = useState<JSX.Element[]>([]);
 
-    const chat = useContext(ChatContext);
+    const {chat} = useContext(ChatContext);
 
     const { id: userAgentId } = useUserStore().profile;
 

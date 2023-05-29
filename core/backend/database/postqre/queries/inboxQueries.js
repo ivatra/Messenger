@@ -35,7 +35,7 @@ class inBoxQueries {
   async receiveInboxes(userId, limit, offset) {
     var { count, rows: inboxes } = await InBox.findAndCountAll({
       where: { userId: userId, isPinned: false, messageId: { [Sequelize.Op.ne]: null } },
-      include: { model: Message, attributes: ['updatedAt'] },
+      include: { model: Message, attributes: ['updatedAt','index'] },
       attributes: ['id'],
       offset: offset,
       limit: limit,
@@ -57,7 +57,7 @@ class inBoxQueries {
         {
           model: Message,
           as: 'message',
-          attributes: ['id', 'content', 'senderId', 'updatedAt', 'isRead', 'createdAt']
+          attributes: ['id', 'content', 'senderId', 'updatedAt', 'isRead', 'createdAt','index']
         },
         {
           model: Chat,
@@ -106,7 +106,7 @@ class inBoxQueries {
       include: [
         {
           model: Message,
-          attributes: ['content', 'senderId', 'createdAt'],
+          attributes: ['content', 'senderId', 'createdAt','index'],
         },
         {
           model: Chat,

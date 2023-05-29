@@ -30,7 +30,7 @@ export const ChatInput: React.FC<IChatInputProps> = ({ parentHeight, isDragging,
 
     const { sendMessage, isLoading, isError, increaseCommunicationMessagesTally } = useMessageStore()
 
-    const chat = useContext(ChatContext)
+    const {chat} = useContext(ChatContext)
 
 
     useDidUpdate(() => {

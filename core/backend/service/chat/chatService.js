@@ -9,7 +9,7 @@ const fileService = require('../misc/fileService');
 const messageService = require('./messageService');
 const messageQueries = require('../../database/postqre/queries/messageQueries');
 
-const {ChatParticipant,Chat,GroupChat,IndividualChat} = require('../../database/postqre/models/chatModel')
+const { ChatParticipant, Chat, GroupChat, IndividualChat } = require('../../database/postqre/models/chatModel')
 const { InBox } = require('../../database/postqre/models');
 const contactsService = require('../pages/contactsService');
 const { validateAndSaveAvatar } = require('../userService');
@@ -52,13 +52,15 @@ class ChatService {
     const chat = await chatQueries.createChat("group");
     await chatQueries.createGroupChat(chat.id, chatAvatar, chatName);
     await this.addParticipantToChat(chat.id, userId, false, userId, 'ADMIN')
-    
-    for(var partId of participantsIds){
+
+    for (var partId of participantsIds) {
       await this.addParticipantToChat(chat.id, partId, true, userId, 'USER')
     }
+    console.log(chat.id)
     await messageQueries.createMessage(chat.id, 'I have just created a chat. Hello guys!', userId)
 
-    return await chatQueries.receiveChatContent(chat.id,userId);
+    const chato = await chatQueries.receiveChatContent(chat.id, userId);
+    return { ...chato.dataValues, ...{ groupChat: { ...chato.dataValues.groupChat.dataValues, role: 'ADMIN' } } }
   }
 
   async addParticipantToChat(chatId, participantId, eventNeeded = false, invitedId, role = 'USER') {
@@ -70,17 +72,23 @@ class ChatService {
 
     const chat = await chatQueries.receiveChatContent(chatId, invitedId)
 
-    const part = await contactsService.getContact(invitedId,participantId)
+    const part = await contactsService.getContact(invitedId, participantId)
 
     if (eventNeeded) {
       await this.notifyAllUsersAboutNewParticipant(chatId, part)
-      await eventsQueries.createInvitedToChatEvent(participantId, chat.dataValues,invitedId)
+      await eventsQueries.createInvitedToChatEvent(participantId, chat.dataValues, invitedId)
     }
   }
 
   async fetchChatContent(chatId, userId) {
-    await this.checkForMemberingInChat(userId, chatId)
-    return await chatQueries.receiveChatContent(chatId, userId)
+    const participant = await this.checkForMemberingInChat(userId, chatId)
+    const chat = await chatQueries.receiveChatContent(chatId, userId)
+    if (chat.groupChat) {
+      return { ...chat.dataValues, ...{ groupChat: { ...chat.dataValues.groupChat.dataValues, role: participant.role } } }
+
+    } else {
+      return chat
+    }
   }
 
   async findChat(userId1, userId2, chatType) {
@@ -109,7 +117,7 @@ class ChatService {
 
     const participants = await chatQueries.receiveParticipantsByChat(chatId)
     const chat = await chatQueries.receiveChatContent(chatId)
-    for ( var part of participants) {
+    for (var part of participants) {
       await eventsQueries.createChatUpdatedEvent(part.user.id, chat.groupChat.name, chat.groupChat.avatar, +chatId)
     }
     return 'Chat succesfuly updated'
@@ -146,6 +154,7 @@ class ChatService {
     if (!participant) {
       throw ApiError.forbidden(`You are not participant of chat ${chatId}`)
     }
+    return participant
   }
 
   async notifyAllUsersAboutNewParticipant(chatId, participant) {

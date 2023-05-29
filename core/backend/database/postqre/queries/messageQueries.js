@@ -44,6 +44,36 @@ class messageQueries {
         })
     }
 
+    async receiveByMessage(limit, chatId, msgIndex) {
+        const totalMessages = await Message.count({ where: { chatId: chatId } });
+
+        const offset = totalMessages - msgIndex - limit;
+        
+        return await Message.findAndCountAll({
+            where: {
+                chatId: chatId
+            },
+            include: [
+                {
+                    model: Attachement,
+                    attributes: ['id', 'type', 'url']
+                },
+            ],
+            attributes: [
+                'id',
+                'content',
+                'senderId',
+                'createdAt',
+                'isRead',
+                'updatedAt',
+                'index'
+            ],
+            limit: limit,
+            offset: offset > 0 ? offset : 0, // Ensure offset is not negative
+            order: [['index', 'DESC']]
+        });
+    }
+
     async updateMessage(messageId, values) {
         return await Message.update(values, {
             where: {
@@ -96,7 +126,7 @@ class messageQueries {
             ],
             limit: limit,
             offset: offset,
-            order: [['id', 'DESC']]
+            order: [['index', 'DESC']]
         });
     }
 

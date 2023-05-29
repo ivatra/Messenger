@@ -2,30 +2,48 @@ import { useEffect, useRef } from "react";
 
 import { IContentItem, IMessageContentItem, useUserStore } from "../../../../../entities";
 
+export interface IProps {
+    renderedItems: JSX.Element[];
+    msgIndex: number | null
+    previousMsgIndex: number | null | undefined
+    items: IContentItem[] | undefined;
+    scrollRef: React.RefObject<HTMLDivElement>;
+}
 
-export const useHandleScroll = (renderedItems: JSX.Element[], chatId: number, items: IContentItem[] | undefined, scrollRef: React.RefObject<HTMLDivElement>, page: number) => {
+export const useManageOverflowLocation = ({ items, renderedItems, scrollRef, msgIndex, previousMsgIndex }: IProps) => {
     const hasScrolledToUnread = useRef<boolean>(false);
 
     const { id: userId } = useUserStore.getState().profile
 
     const scrollToBottom = () => scrollRef?.current?.scrollTo({ top: scrollRef.current.scrollHeight });
 
+
     useEffect(() => {
-        if (hasScrolledToUnread.current || !items || !scrollRef.current) return
+        if (!items || !scrollRef.current) return
 
-        const lastReadMessage = [...items].reverse().find((item) => item.type === 'Message'
-            && !item.data.isRead
-            && item.data.senderId !== userId) as IMessageContentItem | undefined
-
-        if (lastReadMessage) {
-            const lastReadElement = scrollRef.current.querySelector(`[data-key="${lastReadMessage.data.index}"]`);
-            if (lastReadElement) {
-                lastReadElement.scrollIntoView({ behavior: 'auto', block: 'end' });
-            }
-        } else {
-            scrollToBottom();
+        const scrollToSpecificMsg = (msgIndex: number) => {
+            const element = scrollRef?.current?.querySelector(`[data-key="${msgIndex}"]`);
+            element?.scrollIntoView({ behavior: 'auto', block: 'end' });
         }
+        
+        // if (msgIndex && msgIndex !== previousMsgIndex) {
+       
+        // } else {
+        //     if (!hasScrolledToUnread.current) {
+        //         const lastReadMessage = [...items].reverse().find((item) => item.type === 'Message'
+        //             && !item.data.isRead
+        //             && item.data.senderId !== userId) as IMessageContentItem | undefined
+        //         if (lastReadMessage) {
+        //             scrollToSpecificMsg(lastReadMessage.data.index)
+        //         } else {
+        //             scrollToBottom()
+        //         }
+        //     }
+        // }
+        if(msgIndex){
+            scrollToSpecificMsg(msgIndex)
 
+        }
         hasScrolledToUnread.current = true;
     }, [renderedItems]);
 };

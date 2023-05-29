@@ -43,14 +43,14 @@ export const ChatHeader: React.FC<IChatHeaderProps> = ({ chat, height }) => {
                 {!isDesktop && backToNavbarButton}
                 <SharedUi.CustomAvatar avatarSrc={avatarUrl} size='md' />
                 <Stack spacing={0}>
-                    <SharedUi.UserName name={name} />
+                    <Group>
+                        <SharedUi.UserName name={name} />
+                        <Text>{chat.groupChat ? chat.groupChat.role : ''}</Text>
+                    </Group>
                     <Text size='sm'>{bottomTitle}</Text>
                 </Stack>
             </Group>
             <Group>
-                <ActionIcon>
-                    <IconSearch />
-                </ActionIcon>
                 <ActionIcon onClick={onUserProfileClick}>
                     {chat.type === 'individual' ? <IconUser /> : <IconChalkboard />}
                 </ActionIcon>

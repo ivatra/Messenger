@@ -28,7 +28,7 @@ export const InputBody: React.FC<IInputBodyProps> = ({ attachementRef, inputValu
 
     const focusTrapRef = useFocusTrap();
 
-    const chat = useContext(ChatContext)
+    const context = useContext(ChatContext)
     const socket = useContext(SocketContext)
 
     useDidUpdate(() => {
@@ -36,8 +36,9 @@ export const InputBody: React.FC<IInputBodyProps> = ({ attachementRef, inputValu
         if (isInputEmpty !== isTyping) {
 
             setIsTyping(isInputEmpty)
+            
             if (socket) {
-                sendTypingEvent(socket, !isInputEmpty, chat.id)
+                sendTypingEvent(socket, !isInputEmpty, context.chat.id)
             }
         }
     }, [inputValue])
@@ -51,7 +52,7 @@ export const InputBody: React.FC<IInputBodyProps> = ({ attachementRef, inputValu
             <PickAttachement openFileExplorer={attachementRef} />
             <MessageInput inputValue={inputValue} setInputValue={setInputValue} focusRef={focusTrapRef} />
             <PickEmodji onEmojdiPick={handleEmojiSelect} />
-            <SendMessage onAction={() => sendMessage()} isLoading={messageSending} />
+            <SendMessage onAction={sendMessage} isLoading={messageSending} />
         </Group>
     );
 };

@@ -63,7 +63,7 @@ class chatQueries {
 
     async receiveParticipantsByChat(chatId) {
         return await ChatParticipant.findAll({
-            attributes: ['userId'],
+            attributes: ['userId','role'],
             where: { chatId },
             include: {
                 model: User,

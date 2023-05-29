@@ -1,4 +1,4 @@
-import {IUser} from "./User"
+import { IUser } from "./User"
 
 export interface IChatParticipant {
     id: number
@@ -13,6 +13,7 @@ interface IIndividualChat {
 
 interface IGroupChat {
     name: string
+    role: 'USER' | 'ADMIN'
     avatar: string
     participiantsCount: number
 }
@@ -24,5 +25,5 @@ export interface IChat {
     groupChat: IGroupChat
     individualChat: IIndividualChat
     participants: IChatParticipant[]
-    typingUsers:IChatParticipant[]
+    typingUsers: IChatParticipant[]
 }

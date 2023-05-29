@@ -22,6 +22,10 @@ export interface IFormValues {
     termsOfService: boolean;
 }
 
+//Store messages count in inbox
+//make backend accept msgId as parameter
+//
+
 export const AuthenticationPage: React.FC = () => {
     const [formType, setFormType] = useState<'register' | 'login'>('register');
 

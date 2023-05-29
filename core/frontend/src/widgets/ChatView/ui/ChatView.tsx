@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import { Box } from "@mantine/core";
 
@@ -20,23 +21,32 @@ interface IChatViewProps {
 
 export const ChatView: React.FC<IChatViewProps> = ({ chatId, isDisplayed }) => {
     const { receiveChat, chats, isLoading } = useChatStore()
-    useEffect(() => {
-        if (!chatId) return
 
-        const chatExists: SharedTypes.IChat | undefined = chats[+chatId]
-        if (!chatExists) receiveChat(+chatId)
+    const [searchParams, _] = useSearchParams();
+
+    var msgIndex: string | number | null = searchParams.get('msg_index')
+    const parsedMsgIndex = msgIndex ? +msgIndex : null
+
+    useEffect(() => {
+        if (chatId && !chats[+chatId]) {
+            receiveChat(+chatId)
+        }
 
     }, [chatId])
 
     const chatRoomComponent = useMemo(() => {
-        return Object.entries(chats).map(([key, chat]) => (
-            <ChatRoom
-                chat={chat}
-                key={chat.id}
-                display={chat.id === (chatId ? +chatId : -1) ? 'flex' : 'none'} />
-        ))
+        return Object.entries(chats).map(([key, chat]) => {
+            const isCurrentChat = chat.id === (chatId ? +chatId : -1);
+            return (
+                <ChatRoom
+                    msgIndex={isCurrentChat ? parsedMsgIndex : null}
+                    chat={chat}
+                    key={chat.id}
+                    display={isCurrentChat ? 'flex' : 'none'} />
+            );
+        });
 
-    }, [chatId, chats])
+    }, [chatId, chats, msgIndex])
 
     return (
         (<Box pos="relative" w="100%" display={isDisplayed ? 'block' : 'none'} h='100%' >

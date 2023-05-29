@@ -4,9 +4,9 @@ const ApiError = require("../../error/ApiError")
 
 
 function fetchProps(inboxes) {
-  var arr = []
+  var arr = [] 
   for (var inbox of inboxes) {
-    var obj = { id: inbox.id, chatId: inbox.chat.id, countUnreadMsgs: inbox.countUnreadMsgs, isPinned: inbox.isPinned, message: inbox.message.dataValues }
+    var obj = { id: inbox.id, chatId: inbox.chat.id, countUnreadMsgs: inbox.countUnreadMsgs, isPinned: inbox.isPinned, message: inbox.dataValues.message  }
 
     if (inbox.chat.groupChat) {
       obj = { ...obj, name: inbox.chat.groupChat.name, avatar: inbox.chat.groupChat.avatar, chatType: 'group' }

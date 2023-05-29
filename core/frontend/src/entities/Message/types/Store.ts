@@ -6,6 +6,7 @@ import { IContentItem, IListMessage } from "./Model"
 export interface IChatContent {
     items: IContentItem[];
     page: number;
+    loadedPages:number[]
     totalCount:number | undefined
     communicationMessagesTally :number
     hasMore: boolean;
@@ -31,7 +32,8 @@ export interface IMessageStore {
     items: IStoreMessage
     attachments: IStoreAttachement
 
-    receiveMessages: (chatId: number,offset:number,limit: number) => void
+    receiveByOffset: (chatId: number,page:number,limit: number) => void
+    receiveByMsg: (chatId: number, msgIndex: number, limit: number) => void
     receiveAttachments: (chatId: number, limit: number) => void
 
     sendMessage: (chatId: number, message: string, attachement?: FileWithPath) => void
@@ -39,7 +41,7 @@ export interface IMessageStore {
 
     setMessageRead:(chatId:number,messageId:number) => void
     setPage:(chatId:number,page:number) => void
-    
+    addLoadedPage:(chatId:number,page:number) => void
     increaseCommunicationMessagesTally:(chatId:number) => void
     addItemWS: (chatId: number,content:IContentItem) => void;
 }

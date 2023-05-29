@@ -10,6 +10,7 @@ export interface IMessage {
     content: string
     senderId:string
     isRead: boolean
+    index:number
     createdAt:string
     updatedAt:string
 }

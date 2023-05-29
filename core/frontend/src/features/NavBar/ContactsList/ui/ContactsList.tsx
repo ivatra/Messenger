@@ -16,7 +16,7 @@ interface IContactsListProps {
 export const ContactsList: React.FC<IContactsListProps> = ({ onContactTabClick, contacts, limit }) => {
     const [scrollPosition, onScrollPositionChange] = useState({ x: 0, y: 0 });
     const { isLoading, searchTerm, filter } = useContactListStore()
-
+    
     const scrollViewPort = useScrollOnTabSwitch()
 
     useContactsLoading(scrollViewPort, scrollPosition.y, limit)

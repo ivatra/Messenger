@@ -27,17 +27,23 @@ async function handleMentioned(messages, userId) {
 }
 
 
+//fetch message
+//get its index
+//receive by index with limit
+//send response to frontend
+//
+
 class MessageService {
     async fetchMessages(userId, chatId, limit, offset) {
         await chatService.checkForMemberingInChat(userId, chatId)
 
-        const {count,rows:messages} = await messageQueries.receiveByChat(chatId,userId, limit, offset)
+        const { count, rows: messages } = await messageQueries.receiveByChat(chatId, userId, limit, offset)
 
-        for await (var message of messages){
+        for await (var message of messages) {
             if (userId !== message.senderId) {
                 const msgMeta = await MessageMeta.findOne({ where: { messageId: message.id } })
-                if(msgMeta){
-                    message.dataValues.isRead  = msgMeta.isRead
+                if (msgMeta) {
+                    message.dataValues.isRead = msgMeta.isRead
                     message.dataValues.isMentioned = msgMeta.isMentioned
                 }
             } else {
@@ -45,9 +51,13 @@ class MessageService {
             }
         }
 
-        // const mentionedMessages = await handleMentioned(messages, userId)
 
-        return { data: messages,count:count}
+        return { data: messages, count: count }
+    }
+
+    async fetchByMessages(userId, chatId, limit, msgIndex) {
+        const { count, rows: messages } = await messageQueries.receiveByMessage(limit, chatId, msgIndex)
+        return { data: messages, count: count }
     }
 
     async createMessage(content, attachement, senderId, chatId) {
@@ -58,8 +68,8 @@ class MessageService {
             attachement = await attachementService.create(fileType, fileName, message.id)
         }
 
-        
-        return attachement ? {...message.dataValues,attachement:attachement.dataValues} : message.dataValues
+
+        return attachement ? { ...message.dataValues, attachement: attachement.dataValues } : message.dataValues
     }
 
 }
