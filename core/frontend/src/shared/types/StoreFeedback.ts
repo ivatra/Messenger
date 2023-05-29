@@ -1,4 +1,3 @@
 export interface IStoreFeedback{
-    isLoading:boolean
-    isError:boolean
+    state: "loading" | 'error' | 'successful' | 'idle'
 }

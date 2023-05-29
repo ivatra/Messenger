@@ -1,4 +1,4 @@
-import { IInbox } from '../types/Model';
+import { IInbox } from '../types/InboxModel';
 
 export const updateInboxPinnedState = (pinnedInboxes: IInbox[], id: number) => {
     return pinnedInboxes.map((inbox) => inbox.id === id

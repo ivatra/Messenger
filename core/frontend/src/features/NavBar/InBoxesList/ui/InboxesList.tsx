@@ -18,7 +18,7 @@ export const InboxesList = () => {
     const mergedRef = useMergedRef(sizeRef, containerRef)
     const [searchValue, setSearchValue] = useState<string>('')
 
-    const { isLoading, receiveMatched } = useInboxStore();
+    const { isLoading, receiveBySearchTerm: receiveMatched } = useInboxStore();
     const inboxesComponent = useInboxesList({ ref: observerRef, searchValue: searchValue })
     
     useDidUpdate(() => {

@@ -10,6 +10,7 @@ const userQueries = require("../database/postqre/queries/userQueries");
 const ApiError = require("../error/ApiError");
 const stringService = require("./misc/stringService");
 const contactsService = require("./pages/contactsService");
+const { proceedInboxes } = require("./pages/inBoxService");
 
 async function receiveMessageContentByIds(messageIds) {
     return await Promise.all(messageIds.map(async (message) =>
@@ -117,9 +118,7 @@ class searchService {
                 augmentedInboxes[i].message = msg[0]
             }
         }
-
-        const newInboxes = fetchProps(augmentedInboxes)
-        return newInboxes
+        return proceedInboxes(augmentedInboxes)
     }
 
     async searchInChat(chatId, message) {

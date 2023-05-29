@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { Box, Group, GroupProps, Stack } from "@mantine/core";
 
-import { IInbox } from "../types/Model";
+import { IInbox } from "../types/InboxModel";
 import { MessageFotter } from "./MessageFotter";
 import { MessageHeader } from "./MessageHeader/MessageHeader";
 

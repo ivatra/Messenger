@@ -4,9 +4,9 @@ const ApiError = require("../../error/ApiError")
 
 
 function fetchProps(inboxes) {
-  var arr = [] 
+  var arr = []
   for (var inbox of inboxes) {
-    var obj = { id: inbox.id, chatId: inbox.chat.id, countUnreadMsgs: inbox.countUnreadMsgs, isPinned: inbox.isPinned, message: inbox.dataValues.message  }
+    var obj = { id: inbox.id, chatId: inbox.chat.id, countUnreadMsgs: inbox.countUnreadMsgs, isPinned: inbox.isPinned, message: inbox.dataValues.message }
 
     if (inbox.chat.groupChat) {
       obj = { ...obj, name: inbox.chat.groupChat.name, avatar: inbox.chat.groupChat.avatar, chatType: 'group' }
@@ -19,17 +19,24 @@ function fetchProps(inboxes) {
 
 }
 
+
+
 class inBoxService {
+
+  proceedInboxes(inboxes) {
+    const updatedInboxes = fetchProps(inboxes)
+    const dictStructInboxes = Object.fromEntries(updatedInboxes.map(inbox => [inbox.id, { ...inbox }]));
+    return dictStructInboxes
+  }
   async getInbox(userId, limit, offset) {
     const { inboxes, count } = await inboxQueries.receiveInboxes(userId, limit, offset)
-    const updatedInboxes = fetchProps(inboxes)
-    return { inboxes: updatedInboxes, count }
+    const proccedInboxes = this.proceedInboxes(inboxes)
+    return { inboxes: proccedInboxes, count }
   }
 
   async getPinnedInboxes(userId) {
     const inboxes = await inboxQueries.receivePinnedInboxes(userId)
-    const updatedInboxes = fetchProps(inboxes)
-    return updatedInboxes
+    return this.proceedInboxes(inboxes)
   }
 
   async pinInbox(inboxId) {
@@ -44,7 +51,7 @@ class inBoxService {
 
   async getByChat(userId, chatId) {
     const inb = await inboxQueries.receiveInboxByChatId(userId, chatId)
-    return fetchProps([inb[0]])[0]
+    return this.proceedInboxes([inb[0]])
   }
 }
 

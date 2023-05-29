@@ -5,7 +5,7 @@ import { Options } from "./Options"
 
 import { PinnedIcon } from "./PinnedIcon"
 import useInboxStore from "../../store/InboxStore"
-import { IInbox } from "../../types/Model"
+import { IInbox } from "../../types/InboxModel"
 import { useContactInteractionStore } from "../../../Contact"
 
 import { SharedUi } from "../../../../shared"
