@@ -1,13 +1,12 @@
-import { SharedTypes } from "../../../shared";
 
 export interface IMessageContentItem {
     type: "Message";
-    data: IListMessage;
+    data: IMessage;
 }
 
 interface IMessageActionContentItem {
     type: "Action";
-    data: IMessageAction;
+    data: IChatEvent;
 }
 
 export interface IParticipantAction {
@@ -16,18 +15,29 @@ export interface IParticipantAction {
     victimId: string;
 }
 
-export type IMessageAction = {
+export type IChatEvent = {
     id: number;
 } & (IParticipantAction);
 
 
-export interface IListMessage extends SharedTypes.IMessage{
-    index:number
-    status?: SentStatuses
-    isMentioned?:boolean
-    attachement?:SharedTypes.IAttachement
+export interface IDictMessage{
+    [msgId:number]:IMessage
+}
+
+export interface IMessage {
+    id: number
+    chatId:number
+    isMentioned:boolean
+    status?: MessageState
+    content: string
+    attachementId?: number
+    senderId: string
+    isRead: boolean
+    index: number
+    createdAt: string
+    updatedAt: string
 }
 
 export type IContentItem = IMessageContentItem | IMessageActionContentItem
-export type SentStatuses = 'loading' | 'error' | 'sent'
+export type MessageState = 'loading' | 'error' | 'sent'
 

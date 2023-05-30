@@ -24,7 +24,7 @@ export const useMessagesLoading = ({ hasMore, page, totalCount, items, chatId, s
     const [isMessagesLoading, setMessagesLoading] = useState<boolean>(false);
     const [scrollPosition, onScrollPositionChange] = useDebouncedState({ x: 0, y: 0 }, 100);
 
-    const { receiveByOffset, receiveByMsg, setPage } = useMessageStore();
+    const { receiveByOffset, receiveById: receiveByMsg, setPage } = useMessageStore();
 
     const turnOffLoading = () => setMessagesLoading(false)
 

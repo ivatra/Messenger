@@ -6,6 +6,7 @@ const { Message } = require('../models/messageModel');
 const attachementsQueries = require('../queries/attachementsQueries');
 const messageQueries = require('../queries/messageQueries');
 const stringService = require('../../../service/misc/stringService');
+const userQueries = require('../queries/userQueries');
 
 const checkForMention = async (message, userLogins) => {
   let mentionedUsers = [];
@@ -35,7 +36,8 @@ function assignAttachementToMessage(attachement, message) {
 }
 async function sendMessageReceivedEvent(message) {
   const users = await chatQueries.receiveParticipantsByChat(message.chatId)
-  const senderLogin = users.find((user) => user.userId === message.dataValues.senderId).user.login
+  const user = await userQueries.receiveUserById(message.senderId)
+  const senderLogin = user.login
 
   const loginArray = users
     .map(obj => obj.user.login)
@@ -53,7 +55,7 @@ async function sendMessageReceivedEvent(message) {
     if (message.senderId !== participantId) {
       await inboxQueries.updateUnreadMsgs(participantId, message.chatId, 'increment')
 
-      await messageQueries.createMessageMeta(message.id, participantId, userMentioned)
+      const meta = await messageQueries.createMessageMeta(message.id, participantId, userMentioned)
 
       await eventsQueries.createReceivedMessageEvent(participantId,
         { ...messageWithAttachement, isMentioned: userMentioned },

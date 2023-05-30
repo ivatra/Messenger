@@ -5,7 +5,7 @@ const { Sequelize } = require("../postgre")
 
 class attachementsQueries {
     async receiveAll(chatId, limit, offset) {
-        return await Message.findAll({
+        return await Message.findAndCountAll({
             where: {
                 chatId: chatId,
                 '$attachement$': {
@@ -14,26 +14,16 @@ class attachementsQueries {
             },
             include: {
                 model: Attachement,
-                attributes: ['id', 'type', 'url']
+                attributes: ['id', 'type', 'url','messageId']
             },
             limit: limit,
             offset: offset,
-            attributes: ['id', 'content', 'updatedAt', 'senderId', 'isRead', 'chatId']
+            attributes: ['id']
         })
     }
 
-    async receiveOne(chatId, attachementId) {
-        return await Message.findOne({
-            where: {
-                chatId: chatId,
-                '$attachement.id$': attachementId
-            },
-            include: {
-                model: Attachement,
-                attributes: ['id', 'type', 'url']
-            },
-            attributes: ['id', 'content', 'updatedAt', 'senderId'],
-        })
+    async receiveOne(attachementId) {
+        return await Attachement.findByPk(attachementId)
     }
 
     async create(type, url, messageId) {

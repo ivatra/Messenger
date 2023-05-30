@@ -28,7 +28,7 @@ export const ChatRoom: FC<IChatRoomProps> = memo(({ chat, msgIndex, display }) =
     const childrenHeight = isDesktop ? '60px' : '7rem'
 
     const { ref: elementSizeRef, width, height } = useElementSize();
-    const { items } = useMessageStore()
+    const { messages: items } = useMessageStore()
 
     const scrollToBottom = () => scrollRef?.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
 

@@ -1,25 +1,17 @@
 import { FileWithPath } from "@mantine/dropzone";
-import { IListMessage } from "../types/MessageModel";
-import { SharedTypes } from "../../../shared";
 
-export function createMessage(userId: string, index: number, attachement: FileWithPath | undefined, message: string): IListMessage {
+import { IMessage } from "../types/MessageModel";
+
+export function createMockMessage(userId: string, index: number, attachement: FileWithPath | undefined, message: string): IMessage {
     const createdAt = new Date().toISOString();
     const updatedAt = createdAt;
 
-    const newAttachement: SharedTypes.IAttachement | undefined = attachement
-        ? {
-            id: index,
-            type: 'image',
-            url: URL.createObjectURL(attachement),
-        }
-        : undefined;
-
-    const newMessage: IListMessage = {
+    const newMessage: IMessage = {
         id: index,
         content: message,
         senderId: userId,
-        status: 'loading',
-        ...(newAttachement && { attachement: newAttachement }),
+        isMentioned:false,
+        status:'loading',
         isRead: false,
         createdAt: createdAt,
         updatedAt: updatedAt,

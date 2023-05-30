@@ -1,12 +1,14 @@
-import { IStoreFeedback } from "../../../shared/types";
-import { IChatParticipant, IDictChat, IDictChatParticipant } from "./ChatModel";
+import { IDictChat } from "./ChatModel";
+import { IChatParticipant } from "./ChatParticipantModel";
+
+import { SharedTypes } from "../../../shared";
 
 export interface IGroupChatUpdatebleFields {
     avatar?: File
     name?: string
 }
 
-export interface IChatStoreVariables extends IStoreFeedback {
+export interface IChatStoreVariables extends SharedTypes.IStoreFeedback {
     chats: IDictChat
     groupChatCreationOpened: boolean
 }

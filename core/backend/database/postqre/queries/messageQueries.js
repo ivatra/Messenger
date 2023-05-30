@@ -37,13 +37,20 @@ class messageQueries {
                 id: messageId,
             }, include: [{
                 model: Attachement,
-                attributes: ['type', 'url',]
+                attributes: ['type', 'url','id']
             }, {
                 model: MessageMeta,
             }]
         })
     }
 
+    async receiveOne(msgId){
+        return await Message.findByPk(msgId)
+    }
+    async receiveMeta(msgId,userId){
+        return await MessageMeta.findOne({where:{messageId:msgId}})
+    }
+    
     async receiveByMessage(limit, chatId, msgIndex) {
         const totalMessages = await Message.count({ where: { chatId: chatId } });
 
@@ -122,7 +129,8 @@ class messageQueries {
                 'createdAt',
                 'isRead',
                 'updatedAt',
-                'index'
+                'index',
+                'chatId'
             ],
             limit: limit,
             offset: offset,

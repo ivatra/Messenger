@@ -1,7 +1,7 @@
 import { IEvents } from "./EventContents"
 
 export type IEvent  = {
-    _id: string
+    id: string
     recipientId: string
     notify: boolean
 } & IEvents

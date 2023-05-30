@@ -1,8 +1,7 @@
-;import { IListMessage } from "./MessageModel";
+import { IDictMessage } from "./MessageModel"
 
-
-export interface IMessagesApiResponse{
-    data:IListMessage[]
-    count:number
+export interface IMessagesApiResponse {
+    data: IDictMessage
+    count: number
 }
 

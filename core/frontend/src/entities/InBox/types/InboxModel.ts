@@ -4,8 +4,6 @@ export interface IDictInbox {
 
 export interface IInbox{
     id: number
-    name: number
-    avatarUrl: string
     isPinned: boolean
     chatId: number
     messageId: number

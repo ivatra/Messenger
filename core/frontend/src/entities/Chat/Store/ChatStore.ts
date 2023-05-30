@@ -2,7 +2,8 @@ import { create } from 'zustand';
 import produce from "immer";
 
 import { IChatStoreVariables, IChatStoreActions, ChatStoreType } from '../types/ChatStoreType';
-import { IChat, IChatParticipant } from '../types/ChatModel';
+import { IChat } from '../types/ChatModel';
+import { IChatParticipant } from "../types/ChatParticipantModel";
 
 import { api } from '../../../app';
 import { SharedHelpers } from '../../../shared';

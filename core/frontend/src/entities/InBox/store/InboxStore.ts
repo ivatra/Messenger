@@ -24,15 +24,15 @@ const useInboxStore = create<InboxStoreType>()((set, get) => ({
     async pin(inboxId) {
         const request = () => api.post(`${baseUrl}/${inboxId}/pin`);
 
-        await SharedHelpers.handleRequest<IDictInbox>(request, set);
+        const response = await SharedHelpers.handleRequest<IDictInbox>(request, set);
 
-        if (get().state === 'error') return
+        if (!response) return
 
         const { inboxes } = get();
 
         if (inboxes[inboxId]) {
             set(produce((state: InboxStoreType) => {
-                inboxes[inboxId].isPinned = !inboxes[inboxId].isPinned
+                state.inboxes[inboxId].isPinned = !inboxes[inboxId].isPinned
             }));
         }
     },

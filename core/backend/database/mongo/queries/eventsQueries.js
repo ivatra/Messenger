@@ -5,6 +5,7 @@ const { userSockets } = require('../../../websocket/userSocket')
 
 function insertEvent(event) {
     event.createdAt = new Date();
+    event.id = new Date()
     const ws = userSockets.get(event.recipientId);
     if (ws && ws.isAlive) {
         ws.send(JSON.stringify([event]), (err) => {

@@ -21,7 +21,7 @@ export const useInboxesList = ({ ref, searchValue }: IInboxesProps) => {
 
 
     const { currentChatId } = useChatStore();
-    const { items } = useMessageStore();
+    const { messages: items } = useMessageStore();
 
     const processInbox = (inbox: IInbox, matched: boolean) => {
         return (

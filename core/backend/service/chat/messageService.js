@@ -41,7 +41,8 @@ class MessageService {
 
         for await (var message of messages) {
             if (userId !== message.senderId) {
-                const msgMeta = await MessageMeta.findOne({ where: { messageId: message.id } })
+                const msgMeta = await MessageMeta.findOne({ where: { messageId: message.id, userId: userId } })
+                console.log(msgMeta)
                 if (msgMeta) {
                     message.dataValues.isRead = msgMeta.isRead
                     message.dataValues.isMentioned = msgMeta.isMentioned
@@ -49,14 +50,39 @@ class MessageService {
             } else {
                 message.dataValues.isMentioned = false
             }
+            if (message.attachement) {
+                message.dataValues.attachement = null
+                message.dataValues.attachementId = message.attachement.id
+            }
+            message.dataValues = { [message.id]: message.dataValues }
         }
 
 
         return { data: messages, count: count }
     }
 
+    async fetchOne(userId, msgId) {
+        const message = await messageQueries.receiveMessage(msgId)
+
+        if (userId !== message.senderId) {
+            const msgMeta = await MessageMeta.findOne({ where: { messageId: message.id, userId: userId } })
+            if (msgMeta) {
+                message.dataValues.isRead = msgMeta.isRead
+                message.dataValues.isMentioned = msgMeta.isMentioned
+            }
+        } else {
+            message.dataValues.isMentioned = false
+        }
+        if (message.attachement) {
+            message.dataValues.attachement = null
+            message.dataValues.attachementId = message.attachement.id
+        }
+        delete message.dataValues.messages_meta
+
+        return message
+    }
     async fetchByMessages(userId, chatId, limit, msgIndex) {
-        const { count, rows: messages } = await messageQueries.receiveByMessage(limit, chatId, msgIndex)
+        const { count, rows: messages } = await messageQueries.receiveByMessage()
         return { data: messages, count: count }
     }
 
@@ -69,7 +95,7 @@ class MessageService {
         }
 
 
-        return attachement ? { ...message.dataValues, attachement: attachement.dataValues } : message.dataValues
+        return attachement ? { ...message.dataValues, attachementId: attachement.id } : message.dataValues
     }
 
 }

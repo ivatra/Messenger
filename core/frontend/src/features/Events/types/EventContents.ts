@@ -1,5 +1,5 @@
 import { IContact, IInbox } from "../../../entities";
-import { IChatParticipant, IDictChatParticipant } from "../../../entities/Chat/types/ChatModel";
+import { IChatParticipant, IDictChatParticipant } from "../../../entities/Chat/types/ChatParticipantModel";
 import { IContactStatus } from "../../../entities/Contact/types/ContactModel";
 import { IListMessage } from "../../../entities/Message/types/MessageModel";
 export interface IReceivedMessageEvent {
