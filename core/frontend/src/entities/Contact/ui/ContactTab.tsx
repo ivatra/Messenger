@@ -11,7 +11,7 @@ interface IContactTabProps {
 
 export const ContactTab: React.FC<IContactTabProps> = ({ contact,onTabClick }) => {
     const [selected, setSelected] = useState<boolean>(false)
-    const { openContactModal } = useContactInteractionStore.getState()
+    const { openModalWithUser: openContactModal } = useContactInteractionStore.getState()
 
     const boxProps = {
         onMouseEnter: () => setSelected(true),

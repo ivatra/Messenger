@@ -43,7 +43,7 @@ class eventService {
         // const chat = await chatQueries.receiveChatByPk(chatId)
         for (var participant of participants) {
             if (participant.user.id === userId) continue
-            await eventsQueries.createTypingEvent(participant.user.id, chatId, isTyping, userId)
+            await eventsQueries.createTypingEvent(participant.id, chatId, isTyping, userId)
         }
     }
 

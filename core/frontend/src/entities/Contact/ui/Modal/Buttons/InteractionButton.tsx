@@ -6,7 +6,7 @@ import { IconLoader } from "@tabler/icons-react";
 
 import { ButtonTab } from "./ButtonTab";
 import { useContactInteractionStore } from "../../../store/ContactInteractionStore";
-import { IContactStatus } from "../../../types/Model";
+import { IContactStatus } from "../../../types/ContactModel";
 import { getInteractionByStatus } from "../../../helpers/getInteractionByStatus";
 
 import { SharedTypes } from "../../../../../shared";

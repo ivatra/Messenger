@@ -4,7 +4,7 @@ import { Stack } from "@mantine/core";
 import { IconMessageForward, IconSquarePlus } from "@tabler/icons-react";
 
 import { ButtonTab } from "./Buttons/ButtonTab";
-import { IContact } from "../../types/Model";
+import { IContact } from "../../types/ContactModel";
 import { InteractionButton } from "./Buttons/InteractionButton";
 import { useChatStore } from "../../../Chat/types";
 import { useNavigate } from "react-router-dom";

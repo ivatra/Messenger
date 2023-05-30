@@ -1,10 +1,11 @@
-import { IconEditCircle, IconPencil, IconLock, IconClockEdit, IconFileExport, IconFileUpload, IconPhoto, IconPhotoEdit, IconEdit } from "@tabler/icons-react";
-
-import { ProfileFields } from "../types/Store";
 import { HTMLInputTypeAttribute } from "react";
 
+import { IconPencil, IconLock, IconPhoto, IconPhotoEdit, IconEdit } from "@tabler/icons-react";
+
+import { IProfile } from "../types/ProfileModel";
+
 export interface IEditInputs {
-    field: ProfileFields
+    field: Omit<keyof IProfile,'id'>
     type:HTMLInputTypeAttribute
     customPlaceHolder?: string
     PlaceholderIcon: React.ElementType

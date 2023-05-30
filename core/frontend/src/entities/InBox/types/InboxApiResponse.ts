@@ -1,7 +1,7 @@
-import { IInbox } from "./InboxModel";
+import { IDictInbox } from "./InboxModel";
 
 
 export interface IInboxesResponse {
-    inboxes: IInbox[] | []
+    inboxes: IDictInbox
     count: number
 }

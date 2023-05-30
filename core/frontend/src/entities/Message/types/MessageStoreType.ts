@@ -1,6 +1,6 @@
 import { FileWithPath } from "@mantine/dropzone"
 
-import { IContentItem, IListMessage } from "./Model"
+import { IContentItem, IListMessage } from "./MessageModel"
 
 
 export interface IChatContent {

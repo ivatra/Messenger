@@ -1,4 +1,4 @@
-import { IProfile } from "./Model"
+import { IProfile } from "./ProfileModel"
 
 
 export interface IAuthApiResponse{

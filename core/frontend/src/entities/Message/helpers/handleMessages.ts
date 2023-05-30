@@ -1,6 +1,6 @@
 import produce from "immer";
-import { IContentItem } from '../types/Model';
-import { IMessagesApiResponse } from '../types/ApiResponse';
+import { IContentItem } from '../types/MessageModel';
+import { IMessagesApiResponse } from '../types/MessageApiResponse';
 import { StoreType, createOrFindItem } from '../Store/MessageStore';
 
 export async function handleMessages(chatId: number, newMessages: IMessagesApiResponse, currentPage: number, set: any) {

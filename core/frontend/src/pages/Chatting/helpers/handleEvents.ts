@@ -37,7 +37,7 @@ export function handleEvent(event: IEvent) {
             const contact = contactEventData.contact;
             const status = contactEventData.status;
 
-            const { updateContactStatus, pushContact } = useContactListStore.getState()
+            const { updateContactStatus, addContact: pushContact } = useContactListStore.getState()
 
             if (status === 'pending') pushContact(contact)
             else updateContactStatus(contact.id, status)

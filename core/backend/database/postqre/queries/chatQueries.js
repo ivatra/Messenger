@@ -15,12 +15,12 @@ class chatQueries {
         return await GroupChat.create({ chatId: chatId, avatar: avatar, name: name })
     }
 
-    async createParticipant(chatId, participantId,role) {
+    async createParticipant(chatId, participantId, role) {
         return await ChatParticipant.findOrCreate({
             where: {
                 chatId: chatId,
                 userId: participantId,
-                role:role
+                role: role
             }
         });
     }
@@ -49,7 +49,7 @@ class chatQueries {
                     attributes: ['id', 'name', 'login', 'avatar', 'isActive', 'lastSeen'],
                     required: true
                 }],
-                attributes: ['id','role','isTyping']
+                attributes: ['id', 'role', 'isTyping']
             },
             {
                 model: GroupChat,
@@ -63,7 +63,7 @@ class chatQueries {
 
     async receiveParticipantsByChat(chatId) {
         return await ChatParticipant.findAll({
-            attributes: ['userId','role'],
+            attributes: ['userId', 'role'],
             where: { chatId },
             include: {
                 model: User,
@@ -141,11 +141,10 @@ class chatQueries {
         })
     }
 
-    async destroyParticipant(chatId, participantId) {
+    async destroyParticipant(participantId) {
         return await ChatParticipant.destroy({
             where: {
-                chatId,
-                userId: participantId
+                id: participantId
             },
             individualHooks: true
         });

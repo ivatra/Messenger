@@ -1,40 +1,32 @@
 import { create } from 'zustand';
 
 import { useContactListStore } from '..';
-import { IContact } from '../types/Model';
-import { IContactInteractionsStore } from '../types/Store';
+import { IContact } from '../types/ContactModel';
+import { IContactInteractionVariables } from '../types/ContactInteractionStoreType';
 
 import { api } from '../../../app';
-import { SharedTypes, SharedHelpers } from '../../../shared';
+import { SharedHelpers } from '../../../shared';
+import { IContactListStore } from '../types/ContactListStoreType';
 
 const baseUrl = 'content/pages/contacts';
 
-export type StoreType = IContactInteractionsStore & SharedTypes.IStoreFeedback;
-
-const initialState = {
-    isLoading: false,
-    isError: false,
-    receivedContact: undefined,
-
-    contactModalisOpened: false,
-    currentContact: undefined
+const initialState:IContactInteractionVariables = {
+    contactModalisOpened:false,
+    state:'idle'
 }
 
-export const useContactInteractionStore = create<StoreType>((set, get) => ({
+export const useContactInteractionStore = create<IContactListStore>((set, get) => ({
     ...initialState,
-    addContact: async (contactId) => {
-        const { pushContact } = useContactListStore.getState();
-        const { currentContact } = get()
-
-        const request = () => api.post(`${baseUrl}/${contactId}/add`)
+    addContact: async (userId) => {
+        const request = () => api.post(`${baseUrl}/${userId}/add`)
         const response = await SharedHelpers.handleRequest<IContact>(request, set);
 
-        if (!response || get().isError || !currentContact) return;
+        if (!response) return;
 
-        const updatedContact = { ...currentContact, status: 'outgoing' } as IContact
+        const addContact = useContactListStore.getState().addContact
 
-        set({ currentContact: updatedContact })
-        pushContact(updatedContact)
+        const newContact = {userId,status:''} as IContact
+        addContact()
         
     },
     acceptContact: async (contactId) => {
@@ -65,14 +57,14 @@ export const useContactInteractionStore = create<StoreType>((set, get) => ({
         set({ currentContact: updatedContact })
         removeContact(contactId)
     },
-    receiveContactById: async (id: string) => {
+    receiveContactByUserId: async (id: string) => {
         const response = await SharedHelpers.handleRequest<IContact>(() => api.get(`${baseUrl}/${id}`), set);
 
         if (!response || get().isError) return;
 
         return response
     },
-    openContactModal: (contact) => {
+    openModalWithUser: (contact) => {
         set({ currentContact: contact, contactModalisOpened: true })
     },
     closeContactModal: () => {

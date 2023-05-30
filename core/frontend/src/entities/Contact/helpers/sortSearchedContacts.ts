@@ -1,4 +1,4 @@
-import { IContact } from "../types/Model";
+import { IContact } from "../types/ContactModel";
 
 
 

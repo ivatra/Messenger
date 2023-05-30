@@ -5,6 +5,7 @@ const { Chat, GroupChat, IndividualChat, ChatParticipant } = require("../models/
 const { InBox } = require("../models/inBoxModel");
 const { Message, MessageMeta } = require("../models/messageModel");
 const { User, UserVector } = require("../models/userModel");
+const ApiError = require('../../../error/ApiError');
 
 class inBoxQueries {
   async createInbox(chatId, userId) {
@@ -17,8 +18,11 @@ class inBoxQueries {
 
   async receiveInboxByChatId(userId, chatId) {
     const inbox = await InBox.findOne({ where: { chatId: chatId, userId: userId } })
+    if(!inbox){
+      throw ApiError.Internal('No inbox in receiveInboxByChatId')
+    }
     const result = await this.receiveInboxesByIds([inbox.id], userId)
-    return result
+    return result[0]
   }
 
   async receivePinnedInboxes(userId) {
@@ -35,7 +39,7 @@ class inBoxQueries {
   async receiveInboxes(userId, limit, offset) {
     var { count, rows: inboxes } = await InBox.findAndCountAll({
       where: { userId: userId, isPinned: false, messageId: { [Sequelize.Op.ne]: null } },
-      include: { model: Message, attributes: ['updatedAt','index'] },
+      include: { model: Message, attributes: ['updatedAt', 'index'] },
       attributes: ['id'],
       offset: offset,
       limit: limit,
@@ -57,7 +61,7 @@ class inBoxQueries {
         {
           model: Message,
           as: 'message',
-          attributes: ['id', 'content', 'senderId', 'updatedAt', 'isRead', 'createdAt','index']
+          attributes: ['id', 'content', 'senderId', 'updatedAt', 'isRead', 'createdAt', 'index']
         },
         {
           model: Chat,
@@ -106,7 +110,7 @@ class inBoxQueries {
       include: [
         {
           model: Message,
-          attributes: ['content', 'senderId', 'createdAt','index'],
+          attributes: ['content', 'senderId', 'createdAt', 'index'],
         },
         {
           model: Chat,
@@ -198,6 +202,14 @@ class inBoxQueries {
 
     return await inbox.update({ messageId: messageId })
   }
+
+  async destroyInbox(chatId, userId) {
+    return await InBox.destroy({
+      where: {
+        chatId: chatId, userId: userId
+      }
+    })
+  }
   async updateUnreadMsgs(userId, chatId, property, count = 1) {
     if (property !== 'increment' && property !== 'decrement') {
       throw new Error('Invalid property value. Must be either "increment" or "decrement".');
@@ -212,16 +224,16 @@ class inBoxQueries {
     } else {
       if (inbox.dataValues.countUnreadMsgs >= 0) {
         const { count, rows } = await Message.findAndCountAll({
-          where:chatId,
-          include:{
-            model:MessageMeta,
-            where:{
-              userId:userId
+          where: chatId,
+          include: {
+            model: MessageMeta,
+            where: {
+              userId: userId
             }
           }
         })
 
-        await inbox.update({countUnreadMsgs:count})
+        await inbox.update({ countUnreadMsgs: count })
       }
     }
   }

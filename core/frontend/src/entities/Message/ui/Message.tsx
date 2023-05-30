@@ -2,7 +2,7 @@ import { useContext, useRef } from "react";
 
 import { Text, Box, Group, Stack, Image } from "@mantine/core";
 
-import { IListMessage } from "../types/Model";
+import { IListMessage } from "../types/MessageModel";
 import { ChatContext } from "../../../widgets";
 import { SocketContext } from "../../../pages";
 import { sendMessageReadEvent } from "../helpers/sendMessageReadEvent";

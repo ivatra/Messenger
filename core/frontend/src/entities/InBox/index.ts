@@ -1,7 +1,6 @@
 import useInboxStore from "./store/InboxStore";
-import { IInbox } from "./types/InboxModel";
-import { Inbox } from "./ui/Inbox";
 
-export { useInboxStore }
-export type { IInbox }
-export {Inbox}
+export {useInboxStore}
+export type { IDictInbox, IInbox } from "./types/InboxModel";
+export { Inbox } from "./ui/Inbox";
+

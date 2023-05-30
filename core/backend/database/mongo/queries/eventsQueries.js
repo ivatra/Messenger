@@ -17,13 +17,14 @@ function insertEvent(event) {
     }
 }
 class eventQueries {
+    //Message
     async createReceivedMessageEvent(recipientId, message, chatId, isMentioned) {
         const event = {
             type: 'received_message',
             recipientId: recipientId,
             data: {
                 message: message,
-                chatId: chatId,
+                chatId: Number(chatId),
                 isMentioned: isMentioned
             },
             notify: false
@@ -37,8 +38,8 @@ class eventQueries {
             type: 'message_read',
             recipientId: recipientId,
             data: {
-                chatId: chatId,
-                msgId: msgId
+                chatId: Number(chatId),
+                msgId: Number(chatId)
             },
             notify: false
         };
@@ -46,6 +47,7 @@ class eventQueries {
         insertEvent(event);
     }
 
+    //Contact
     async createContactEvent(recipientId, contact, status) {
         const event = {
             type: 'contact',
@@ -60,91 +62,91 @@ class eventQueries {
         insertEvent(event);
     }
 
-    async createTypingEvent(recipientId, chatId, typingState, typerId) {
-        const event = {
-            type: 'typing',
-            recipientId: recipientId,
-            data: {
-                chatId: chatId,
-                typingState: typingState,
-                typerId: typerId
-            },
-            notify: false
-        };
+    //Chat Participant
 
-        insertEvent(event);
-    }
-
-    async createParticipantInvitedEvent(recipientId, chatId, participant, inviterId) {
+    async createParticipantInvitedEvent(recipientId, chatId, participant, inviterId) { //done
         const event = {
             type: 'participant_invited',
             recipientId: recipientId,
             data: {
-                chatId: chatId,
+                chatId: Number(chatId),
                 participant: participant,
                 inviterId: inviterId
             },
             notify: false
         };
-
+        console.log(event)
         insertEvent(event);
     }
 
-    async createParticipantRemovedEvent(recipientId, chatId, participantId, removerId) {
+    async createParticipantRemovedEvent(recipientId, chatId, participantId, removerId) { //done
         const event = {
             type: 'participant_removed',
             recipientId: recipientId,
             data: {
-                chatId: chatId,
-                participantId: participantId,
+                chatId: Number(chatId),
+                participantId: Number(participantId),
                 removerId: removerId
+            },
+            notify: false
+        };
+        console.log(event)
+        insertEvent(event);
+    }
+
+
+    //Chat
+    async createTypingEvent(recipientId, chatId, typingState, participantTyperId) { //changed
+        const event = {
+            type: 'typing',
+            recipientId: recipientId,
+            data: {
+                chatId: Number(chatId),
+                typingState: typingState,
+                typerId: Number(participantTyperId)
             },
             notify: false
         };
 
         insertEvent(event);
     }
-
-    async createExcludedFromChatEvent(recipientId, chatId, excluderId) {
+    async createExcludedFromChatEvent(recipientId, inboxId, excluderId) { //changed
         const event = {
             type: 'excluded_from_chat',
             recipientId: recipientId,
             data: {
-                chatId: chatId,
+                inboxId: Number(inboxId),
                 excluderId: excluderId
             },
             notify: true
         };
-
         insertEvent(event);
     }
-
-    async createInvitedToChatEvent(recipientId, chat, inviterId) {
+    async createInvitedToChatEvent(recipientId, inbox, inviterId) { //changed
         const event = {
             type: 'invited_to_chat',
             recipientId: recipientId,
             data: {
                 invitedId: inviterId,
-                chat: chat
+                inbox: inbox
             },
             notify: true
         };
-
         insertEvent(event);
     }
 
-    async createChatUpdatedEvent(recipientId, name,avatar, chatId) {
+    async createChatUpdatedEvent(recipientId, name,avatar, chatId) { 
         const event = {
             type: 'chat_updated',
             recipientId: recipientId,
             data: {
                 name:name,
                 avatar:avatar,
-                chatId: chatId
+                chatId: Number(chatId)
             },
             notify: false
         };
-
+        console.log(event)
         insertEvent(event);
     }
 

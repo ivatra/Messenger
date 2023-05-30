@@ -5,7 +5,7 @@ import { Options } from "./Options"
 
 import { PinnedIcon } from "./PinnedIcon"
 import useInboxStore from "../../store/InboxStore"
-import { IInbox } from "../../types/InboxModel"
+import { IDictInbox } from "../../types/InboxModel"
 import { useContactInteractionStore } from "../../../Contact"
 
 import { SharedUi } from "../../../../shared"
@@ -14,13 +14,13 @@ import { SharedUi } from "../../../../shared"
 interface ITitleProps {
     name: string
     messageSentDate: string
-    inbox: IInbox
+    inbox: IDictInbox
     inboxSelected: boolean
 }
 
 export const MessageHeader: React.FC<ITitleProps> = ({ name, inbox, messageSentDate, inboxSelected }) => {
     const { pin } = useInboxStore()
-    const { openContactModal, receiveContactById } = useContactInteractionStore.getState()
+    const { openModalWithUser: openContactModal, receiveContactByUserId: receiveContactById } = useContactInteractionStore.getState()
 
     const pinInbox = () => pin(inbox.id)
 

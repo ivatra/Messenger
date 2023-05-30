@@ -18,7 +18,7 @@ export const ContactsSearchBar: React.FC<IHeaderProps> = ({ limit }) => {
 
         contacts,
 
-        searchContacts } = useContactListStore()
+        receiveBySearchTerm: searchContacts } = useContactListStore()
 
     const handleSearch = (searchTerm: string) => {
         resetSearch()

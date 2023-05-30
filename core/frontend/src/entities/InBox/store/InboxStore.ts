@@ -1,12 +1,13 @@
 import { create } from 'zustand';
 import produce from "immer";
 
-import { IInboxActions, IInboxVariables } from '../types/InboxStoreType';
-import { IInbox } from '../types/InboxModel';
+import { IInboxActions, IInboxVariables, InboxStoreType } from '../types/InboxStoreType';
+import { IDictInbox } from '../types/InboxModel';
 import { IInboxesResponse } from '../types/InboxApiResponse';
 
 import { api } from '../../../app';
 import { SharedHelpers } from '../../../shared';
+import { useChatStore } from '../..';
 
 const baseUrl = 'content/pages/inbox'
 
@@ -18,14 +19,12 @@ const initialState: IInboxVariables = {
 }
 
 
-type InboxStoreType = IInboxActions & IInboxVariables
-
 const useInboxStore = create<InboxStoreType>()((set, get) => ({
     ...initialState,
-    pin: async (inboxId) => {
+    async pin(inboxId) {
         const request = () => api.post(`${baseUrl}/${inboxId}/pin`);
 
-        await SharedHelpers.handleRequest<IInbox>(request, set);
+        await SharedHelpers.handleRequest<IDictInbox>(request, set);
 
         if (get().state === 'error') return
 
@@ -37,19 +36,19 @@ const useInboxStore = create<InboxStoreType>()((set, get) => ({
             }));
         }
     },
-    receivePinned: async () => {
+    async receivePinned() {
         const request = () => api.get(baseUrl + '/pinned');
 
-        const response = await SharedHelpers.handleRequest<IInbox>(request, set)
+        const response = await SharedHelpers.handleRequest<IInboxesResponse>(request, set)
 
         if (!response) return
 
         set(produce((state) => {
-            state.inboxes.shift(response)
+            Object.assign(state.inboxes, response.inboxes, state.inboxes)
         }));
 
     },
-    receiveByOffset: async (limit, offset) => {
+    async receiveByOffset(limit, offset) {
         const request = () => api.get(`${baseUrl}?limit=${limit}&offset=${offset}`);
 
         const response = await SharedHelpers.handleRequest<IInboxesResponse>(request, set)
@@ -61,10 +60,10 @@ const useInboxStore = create<InboxStoreType>()((set, get) => ({
             state.inboxesTotalCount = response.count
         }));
     },
-    receiveByChatId: async (chatId) => {
+    async receiveByChatId(chatId) {
         const request = () => api(baseUrl + `/bychat/?chatId=${chatId}`)
 
-        const response = await SharedHelpers.handleRequest<IInbox>(request, set)
+        const response = await SharedHelpers.handleRequest<IDictInbox>(request, set)
 
         if (!response) return
 
@@ -72,19 +71,34 @@ const useInboxStore = create<InboxStoreType>()((set, get) => ({
             Object.assign(state.inboxes, response, state.inboxes)
         }));
     },
-    receiveBySearchTerm: async (searchTerm) => {
+    async receiveBySearchTerm(searchTerm) {
         const request = () => api.get(`content/search/inbox/?message=${searchTerm}`);
 
-        const response = await SharedHelpers.handleRequest<IInbox>(request, set);
+        const response = await SharedHelpers.handleRequest<IDictInbox>(request, set);
 
         if (!response) return
 
         set({ matchedInboxes: response });
     },
-    updateMsgId: (inboxId, msgId) => {
+    updateMsgId(inboxId, msgId) {
         set(produce((state: InboxStoreType) => {
             state.inboxes[inboxId].messageId = msgId
         }));
+    },
+    addInbox(inbox) {
+        set(produce((state: InboxStoreType) => {
+            state.inboxes[inbox.id] = inbox
+        }));
+    },
+    removeInbox(inboxId) {
+        const { removeChat } = useChatStore().getState
+        const inbox = get().inboxes[inboxId]
+
+        set(produce((state: InboxStoreType) => {
+            delete state.inboxes[inboxId]
+        }));
+
+        removeChat(inbox.chatId)
     },
 }))
 

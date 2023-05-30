@@ -18,33 +18,6 @@ async function receiveMessageContentByIds(messageIds) {
     ))
 }
 
-function fetchProps(inboxes) {
-    var arr = []
-    for (var inbox of inboxes) {
-        var obj = { id: inbox.id, chatId: inbox.chat.id, countUnreadMsgs: inbox.countUnreadMsgs, isPinned: inbox.isPinned, message: inbox.message.dataValues }
-
-        if (inbox.chat.groupChat) {
-            obj = { ...obj, name: inbox.chat.groupChat.name, avatar: inbox.chat.groupChat.avatar, chatType: 'group' }
-        } else {
-            obj = { ...obj, name: inbox.chat.participants[0].user.name, avatar: inbox.chat.participants[0].user.avatar, chatType: "individual" }
-        }
-        arr.push(obj)
-    }
-    return arr
-
-}
-
-function sortContactsByIsContact(contacts) {
-    return contacts.sort((a, b) => {
-        if (a.isContact && !b.isContact) {
-            return -1;
-        } else if (!a.isContact && b.isContact) {
-            return 1;
-        } else {
-            return contacts.indexOf(a) - contacts.indexOf(b)
-        }
-    });
-}
 async function findInboxIdsByMessageIds(messages, userId) {
     const messageIds = messages.map((message) => message.id);
     const inboxes = await InBox.findAll({
@@ -62,7 +35,7 @@ async function findInboxIdsByMessageIds(messages, userId) {
 }
 
 async function searchUsers(senderId,searchTerm,limit,offset) {
-    const users = await User.findAll()
+    const users = await User.findAll({offset:offset,limit:limit})
     const searchResults = users.filter(user => {
         const userName = user.dataValues.name.toLowerCase();
         const search = searchTerm.toLowerCase();
@@ -77,26 +50,21 @@ class searchService {
     async searchInContacts(senderId, searchTerm, limit, offset) {
         if (!searchTerm) return
 
-        const likeString = stringService.convertToLikeStructure(searchTerm)
-
         const {users,count} = await searchUsers(senderId,searchTerm,limit,offset)
 
-        let newUsers = []
-
-        for (var user of users) {
-            const contact = await contactsQueries.receiveContact(senderId, user.dataValues.id)
-            user.dataValues.isContact = contact !== null
-            if (contact !== null) {
-                if (contact.dataValues.senderId === senderId && contact.dataValues.status === 'pending') {
-                    var merged = { ...user.dataValues, status: 'outgoing' }
-                } else {
-                    var merged = { ...user.dataValues, status: contact.dataValues.status }
+        const fetchedUsers = users.map((user)=>{
+            return {
+                [user.id]:{
+                    id: user.id,
+                    name: user.name,
+                    login: user.login,
+                    avatarUrl: user.avatar,
+                    isActive: user.isActive,
+                    lastSeen: user.lastSeen,
                 }
-                newUsers.push(merged)
-            } else newUsers.push({ ...user.dataValues, status: null })
-        }
-
-        return { data: newUsers, count }
+            }
+        })
+        return { data: fetchedUsers, count }
 
     }
     async searchInInbox(senderId, message) {

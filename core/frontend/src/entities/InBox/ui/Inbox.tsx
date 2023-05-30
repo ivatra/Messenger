@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { Box, Group, GroupProps, Stack } from "@mantine/core";
 
-import { IInbox } from "../types/InboxModel";
+import { IDictInbox } from "../types/InboxModel";
 import { MessageFotter } from "./MessageFotter";
 import { MessageHeader } from "./MessageHeader/MessageHeader";
 
@@ -19,7 +19,7 @@ const groupProps: GroupProps = {
 
 
 interface IInboxProps {
-    inbox: IInbox
+    inbox: IDictInbox
     isMatched: boolean
     active: boolean
 }

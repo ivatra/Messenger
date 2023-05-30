@@ -1,5 +1,5 @@
 import { FileWithPath } from "@mantine/dropzone";
-import { IListMessage } from "../types/Model";
+import { IListMessage } from "../types/MessageModel";
 import { SharedTypes } from "../../../shared";
 
 export function createMessage(userId: string, index: number, attachement: FileWithPath | undefined, message: string): IListMessage {

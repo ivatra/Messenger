@@ -1,5 +1,5 @@
 import { IconUserCheck, IconUserMinus, IconUserPlus } from "@tabler/icons-react";
-import { IContactStatus } from "../types/Model";
+import { IContactStatus } from "../types/ContactModel";
 
 const contactInteractions = [
     {

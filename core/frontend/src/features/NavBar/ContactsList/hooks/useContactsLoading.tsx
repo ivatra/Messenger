@@ -21,8 +21,8 @@ export const useContactsLoading = (
         contacts,
         searchedContacts,
 
-        receiveContacts,
-        searchContacts
+        receiveByOffset: receiveContacts,
+        receiveBySearchTerm: searchContacts
     } = useContactListStore()
 
     useEffect(() => {

@@ -19,7 +19,7 @@ export const ChatHeader: React.FC<IChatHeaderProps> = ({ chat, height }) => {
     const isDesktop = useMediaQuery(`(min-width: ${SharedConsts.DESKTOP_WIDTH})`)
     const navigate = useNavigate()
 
-    const { openContactModal, receiveContactById } = useContactInteractionStore.getState()
+    const { openModalWithUser: openContactModal, receiveContactByUserId: receiveContactById } = useContactInteractionStore.getState()
     const { name, avatar: avatarUrl, userId } = SharedHelpers.fetchChatProps(chat)
     
     const bottomTitle = generateBottomTitle(chat)

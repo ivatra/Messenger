@@ -1,8 +1,7 @@
-import { IContact, IGroupChatUpdatebleFields } from "../../../entities"
-import { IContactStatus } from "../../../entities/Contact/types/Model"
-import { IListMessage } from "../../../entities/Message/types/Model"
-import { SharedTypes } from "../../../shared";
-
+import { IContact, IInbox } from "../../../entities";
+import { IChatParticipant, IDictChatParticipant } from "../../../entities/Chat/types/ChatModel";
+import { IContactStatus } from "../../../entities/Contact/types/ContactModel";
+import { IListMessage } from "../../../entities/Message/types/MessageModel";
 export interface IReceivedMessageEvent {
     type: 'received_message'
     data: {
@@ -28,12 +27,12 @@ export interface IContactEvent {
     }
 }
 
-interface ITypingEvent {
+interface ITypingEvent { //changed
     type: 'typing'
     data: {
         chatId: number
         typingState: boolean
-        typerId: string
+        participantTyperId: string
     }
 }
 
@@ -41,7 +40,7 @@ export interface IParticipantInvitedEvent {
     type: 'participant_invited'
     data: {
         chatId: number
-        participant: SharedTypes.IChatParticipant
+        participant: IChatParticipant
         inviterId:string
     }
 }
@@ -55,18 +54,18 @@ export interface IParticipantRemovedEvent {
     }
 }
 
-export interface IExcludedFromChat {
+export interface IExcludedFromChat { //changed
     type: 'excluded_from_chat'
     data: {
         exluderId:string
-        chatId: number
+        inboxId: number
     }
 }
-export interface IInvitedToChat {
+export interface IInvitedToChat {  //changed
     type: 'invited_to_chat'
     data: {
         invitedId:string
-        chat: SharedTypes.IChat
+        inbox: IInbox
     }
 }
 

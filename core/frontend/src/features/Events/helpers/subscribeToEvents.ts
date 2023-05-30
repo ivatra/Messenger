@@ -8,9 +8,8 @@ function handleEvent(event: IEvent) {
     console.log(event.type)
     switch (event.type) {
         case 'received_message': {
-            const receivedMessageData = event.data;
-            const message = receivedMessageData.message;
-            const messageChatId = receivedMessageData.chatId;
+            const message = event.data.message;
+            const messageChatId = event.data.chatId;
 
             const { addItemWS } = useMessageStore.getState()
             const { updateMessage } = useInboxStore.getState()
@@ -22,9 +21,8 @@ function handleEvent(event: IEvent) {
 
 
         case 'message_read': {
-            const readMessageData = event.data;
-            const msgId = readMessageData.msgId;
-            const chatId = readMessageData.chatId;
+            const msgId = event.data.msgId;
+            const chatId = event.data.chatId;
 
             const { setMessageRead } = useMessageStore.getState()
 
@@ -35,22 +33,20 @@ function handleEvent(event: IEvent) {
 
 
         case 'contact': {
-            const contactEventData = event.data;
-            const contact = contactEventData.contact;
-            const status = contactEventData.status;
+            const contact = event.data.contact;
+            const status = event.data.status;
 
-            const { updateContactStatus, pushContact } = useContactListStore.getState()
+            const { updateContactStatus, addContact: pushContact } = useContactListStore.getState()
 
             if (status === 'pending') pushContact(contact)
             else updateContactStatus(contact.id, status)
 
             break;
         }
-        case 'typing': {
-            const typingEventData = event.data;
-            const chatId = typingEventData.chatId;
-            const typingState = typingEventData.typingState;
-            const typerId = typingEventData.typerId;
+        case 'typing': { //changed
+            const chatId = event.data.chatId;
+            const typingState = event.data.typingState;
+            const typerId = event.data.participantTyperId
 
             const { addTypingUser, removeTypingUser } = useChatStore.getState()
 
@@ -62,9 +58,8 @@ function handleEvent(event: IEvent) {
 
 
         case 'participant_invited': {
-            const participantInvitedData = event.data;
-            const invitedChatId = participantInvitedData.chatId;
-            const participant = participantInvitedData.participant;
+            const invitedChatId = event.data.chatId;
+            const participant = event.data.participant;
 
             const { addParticipantWS } = useChatStore.getState()
 
@@ -74,41 +69,37 @@ function handleEvent(event: IEvent) {
         }
 
         case 'participant_removed': {
-            const participantRemovedData = event.data;
-            const removedChatId = participantRemovedData.chatId;
-            const removedParticipantId = participantRemovedData.participantId;
+            const removedChatId = event.data.chatId;
+            const removedParticipantId = event.data.participantId;
 
             const { removeParticipantWS } = useChatStore.getState()
 
             removeParticipantWS(removedChatId, removedParticipantId)
             break;
         }
-        case 'excluded_from_chat': {
-            const excludedFromChatData = event.data;
-            const excludedChatId = excludedFromChatData.chatId;
+        case 'excluded_from_chat': { //changed
+            const inboxId = event.data.inboxId;
 
-            const { removeChat } = useChatStore.getState()
+            const removeInbox = useInboxStore.getState().removeInbox
 
-            removeChat(excludedChatId)
+            removeInbox(inboxId)
             break;
         }
         case 'invited_to_chat': {
-            const invitedToChatData = event.data;
-            const invitedChat = invitedToChatData.chat;
+            const newInbox = event.data.inbox;
 
-            const { addChat } = useChatStore.getState()
+            const addInbox = useInboxStore.getState().addInbox
 
-            addChat(invitedChat)
+            addInbox(newInbox)
             break;
         }
         case 'chat_updated': {
-            const chatUpdatedData = event.data;
-            const {name,avatar} = chatUpdatedData;
-            const updatedChatId = chatUpdatedData.chatId;
+            const { name, avatar } = event.data;
+            const updatedChatId = event.data.chatId;
 
             const { editGroupChatWS } = useChatStore.getState()
 
-            editGroupChatWS(updatedChatId, name,avatar)
+            editGroupChatWS(updatedChatId, name, avatar)
             break;
         }
         default:
@@ -139,5 +130,5 @@ export function subscribeToEvents(socket: React.MutableRefObject<WebSocket | nul
         socket.current = null
         console.log('WebSocket disconnected');
     };
-    
+
 }

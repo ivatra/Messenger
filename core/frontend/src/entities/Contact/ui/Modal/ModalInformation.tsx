@@ -3,7 +3,7 @@ import { IconExclamationCircle } from "@tabler/icons-react"
 
 import { TextTab } from "./Buttons/TextTab"
 import { Contact } from "../Contact"
-import { IContact } from "../../types/Model"
+import { IContact } from "../../types/ContactModel"
 import { StatusText } from "./Buttons/StatusText"
 
 

@@ -8,24 +8,20 @@ class contactsService {
 
     const { contacts, count } = await contactsQueries.receiveContactsAndCountByUser(userId, status, limit, offset)
 
-    const contactsInfo = await this.fetchContactsInfo(contacts, userId)
-
-
-    const newContacts = []
-    contactsInfo.forEach((contact, index) => {
+    const newContacts = contacts.map((contact, index) => {
       const status = contacts[index].dataValues.status
       const recipient = contacts[index].dataValues.recipientId
       const sender = contacts[index].dataValues.senderId
-      const contactId = contact.dataValues.id
 
-      if (contactId === sender || contactId === recipient) {
-        if (sender === userId && status === 'pending') {
-          var merged = { ...contact.dataValues, status: 'outgoing' }
-        } else {
-          var merged = { ...contact.dataValues, status: status }
-        }
-        newContacts.push(merged)
+      var merged = {}
+      var userId = sender === userId ? recipient : sender
+      if (sender === userId && status === 'pending') {
+        merged = {id:contact.dataValues.id, status: 'outgoing', userId: userId }
+      } else {
+        merged = { id: contact.dataValues.id, status: status, userId: userId }
       }
+
+      return { [contact.id]: merged }
 
 
     })
@@ -34,25 +30,23 @@ class contactsService {
   }
 
   async getContact(userId, contactId) {
-    const userInfo = await userQueries.receiveUserById(contactId)
-    const contactInfo = await contactsQueries.receiveContact(userId, contactId)
+    const contact = await contactsQueries.receiveContact(userId,contactId)
+    var merged = {}
 
-    var merged
-    if (contactInfo) {
-      const status = contactInfo.dataValues.status
-      const sender = contactInfo.dataValues.senderId
+    if(contact){
+      const status = contact.dataValues.status
+      const recipient = contact.dataValues.recipientId
+      const sender = contact.dataValues.senderId
+      var userId = sender === userId ? recipient : sender
 
       if (sender === userId && status === 'pending') {
-        merged = { ...userInfo.dataValues, status: 'outgoing' }
+        merged = { id: contact.dataValues.id, status: 'outgoing', userId: userId }
+      } else {
+        merged = { id: contact.dataValues.id, status: status, userId: userId }
       }
-      else {
-        merged = { ...userInfo.dataValues, status: status }
-      }
-
-    } else {
-      merged = { ...userInfo.dataValues, status: null }
     }
-    return merged || userInfo.dataValues
+
+    return merged
   }
 
   async sendContactRequest(userId, contactId) {

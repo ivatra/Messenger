@@ -1,4 +1,4 @@
-;import { IListMessage } from "./Model";
+;import { IListMessage } from "./MessageModel";
 
 
 export interface IMessagesApiResponse{

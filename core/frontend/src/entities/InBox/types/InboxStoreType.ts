@@ -1,8 +1,9 @@
 import { SharedTypes } from "../../../shared";
-import { IInbox } from "./InboxModel";
+import { IDictInbox,IInbox } from "./InboxModel";
 
+export type InboxStoreType = IInboxActions & IInboxVariables
 
-export interface IInboxActions{
+export interface IInboxActions {
     pin: (inboxId: number) => void
 
     receivePinned: () => void
@@ -10,11 +11,15 @@ export interface IInboxActions{
     receiveByChatId: (chatId: number) => void
     receiveBySearchTerm: (searchTerm: string) => void
 
+
+    // WS.
+    addInbox: (inbox: IInbox) => void
+    removeInbox: (inboxId: number) => void // Chat dependence
     updateMsgId: (inboxId: number, msgId: number) => void
 }
 
-export interface IInboxVariables extends SharedTypes.IStoreFeedback{
-    inboxes: IInbox
-    matchedInboxes: IInbox
-    inboxesTotalCount:number
+export interface IInboxVariables extends SharedTypes.IStoreFeedback {
+    inboxes: IDictInbox
+    matchedInboxes: IDictInbox
+    inboxesTotalCount: number
 }

@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { ActionIcon, Group } from "@mantine/core";
 
-import { UpdateProfileParams } from "../types/Store";
+import { UpdateProfileParams } from "../types/ProfileStoreType";
 import { IProfile } from "..";
 import { IEditInputs } from "../model/EditInputProps";
 import { EditTextInput } from "./EditTextInput";

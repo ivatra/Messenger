@@ -6,7 +6,8 @@ const ApiError = require("../../error/ApiError")
 function fetchProps(inboxes) {
   var arr = []
   for (var inbox of inboxes) {
-    var obj = { id: inbox.id, chatId: inbox.chat.id, countUnreadMsgs: inbox.countUnreadMsgs, isPinned: inbox.isPinned, message: inbox.dataValues.message }
+    const msgId = inbox.dataValues.message ? inbox.dataValues.message.id : null
+    var obj = { id: inbox.id, chatId: inbox.chat.id, countUnreadMsgs: inbox.countUnreadMsgs, isPinned: inbox.isPinned, messageId: msgId }
 
     if (inbox.chat.groupChat) {
       obj = { ...obj, name: inbox.chat.groupChat.name, avatar: inbox.chat.groupChat.avatar, chatType: 'group' }
@@ -51,7 +52,10 @@ class inBoxService {
 
   async getByChat(userId, chatId) {
     const inb = await inboxQueries.receiveInboxByChatId(userId, chatId)
-    return this.proceedInboxes([inb[0]])
+    if(!inb){
+      throw ApiError.Internal('Something went wrong with fetching inbox')
+    }
+    return this.proceedInboxes([inb])
   }
 }
 

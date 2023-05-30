@@ -1,4 +1,4 @@
-import { IContact, IContactStatus } from "../types/Model";
+import { IContact, IContactStatus } from "../types/ContactModel";
 
 
 export function updateContactList(list: IContact[], contactId: string, status: IContactStatus): IContact[] {

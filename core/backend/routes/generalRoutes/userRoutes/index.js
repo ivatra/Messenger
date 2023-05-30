@@ -3,6 +3,7 @@ const router = new Router()
 
 const userController = require('../../../controllers/userController')
 
-router.use('/update',userController.update)
+router.put('/update',userController.update)
+router.get('/get/:id', userController.getUser)
 
 module.exports = router

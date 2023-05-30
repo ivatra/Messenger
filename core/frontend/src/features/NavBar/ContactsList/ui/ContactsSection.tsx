@@ -16,7 +16,7 @@ const averageContactSize = 40
 
 
 export const ContactsSection = () => {
-    const { openContactModal } = useContactInteractionStore.getState()
+    const { openModalWithUser: openContactModal } = useContactInteractionStore.getState()
     const { visibleContacts } = useContactListStore();
 
     const { limit, sizeRef } = SharedHooks.useDynamicLimit({ subjectSize: averageContactSize })

@@ -24,14 +24,20 @@ class userService {
 
             await tokensQueries.expireRefreshTokensByUser(userId)
         }
-        
+
         const updatedFields = { name, login, password, avatar };
         const result = await userQueries.updateUser(userId, updatedFields);
-        
+
 
         return result.dataValues
     }
 
+    async getUserById(userId) {
+        if(!userId){
+            throw ApiError.badRequest('No userId has passed')
+        }
+        return await userQueries.receiveUserById(userId)
+    }
     async validateUniqueLogin(userId, login) {
         const user = await userQueries.receiveUserByLogin(login);
         if (user && user.id !== userId) {

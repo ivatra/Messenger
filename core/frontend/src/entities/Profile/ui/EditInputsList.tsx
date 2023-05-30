@@ -4,11 +4,11 @@ import { Stack } from "@mantine/core";
 import { useDidUpdate } from "@mantine/hooks";
 
 import { EditInputProps } from "../model/EditInputProps";
-import { UpdateProfileParams, ProfileFields } from "../types/Store";
-import { useUserStore } from "..";
+import { UpdateProfileParams } from "../types/ProfileStoreType";
 import { BaseEditInput } from "./BaseEditInput";
 
 import { SharedHooks, SharedUi } from "../../../shared";
+import { useProfileStore } from "../store/ProfileStore";
 
 type IOutcomeIcons = {
     [key in ProfileFields]?: JSX.Element;
@@ -16,8 +16,8 @@ type IOutcomeIcons = {
 
 export const EditInputsList = () => {
     const stackRef = useRef<HTMLDivElement>(null)
-    
-    const { profile, updateProfile, isError, isLoading } = useUserStore();
+
+    const { profile, updateProfile, state } = useProfileStore();
     const [fieldUpdated, setFieldUpdated] = useState<string>("");
     const [outcomeIcons, setOutcomeIcons] = useState<IOutcomeIcons>({});
 
@@ -26,12 +26,12 @@ export const EditInputsList = () => {
         await updateProfile(field, value);
     };
 
-    SharedHooks.useNavigationByArrows({parentRef:stackRef,tolerance:15})
+    SharedHooks.useNavigationByArrows({ parentRef: stackRef, tolerance: 15 })
 
     useDidUpdate(() => {
         var iconOnUpdate: JSX.Element;
-        if (isError) iconOnUpdate = SharedUi.errorIcon;
-        else if (isLoading) iconOnUpdate = SharedUi.loaderIcon;
+        if (state === 'error') iconOnUpdate = SharedUi.errorIcon;
+        else if (state === 'loading') iconOnUpdate = SharedUi.loaderIcon;
         else iconOnUpdate = SharedUi.successIcon;
 
         setOutcomeIcons((prevState) => ({
@@ -39,10 +39,10 @@ export const EditInputsList = () => {
             [fieldUpdated]: iconOnUpdate,
         }));
 
-    }, [isLoading, isError]);
+    }, [state]);
 
     return (
-        <Stack ref = {stackRef}>
+        <Stack ref={stackRef}>
             {EditInputProps.map((Input) => (
                 <BaseEditInput
                     key={Input.field}

@@ -7,7 +7,7 @@ const userRoutes = require('./userRoutes/index')
 const searchRoutes = require('./searchRoutes/index')
 const paginationMiddleware = require('../../middleware/paginationMiddleware')
 
-router.use('/profile', userRoutes)
+router.use('/user', userRoutes)
 router.use('/pages', paginationMiddleware, pagesRouter)
 router.use('/chat', chatRouter)
 router.use('/events', eventsRouter)

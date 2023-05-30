@@ -1,9 +1,9 @@
 import { create } from 'zustand'
 import produce from "immer";
 
-import { IAttachementsContent, IChatContent, IMessageStore, IStoreAttachement, IStoreMessage } from '../types/Store'
-import { IListMessage, SentStatuses } from '../types/Model'
-import { IMessagesApiResponse } from '../types/ApiResponse'
+import { IAttachementsContent, IChatContent, IMessageStore, IStoreAttachement, IStoreMessage } from '../types/MessageStoreType'
+import { IListMessage, SentStatuses } from '../types/MessageModel'
+import { IMessagesApiResponse } from '../types/MessageApiResponse'
 import { createMessage } from '../helpers/createMessage'
 import { useUserStore } from '../../User'
 import { useInboxStore } from '../..';

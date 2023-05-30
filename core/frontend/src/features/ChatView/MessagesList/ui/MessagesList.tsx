@@ -5,7 +5,7 @@ import { Box, ScrollArea, ScrollAreaProps, Stack, StackProps } from "@mantine/co
 import { useMessagesLoading } from "../helpers/hooks/useMessagesLoading";
 import { useRenderMessages } from "../helpers/hooks/useRenderMessages";
 import { useManageOverflowLocation } from "../helpers/hooks/useHandleScroll";
-import { IChatContent } from "../../../../entities/Message/types/Store";
+import { IChatContent } from "../../../../entities/Message/types/MessageStoreType";
 
 import { ChatContext } from "../../../../widgets";
 import { SharedUi } from "../../../../shared";
