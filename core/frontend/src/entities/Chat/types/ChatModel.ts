@@ -5,11 +5,10 @@ import { ChatProps } from "./ChatPropsModel"
 export interface IDictChat {
     [chatId: number]: IChat
 }
-
+   
 export type IChat = ChatProps & {
     id: number
     countUnreadMsgs: number
-    wsCommunicationMsgsLen: number
     name: string
     avatar: string
     participants: IDictChatParticipant

@@ -1,22 +1,22 @@
 import { create } from 'zustand';
 import produce from "immer";
-import { IReceiveContactsResponse } from '../types/ContactApiResponse';
 
+import { IReceiveContactsResponse } from '../types/ContactApiResponse';
+import { IContactListStore, IContactListVariables } from '../types/ContactListStoreType';
+
+import { IContact } from '../types/ContactModel';
 
 import { api } from '../../../app';
 import { SharedHelpers } from '../../../shared';
-import { IContactListStore, IContactListVariables } from '../types/ContactListStoreType';
 
 const baseUrl = 'content/pages/contacts';
 
 export const initialState: IContactListVariables = {
-    contacts: [],
-    searchedContacts: [],
+    contacts: { byId: {}, idByUserId: {} },
 
     state: 'idle',
 
     contactsTotalCount: null,
-    searchTotalCount: null
 };
 
 
@@ -25,43 +25,55 @@ export const useContactListStore = create<IContactListStore>((set, get) => ({
     receiveByOffset: async (limit, offset) => {
         const request = () => api.get(`${baseUrl}/?limit=${limit}&offset=${offset}`);
 
-        const response = await SharedHelpers.handleRequest<IReceiveContactsResponse>(request, set);
+        const contacts = await SharedHelpers.handleRequest<IReceiveContactsResponse>(request, set);
 
-        if (!response) return;
+        if (!contacts) return;
+
+        const dictContacts = SharedHelpers.convertArrToDict(contacts.data)
 
         set(produce((state: IContactListStore) => {
-            Object.assign(state.contacts, response.data, state.contacts)
-            state.contactsTotalCount = response.count
+            Object.assign(state.contacts, dictContacts, state.contacts)
+
+            for (var con of contacts.data) {
+                state.contacts.idByUserId[con.userId] = con.id
+            }
+
+            state.contactsTotalCount = contacts.count
         }));
 
     },
+    async receiveByUserId(userId) {
+        const request = () => api.get(`${baseUrl}/${userId}`)
 
-    receiveBySearchTerm: async (limit, offset, searchTerm) => {
-        const request = () => api.get(`content/search/contacts/?message=${searchTerm}&limit=${limit}&offset=${offset}`);
+        const contact = await SharedHelpers.handleRequest<IContact | null>(request, set)
 
-        const response = await SharedHelpers.handleRequest<IReceiveContactsResponse>(request, set);
-
-        if (!response) return;
+        if (contact === undefined) return
 
         set(produce((state: IContactListStore) => {
-            Object.assign(state.searchedContacts, response.data, state.searchedContacts)
-            state.searchTotalCount = response.count
+            if (contact !== null) {
+                state.contacts.byId[contact.id] = contact
+                state.contacts.idByUserId[userId] = contact.id
+            } else {
+                state.contacts.idByUserId[userId] = null
+            }
         }));
     },
 
-    addContact: (contact) => {
+    addOrUpdateContact: (contact) => {
         set(produce((state: IContactListStore) => {
-            state.contacts[contact.id] = contact
+            state.contacts.byId[contact.id] = contact
         }));
     },
     updateContactStatus: (contactId, status) => {
         set(produce((state: IContactListStore) => {
-            state.contacts[contactId].status = status
+            if (state.contacts.byId[contactId]) {
+                state.contacts.byId[contactId].status = status
+            }
         }));
     },
     removeContact: (contactId) => {
         set(produce((state: IContactListStore) => {
-            delete state.contacts[contactId]
+            delete state.contacts.byId[contactId]
         }));
     },
 }));

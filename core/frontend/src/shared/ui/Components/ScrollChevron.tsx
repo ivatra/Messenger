@@ -23,7 +23,7 @@ interface IShevronProps {
     pos: pos
 }
 
-export const ScrollChevron: React.FC<IShevronProps> = ({
+export const ScrollShevron: React.FC<IShevronProps> = ({
     onClick,
     position,
     visible,

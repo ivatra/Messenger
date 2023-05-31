@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-import { IContentItem, IMessageContentItem, useUserStore } from "../../../../../entities";
+import { IContentItem, IMessageContentItem, useProfileStore } from "../../../../../entities";
 
 export interface IProps {
     renderedItems: JSX.Element[];
@@ -13,7 +13,7 @@ export interface IProps {
 export const useManageOverflowLocation = ({ items, renderedItems, scrollRef, msgIndex, previousMsgIndex }: IProps) => {
     const hasScrolledToUnread = useRef<boolean>(false);
 
-    const { id: userId } = useUserStore.getState().profile
+    const { id: userId } = useProfileStore.getState().profile
 
     const scrollToBottom = () => scrollRef?.current?.scrollTo({ top: scrollRef.current.scrollHeight });
 

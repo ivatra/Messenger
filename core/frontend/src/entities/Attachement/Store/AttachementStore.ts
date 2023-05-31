@@ -2,20 +2,19 @@ import { create } from 'zustand'
 import produce from "immer";
 
 import { IAttachementStoreType, IAttachementStoreVariables } from '../types/AttachementStoreType';
-import { api } from '../../../app';
-import { SharedHelpers } from '../../../shared';
 import { IAttachementApiResponse } from '../types/AttachementApiResponse';
 import { IAttachement } from '../types/AttachementModel';
 
-
+import { api } from '../../../app';
+import { SharedHelpers } from '../../../shared';
 
 const initialState: IAttachementStoreVariables = {
-    attachements: {},
+    attachements: { byId: {}, idByChatId: {} },
     state: 'idle'
 }
 
 
-export const useMessageStore = create<IAttachementStoreType>((set, get) => ({
+export const useAttachementStore = create<IAttachementStoreType>((set, get) => ({
     ...initialState,
     async receiveByOffset(chatId, limit, offset) {
         const request = () =>
@@ -27,7 +26,13 @@ export const useMessageStore = create<IAttachementStoreType>((set, get) => ({
 
         set(
             produce((state: IAttachementStoreType) => {
-                Object.assign(state.attachements, state.attachements, newAttachments.data)
+                Object.assign(state.attachements.byId, state.attachements.byId, newAttachments.data)
+
+                const chatAttachs = state.attachements.idByChatId[chatId]
+
+                for (const [key, value] of Object.entries(newAttachments)) {
+                    chatAttachs.add(Number(key))
+                }
             })
         );
     },
@@ -41,11 +46,12 @@ export const useMessageStore = create<IAttachementStoreType>((set, get) => ({
 
         set(
             produce((state: IAttachementStoreType) => {
-                state.attachements[attachement.id] = attachement
+                state.attachements.byId[attachement.id] = attachement
+                state.attachements.idByChatId[attachement.chatId].add(attachement.id)
             })
         );
     },
-    async sendAttachement(chatId,attachment){
+    async sendAttachement(chatId, attachment) {
         const request = () =>
             api.post(`content/{chatId}/attachments`, {
                 json: {
@@ -59,7 +65,8 @@ export const useMessageStore = create<IAttachementStoreType>((set, get) => ({
         if (!newAttachment) return;
 
         set(produce((state: IAttachementStoreType) => {
-            state.attachements[attachment.id] = newAttachment;
+            state.attachements.byId[attachment.id] = newAttachment;
+            state.attachements.idByChatId[chatId].add(attachment.id)
         }));
     },
 }))

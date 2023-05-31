@@ -17,23 +17,31 @@ export type ChatStoreType = IChatStoreActions & IChatStoreVariables
 
 export interface IChatStoreActions {
     // Local actions.
-    receiveChatIdByUserId: (userId: string) => Promise<number | undefined> //done
-    receiveByChatId: (chatId: number) => void //done
-    createGroupChat: (participantsIds: number[], fields: IGroupChatUpdatebleFields) => void //done
+    receiveChatIdByUserId: (userId: string) => Promise<number | undefined>
+    receiveByChatId: (chatId: number) => void
+    createGroupChat: (participantsIds: number[], fields: IGroupChatUpdatebleFields) => void
 
-    addParticipant: (chatId: number, userId: number) => void //done
-    kickParticipant: (chatId: number, participantId: number) => void //done
+    addParticipant: (chatId: number, userId: number) => void
+    kickParticipant: (chatId: number, participantId: number) => void
 
+
+    decrementCUnreadMsgs: (chatId:number) => void
     setGroupChatCreationOpened: (value: boolean) => void
 
     // Might be WS.
-    editGroupChat: (chatId: number, fields: IGroupChatUpdatebleFields,doHttp:boolean) => void 
+    editGroupChat: (chatId: number, fields: IGroupChatUpdatebleFields) => void
+
+    removeChat: (chatId: number) => void // Message depenence
 
     // WS actions.
-    addParticipantWS: (chatId: number, participant: IChatParticipant) => void //done
-    kickParticipantWS: (chatId: number, participantId: number) => void //done
 
-    removeChat: (chatId: number) => void
+    incrementCUnreadMsgs: (chatId:number) => void
+
+
+    editGroupChatWS:(chatId:number,name:string,avatar:string) => void
+    addParticipantWS: (chatId: number, participant: IChatParticipant) => void
+    kickParticipantWS: (chatId: number, participantId: number) => void
+
     addTypingUser: (chatId: number, participantId: number) => void
     removeTypingUser: (chatId: number, participantId: number) => void
 

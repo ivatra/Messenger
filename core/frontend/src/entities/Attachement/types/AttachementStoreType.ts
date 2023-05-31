@@ -4,7 +4,12 @@ import { SharedTypes } from "../../../shared"
 
 
 export interface IAttachementStoreVariables extends SharedTypes.IStoreFeedback {
-    attachements: IDictAttachement
+    attachements: {
+        ['byId']: IDictAttachement,
+        ['idByChatId']: {
+            [chatId: number]: Set<number>
+        }
+    }
 }
 
 

@@ -1,7 +1,8 @@
-import { SharedTypes } from "../../../shared"
 
 
-export type IContactStatus = 'pending' | 'accepted' | 'outgoing' | null
+export type IContactStatus = 'pending' | 'accepted' | 'outgoing'
+
+export type IContactFilters = 'all' | 'accepted' | 'pending' | 'outgoing'
 
 export interface IContact {
     id: number
@@ -11,4 +12,8 @@ export interface IContact {
 
 export interface IDictContact{
     [contactId:number]:IContact
+}
+
+export interface IDictContactIdByUserId{
+    [userId:string]:number | null
 }

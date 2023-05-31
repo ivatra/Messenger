@@ -1,7 +1,6 @@
+
+export type {  IMessageContentItem, IMessage } from "./types/MessageModel"
+
 export { ParticipantAction } from "./ui/ParticipantAction";
-
-export { useMessageStore } from "./Store/MessageStore";
 export { Message } from "./ui/Message";
-
-export type {IContentItem,IMessageContentItem} from "./types/MessageModel"
- 
+export { useMessageStore } from "./Store/MessageStore";

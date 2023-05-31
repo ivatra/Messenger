@@ -10,6 +10,6 @@ export { NothingFoundView } from "./Components/NothingFoundView";
 export { UserName } from "./Components/UserName";
 export { CustomAvatar } from "./Components/CustomAvatar";
 export { CustomToolTip } from "./Components/CustomToolTip";
-export { ScrollChevron as ScrollShevron } from "./Components/ScrollChevron";
+export { ScrollShevron } from "./Components/ScrollChevron";
 export { SideBarItemSkeleton } from "./Skeletons/SideBarItemSkeleton";
 export { errorIcon, iconBaseProps, loaderIcon, successIcon } from "./FeedbackIcons";

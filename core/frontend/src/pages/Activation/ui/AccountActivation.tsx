@@ -6,12 +6,12 @@ import { Modal } from '@mantine/core';
 import { SuccesfullContent } from './SuccesfulContent';
 import { FailedContent } from './FailedContent';
 
-import { useUserStore } from '../../../entities';
+import { useProfileStore } from '../../../entities';
 import { SharedUi } from '../../../shared';
 
 
 export const AccountActivation = () => {
-    const { activate, isActivated,isAnotherAccountActivated, isLoading } = useUserStore();
+    const { activate, isActivated,isAnotherAccountActivated, isLoading } = useProfileStore();
 
     const { activationLink } = useParams();
 

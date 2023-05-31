@@ -1,7 +1,6 @@
 
 const eventsQueries = require('../../mongo/queries/eventsQueries')
 
-
 const { Contact } = require('../models/contactModel')
 
 async function makeContactStatusChangedEvent() {

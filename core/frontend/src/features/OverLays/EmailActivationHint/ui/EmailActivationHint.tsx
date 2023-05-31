@@ -2,18 +2,18 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 import { Modal, ModalProps } from "@mantine/core"
+import { useInterval } from "@mantine/hooks"
 
 import { EmailActivationHintBody } from "./EmailActivationHintBody"
 
-import { useUserStore } from "../../../../entities"
-import { useInterval } from "@mantine/hooks"
+import { useProfileStore } from "../../../../entities"
 
 
 export const EmailActivationHint: React.FC = () => {
     const [isOpened, setOpened] = useState<boolean>(true)
     const navigate = useNavigate()
 
-    const { logout, profile,checkActivation,isActivated} = useUserStore()
+    const { logout, profile,checkActivation,isActivated} = useProfileStore()
 
     const handleLogout = () => {
         logout()

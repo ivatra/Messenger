@@ -1,3 +1,5 @@
+export { convertArrToDict } from "./convertArrToDict";
+
 export { fetchChatProps } from "./fetchChatProps";
 
 export { handleRequest } from "./handleRequest";
@@ -5,3 +7,4 @@ export { handleRequest } from "./handleRequest";
 export { extractCommonFields } from "./extractCommonFields";
 export { formatDate } from "./formatDate";
 export { getRandomArbitrary } from "./getRandomArbitrary";
+

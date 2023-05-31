@@ -11,22 +11,22 @@ function handleEvent(event: IEvent) {
             const message = event.data.message;
             const messageChatId = event.data.chatId;
 
-            const { addItemWS } = useMessageStore.getState()
-            const { updateMessage } = useInboxStore.getState()
+            const { addMessage } = useMessageStore.getState()
+            const { incrementCUnreadMsgs } = useChatStore.getState()
 
-            updateMessage(message, messageChatId, true)
-            addItemWS(messageChatId, { type: 'Message', data: message })
+            addMessage(message.chatId, message)
+            incrementCUnreadMsgs(messageChatId)
+
             break;
         }
 
 
         case 'message_read': {
             const msgId = event.data.msgId;
-            const chatId = event.data.chatId;
 
             const { setMessageRead } = useMessageStore.getState()
 
-            setMessageRead(chatId, msgId)
+            setMessageRead(msgId)
 
             break;
         }
@@ -34,16 +34,14 @@ function handleEvent(event: IEvent) {
 
         case 'contact': {
             const contact = event.data.contact;
-            const status = event.data.status;
 
-            const { updateContactStatus, addContact: pushContact } = useContactListStore.getState()
+            const { addOrUpdateContact: addContact } = useContactListStore.getState()
 
-            if (status === 'pending') pushContact(contact)
-            else updateContactStatus(contact.id, status)
+            addContact(contact)
 
             break;
         }
-        case 'typing': { //changed
+        case 'typing': {
             const chatId = event.data.chatId;
             const typingState = event.data.typingState;
             const typerId = event.data.participantTyperId
@@ -72,9 +70,9 @@ function handleEvent(event: IEvent) {
             const removedChatId = event.data.chatId;
             const removedParticipantId = event.data.participantId;
 
-            const { removeParticipantWS } = useChatStore.getState()
+            const { kickParticipantWS } = useChatStore.getState()
 
-            removeParticipantWS(removedChatId, removedParticipantId)
+            kickParticipantWS(removedChatId, removedParticipantId)
             break;
         }
         case 'excluded_from_chat': { //changed

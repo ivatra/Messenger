@@ -1,4 +1,4 @@
-import { IDictUser } from "./UserModel";
+import { IDictUser, IUser } from "./UserModel";
 
 import { SharedTypes } from "../../../shared";
 
@@ -9,6 +9,7 @@ export interface IUserStoreVariables extends SharedTypes.IStoreFeedback {
 
 export interface IUserStoreActions {
     receiveById: (userId: string) => void
+    receiveBySearchTerm:(searchTerm:string) => Promise<IUser[] | undefined>
 }
 
 

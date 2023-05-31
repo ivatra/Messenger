@@ -5,7 +5,7 @@ import { Paper, PaperProps } from "@mantine/core";
 import { sections } from "../types/Sections";
 import { SectionContent } from "./Content/SectionContent";
 import { useDrawer } from "../hooks/EditUserContext";
-import { EditUserDrawer } from "../../../entities/User/ui/EditUserDrawer";
+import { EditUserDrawer } from "../../../entities";
 
 import {SharedConsts} from "../../../shared";
 

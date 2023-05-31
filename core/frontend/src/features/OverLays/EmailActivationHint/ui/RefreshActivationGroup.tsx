@@ -2,12 +2,12 @@ import { useState } from "react"
 
 import { Group, Loader, Text, TextProps } from "@mantine/core"
 
-import { useUserStore } from "../../../../entities"
+import { useProfileStore } from "../../../../entities"
 import { SharedUi } from "../../../../shared"
 
 
 export const RefreshActivationGroup = () => {
-    const { refreshActivation, isLoading, isError } = useUserStore()
+    const { refreshActivation, isLoading, isError } = useProfileStore()
 
     const [isLetterRefreshed, setLetterRefreshed] = useState<boolean>(false)
 

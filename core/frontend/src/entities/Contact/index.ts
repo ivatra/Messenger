@@ -1,12 +1,8 @@
-export { ContactTab } from "./ui/ContactTab"
+export type { IContactStatus } from "./types/ContactModel"
 
-export  {ContactModal} from "./ui/Modal/ContactModal"
-
-export { useContactInteractionStore } from "./store/ContactInteractionStore"
+export { ContactModal } from "./ui/Modal/ContactModal"
 
 export { type IContactInteractions } from "./types/ContactInteractionStoreType"
-
-export { Contact } from "./ui/Contact"
+export { type IContact,type IContactFilters } from "./types/ContactModel"
 export { useContactListStore } from "./store/ContactListStore"
-export { type IContact } from "./types/ContactModel"
-
+export { useContactInteractionStore } from "./store/ContactInteractionStore"

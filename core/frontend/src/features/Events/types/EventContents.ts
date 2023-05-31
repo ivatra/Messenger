@@ -1,20 +1,23 @@
-import { IContact, IInbox } from "../../../entities";
-import { IChatParticipant, IDictChatParticipant } from "../../../entities/Chat/types/ChatParticipantModel";
-import { IContactStatus } from "../../../entities/Contact/types/ContactModel";
-import { IListMessage } from "../../../entities/Message/types/MessageModel";
+import type {
+    IMessage,
+    IContact,
+    IInbox,
+    IContactStatus,
+    IChatParticipant
+} from "../../../entities";
+
 export interface IReceivedMessageEvent {
     type: 'received_message'
     data: {
-        message: IListMessage
-        chatId:number
-        isMentioned: boolean
+        message: IMessage
+        chatId: number
     }
 }
 
 export interface IReadMessageEvent {
     type: 'message_read'
     data: {
-        chatId:number
+        chatId: number
         msgId: number
     }
 }
@@ -32,7 +35,7 @@ interface ITypingEvent { //changed
     data: {
         chatId: number
         typingState: boolean
-        participantTyperId: string
+        participantTyperId: number
     }
 }
 
@@ -41,7 +44,7 @@ export interface IParticipantInvitedEvent {
     data: {
         chatId: number
         participant: IChatParticipant
-        inviterId:string
+        inviterId: string
     }
 }
 
@@ -50,21 +53,21 @@ export interface IParticipantRemovedEvent {
     data: {
         chatId: number
         participantId: number
-        removerId:string
+        removerId: string
     }
 }
 
 export interface IExcludedFromChat { //changed
     type: 'excluded_from_chat'
     data: {
-        exluderId:string
+        exluderId: string
         inboxId: number
     }
 }
 export interface IInvitedToChat {  //changed
     type: 'invited_to_chat'
     data: {
-        invitedId:string
+        invitedId: string
         inbox: IInbox
     }
 }
@@ -72,8 +75,8 @@ export interface IInvitedToChat {  //changed
 interface IGroupChatUpdatedEvent {
     type: 'chat_updated'
     data: {
-        name:string
-        avatar:string
+        name: string
+        avatar: string
         chatId: number
     }
 }

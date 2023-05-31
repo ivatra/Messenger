@@ -1,18 +1,15 @@
-export { useUserStore, type IUser } from "./User";
+export { useUserStore, type IUser, UserWrapper, UserCard, UserTab } from "./User";
 export { useProfileStore, type IProfile, EditUserDrawer } from "./Profile";
-
-
-export { Message, useMessageStore,ParticipantAction ,type IContentItem,type IMessageContentItem} from "./Message";
-
+export { Message, type IMessage, useMessageStore, ParticipantAction, type IMessageContentItem } from "./Message";
 export { useInboxStore, type IInbox, Inbox } from "./InBox";
-export { useChatStore, type IGroupChatUpdatebleFields } from "./Chat/types"
+export { type IChat, type IChatParticipant, useChatStore } from "./Chat"
 export {
     type IContact,
-    useContactListStore,
-    Contact,
+    type IContactFilters,
+    type IContactStatus,
     type IContactInteractions,
+    useContactListStore,
     useContactInteractionStore,
     ContactModal,
-    ContactTab
 } from "./Contact";
 

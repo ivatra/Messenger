@@ -19,7 +19,7 @@ const initialState: IInboxVariables = {
 }
 
 
-const useInboxStore = create<InboxStoreType>()((set, get) => ({
+export const useInboxStore = create<InboxStoreType>()((set, get) => ({
     ...initialState,
     async pin(inboxId) {
         const request = () => api.post(`${baseUrl}/${inboxId}/pin`);
@@ -91,7 +91,7 @@ const useInboxStore = create<InboxStoreType>()((set, get) => ({
         }));
     },
     removeInbox(inboxId) {
-        const { removeChat } = useChatStore().getState
+        const { removeChat } = useChatStore.getState()
         const inbox = get().inboxes[inboxId]
 
         set(produce((state: InboxStoreType) => {
@@ -101,6 +101,4 @@ const useInboxStore = create<InboxStoreType>()((set, get) => ({
         removeChat(inbox.chatId)
     },
 }))
-
-export default useInboxStore
 

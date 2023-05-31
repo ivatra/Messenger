@@ -4,24 +4,8 @@ export interface IMessageContentItem {
     data: IMessage;
 }
 
-interface IMessageActionContentItem {
-    type: "Action";
-    data: IChatEvent;
-}
-
-export interface IParticipantAction {
-    type: "Removed" | "Added";
-    causeId: string;
-    victimId: string;
-}
-
-export type IChatEvent = {
-    id: number;
-} & (IParticipantAction);
-
-
 export interface IDictMessage{
-    [msgId:number]:IMessage
+    [msgId:number | string]:IMessage
 }
 
 export interface IMessage {
@@ -38,6 +22,5 @@ export interface IMessage {
     updatedAt: string
 }
 
-export type IContentItem = IMessageContentItem | IMessageActionContentItem
 export type MessageState = 'loading' | 'error' | 'sent'
 

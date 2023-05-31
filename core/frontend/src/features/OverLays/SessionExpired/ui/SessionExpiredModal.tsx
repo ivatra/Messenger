@@ -3,7 +3,7 @@ import { Modal, Text, Stack, Group, Box } from "@mantine/core";
 
 import { ResignButton } from "./ResignButton";
 
-import { useUserStore } from '../../../../entities';
+import { useProfileStore } from '../../../../entities';
 
 
 const modalProps = {
@@ -18,7 +18,7 @@ const modalProps = {
 
 
 export const SessionExpiredModal: React.FC = (): JSX.Element => {
-    const { isSessionExpired, setSessionExpired, logout } = useUserStore()
+    const { isSessionExpired, setSessionExpired, logout } = useProfileStore()
 
     const reSign = () => {
         logout()

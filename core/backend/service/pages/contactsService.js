@@ -16,12 +16,12 @@ class contactsService {
       var merged = {}
       var userId = sender === userId ? recipient : sender
       if (sender === userId && status === 'pending') {
-        merged = {id:contact.dataValues.id, status: 'outgoing', userId: userId }
+        merged = { id: contact.dataValues.id, status: 'outgoing', userId: userId }
       } else {
         merged = { id: contact.dataValues.id, status: status, userId: userId }
       }
 
-      return { [contact.id]: merged }
+      return merged
 
 
     })
@@ -30,10 +30,10 @@ class contactsService {
   }
 
   async getContact(userId, contactId) {
-    const contact = await contactsQueries.receiveContact(userId,contactId)
+    const contact = await contactsQueries.receiveContact(userId, contactId)
     var merged = {}
 
-    if(contact){
+    if (contact) {
       const status = contact.dataValues.status
       const recipient = contact.dataValues.recipientId
       const sender = contact.dataValues.senderId
@@ -44,10 +44,13 @@ class contactsService {
       } else {
         merged = { id: contact.dataValues.id, status: status, userId: userId }
       }
+      return merged
+    } else {
+      return null
     }
-
-    return merged
   }
+
+
 
   async sendContactRequest(userId, contactId) {
     await this.checkForContact(userId, contactId, false)

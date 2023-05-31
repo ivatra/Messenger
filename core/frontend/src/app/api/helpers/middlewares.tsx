@@ -1,7 +1,7 @@
 import ky from "ky";
 
 import { useCaptchaStore } from "../../../features"
-import { useUserStore } from "../../../entities";
+import { useProfileStore } from "../../../entities";
 import { SharedConsts } from "../../../shared";
 
 export const setHeader = (request: Request) => {
@@ -19,7 +19,7 @@ export const refreshToken = async (request: Request, response: Response) => {
         localStorage.setItem('accessToken', token);
         return ky(request);
     } catch (e) {
-        useUserStore.getState().setSessionExpired(true)
+        useProfileStore.getState().setSessionExpired(true)
         return response;
     }
 };

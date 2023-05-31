@@ -1,5 +1,6 @@
-import { SharedTypes } from "../../../shared";
 import { IDictInbox,IInbox } from "./InboxModel";
+
+import { SharedTypes } from "../../../shared";
 
 export type InboxStoreType = IInboxActions & IInboxVariables
 

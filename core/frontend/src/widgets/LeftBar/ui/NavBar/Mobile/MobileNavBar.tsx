@@ -1,5 +1,5 @@
 import { sections } from "../../../types/Sections";
-import { useUserStore } from "../../../../../entities";
+import { useProfileStore } from "../../../../../entities";
 import { Footer, FooterProps, Group, GroupProps } from "@mantine/core";
 import { MainSectionsList } from "../MainSectionsList";
 
@@ -23,7 +23,7 @@ interface INavigationProps {
 
 
 export const MobileNavBar: React.FC<INavigationProps> = ({ section, setSection }) => {
-    const profile = useUserStore((state) => state.profile)
+    const profile = useProfileStore((state) => state.profile)
 
     return (
         <Footer {...fotterProps}>

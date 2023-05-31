@@ -5,6 +5,7 @@ import { NotificationsList } from "../../mixtures/Lists";
 import { sections } from "../../types/Sections";
 import { RenderedSection } from "./RenderedSection";
 import { ContactsList, InboxesList } from "../../../../features";
+import { CenterLoader } from "../../../../shared/ui";
 
 
 
@@ -20,7 +21,7 @@ const stackProps: StackProps = {
 
 export const SectionContent: React.FC<IContentProps> = ({ section }) => {
     const sectionComponents: Record<sections, React.FC> = {
-        Chats: InboxesList,
+        Chats: CenterLoader,
         Contacts: ContactsList,
     };
 

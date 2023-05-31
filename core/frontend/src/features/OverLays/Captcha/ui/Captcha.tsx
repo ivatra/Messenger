@@ -6,7 +6,7 @@ import { useCaptchaStore } from "../store/CaptchaStore"
 
 
 export const Captcha: React.FC = (): JSX.Element => {
-    const { setCaptcha, isError } = useCaptchaStore()
+    const { setCaptcha} = useCaptchaStore()
 
     const [isAskPassed, setAskPassed] = useState<boolean>(false)
 

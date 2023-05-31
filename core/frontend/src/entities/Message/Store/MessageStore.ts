@@ -11,14 +11,18 @@ import { SharedHelpers } from '../../../shared';
 
 
 const initialState: IMessageStoreVariables = {
-    messages: { byId: {}, idByChatId: {} },
+    messages: { byId: {}, idByChatId: {}, commLenByChatId: {} },
     state: 'idle'
 }
 
 export const useMessageStore = create<IMessageStore>((set, get) => ({
     ...initialState,
     receiveByOffset: async (chatId, offset, limit) => {
-        const request = () => api.get(`content/chat/${chatId}/messages/?offset=${offset}&limit=${limit}`);
+        const { messages } = get()
+
+        const additionalOffset = messages.commLenByChatId[chatId]
+
+        const request = () => api.get(`content/chat/${chatId}/messages/?offset=${offset + additionalOffset}&limit=${limit}`);
 
         const newMessages = await SharedHelpers.handleRequest<IMessagesApiResponse>(request, set);
 
@@ -52,21 +56,15 @@ export const useMessageStore = create<IMessageStore>((set, get) => ({
         );
 
     },
-    addMessage(chatId, message) {
-        produce((state: IMessageStore) => {
-            state.messages.byId[message.id] = message
-            state.messages.idByChatId[chatId].add(message.id)
-        })
-    },
     sendMessage: async (userId, chatId, message, attachment) => {
+        const addMessage = get().addMessage
+
         const createMock = () => {
             const randomNumber = Date.now()
 
             const newMessage = createMockMessage(userId, randomNumber, attachment, message);
 
-            set(produce((state: IMessageStore) => {
-                state.messages.byId[newMessage.id] = newMessage
-            }));
+            addMessage(chatId, newMessage)
 
             return newMessage
 
@@ -96,8 +94,7 @@ export const useMessageStore = create<IMessageStore>((set, get) => ({
                     delete state.messages.byId[newMessage.id]
                     state.messages.idByChatId[newMessage.chatId].delete(newMessage.id)
 
-                    state.messages.byId[response.id] = response
-                    state.messages.idByChatId[newMessage.chatId].add(response.id)
+                    addMessage(response.chatId, newMessage)
                 }));
             } else {
                 set(produce((state: IMessageStore) => {
@@ -112,9 +109,26 @@ export const useMessageStore = create<IMessageStore>((set, get) => ({
 
 
     },
+    addMessage(chatId, message) {
+        produce((state: IMessageStore) => {
+            state.messages.byId[message.id] = message
+            state.messages.idByChatId[chatId].add(message.id)
+            state.messages.commLenByChatId[chatId]++
+        })
+    },
     setMessageRead: (messageId) => {
         set(produce((state: IMessageStore) => {
             state.messages.byId[messageId].isRead = true
+        }));
+    },
+    clearMessagesByChatId(chatId) {
+        set(produce((state: IMessageStore) => {
+            const msgIds = state.messages.idByChatId[chatId]
+
+            for (var id of msgIds) {
+                delete state.messages.byId[id]
+            }
+            msgIds.clear()
         }));
     },
 }));

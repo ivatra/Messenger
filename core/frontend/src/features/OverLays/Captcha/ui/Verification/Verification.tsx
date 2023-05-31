@@ -31,7 +31,7 @@ const closeButtonProps = {
 };
 
 const Verification: React.FC<IVerification> = ({ setCaptcha }) => {
-    const { svgData, verifyAnswer, receiveCaptcha, isLoading } = useCaptchaStore();
+    const { svgData, verifyAnswer, receiveCaptcha, state } = useCaptchaStore();
     const captchaInputRef = useRef<HTMLInputElement>(null);
     const [input, setInput] = useState("");
     const [inputErr, setInputErr] = useState("");
@@ -63,7 +63,7 @@ const Verification: React.FC<IVerification> = ({ setCaptcha }) => {
                 <Stack m="sm" spacing="xs" >
                     <CaptchaSvg svgData={svgData} />
                     <Group noWrap spacing="xs" align="center">
-                        <ReloadButton isLoading={isLoading} reloadCaptcha={reloadCaptcha} />
+                        <ReloadButton isLoading={state === 'loading'} reloadCaptcha={reloadCaptcha} />
                         <CaptchaInput
                             input={input}
                             inputErr={inputErr}

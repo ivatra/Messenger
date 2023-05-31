@@ -1,25 +1,27 @@
-import { IDictContact, IContact, IContactStatus } from "./ContactModel";
+import { IDictContact, IContact, IContactStatus, IDictContactIdByUserId } from "./ContactModel";
 
 import { SharedTypes } from "../../../shared";
 
 
+export type IContactListStore = IContactListActions & IContactListVariables
 
-export type IContactListStore = IContactListActions  & IContactListVariables
 
+export type ContactsType = {
+    byId: IDictContact,
+    idByUserId: IDictContactIdByUserId
+}
 
 export interface IContactListVariables extends SharedTypes.IStoreFeedback {
-    contacts: IDictContact;
-    searchedContacts: IDictContact;
+    contacts: ContactsType;
 
     contactsTotalCount: number | null;
-    searchTotalCount: number | null;
 }
 
 export interface IContactListActions {
     receiveByOffset: (limit: number, offset: number) => void;
-    receiveBySearchTerm: (limit: number, offset: number,searchTerm:string) => void;
+    receiveByUserId: (userId: string) => void
 
-    addContact: (contact: IContact) => void;
+    addOrUpdateContact: (contact: IContact) => void;
     removeContact: (contactId: number) => void;
     updateContactStatus: (contactId: number, status: IContactStatus) => void
 }

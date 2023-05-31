@@ -29,5 +29,14 @@ export const useUserStore = create<IUserStore>()((set, get) => ({
             state.users[response.id] = response
         }));
     },
+    receiveBySearchTerm: async (searchTerm) => {
+        const request = () => api.get(`content/search/contacts/?message=${searchTerm}`);
+
+        const users = await SharedHelpers.handleRequest<IUser[]>(request, set);
+
+        if (!users) return;
+
+        return users
+    },
 }))
 

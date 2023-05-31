@@ -35,7 +35,7 @@ async function findInboxIdsByMessageIds(messages, userId) {
 }
 
 async function searchUsers(senderId,searchTerm,limit,offset) {
-    const users = await User.findAll({offset:offset,limit:limit})
+    const users = await User.findAll({})
     const searchResults = users.filter(user => {
         const userName = user.dataValues.name.toLowerCase();
         const search = searchTerm.toLowerCase();
@@ -43,28 +43,26 @@ async function searchUsers(senderId,searchTerm,limit,offset) {
     });
 
     const count = searchResults.length;
-    return { users: searchResults, count };
+    return searchResults;
 }
 
 class searchService {
     async searchInContacts(senderId, searchTerm, limit, offset) {
         if (!searchTerm) return
 
-        const {users,count} = await searchUsers(senderId,searchTerm,limit,offset)
+        const users = await searchUsers(senderId,searchTerm,limit,offset)
 
         const fetchedUsers = users.map((user)=>{
             return {
-                [user.id]:{
                     id: user.id,
                     name: user.name,
                     login: user.login,
                     avatarUrl: user.avatar,
                     isActive: user.isActive,
                     lastSeen: user.lastSeen,
-                }
             }
         })
-        return { data: fetchedUsers, count }
+        return fetchedUsers
 
     }
     async searchInInbox(senderId, message) {

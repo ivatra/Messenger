@@ -2,14 +2,14 @@ import React, { useRef, useState } from 'react';
 
 import { useForm } from '@mantine/form';
 import { LoadingOverlay } from '@mantine/core';
-import { useFocusTrap, useHotkeys, useMergedRef } from '@mantine/hooks';
+import { useFocusTrap, useMergedRef } from '@mantine/hooks';
 
 import { RegisterForm } from './RegisterForm';
 import { LoginForm } from './LoginForm';
 import { FormToggle } from './FormToggle';
 import { AuthFrame } from './AuthFrame';
 
-import { useUserStore } from '../../../entities';
+import { useProfileStore } from '../../../entities';
 import { SharedHooks } from '../../../shared';
 
 export interface IFormValues {
@@ -33,7 +33,7 @@ export const AuthenticationPage: React.FC = () => {
     const focusTrapRef = useFocusTrap(true)
     const mergedRef = useMergedRef(paperRef, focusTrapRef)
 
-    const { isLoading, register, login } = useUserStore()
+    const { state, register, login } = useProfileStore()
 
     const form = useForm<IFormValues>({
         initialValues: {
@@ -84,7 +84,7 @@ export const AuthenticationPage: React.FC = () => {
     return (
         <AuthFrame>
             <form onSubmit={form.onSubmit(handleSubmit)} ref={mergedRef} >
-                <LoadingOverlay visible={isLoading} />
+                <LoadingOverlay visible={state === 'loading'} />
                 {formType === 'register'
                     ? <RegisterForm form={form} />
                     : <LoginForm form={form} />

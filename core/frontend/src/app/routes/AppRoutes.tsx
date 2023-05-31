@@ -4,11 +4,11 @@ import AuthenticatedRoutes from './AuthenticatedRoutes';
 import NotAuthorizedRoutes from './NotAuthorizedRoutes';
 import ActivationRoutes from './ActivationRoutes';
 
-import { useUserStore } from '../../entities';
+import { useProfileStore } from '../../entities';
 
 
 export const AppRoutes = () => {
-    const { isAuth, isActivated } = useUserStore()
+    const { isAuth, isActivated } = useProfileStore()
 
     return (
         <BrowserRouter>

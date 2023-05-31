@@ -1,17 +1,15 @@
 import { useState } from "react";
 
-import { IContact } from "../..";
-import { Contact } from "./Contact";
-import { useContactInteractionStore } from "../store/ContactInteractionStore";
+import { IUser } from "../..";
+import { UserCard } from "./UserCard";
 
 interface IContactTabProps {
-    contact: IContact;
-    onTabClick:() => void
+    user: IUser
+    onTabClick: () => void
 }
 
-export const ContactTab: React.FC<IContactTabProps> = ({ contact,onTabClick }) => {
+export const UserTab: React.FC<IContactTabProps> = ({ user, onTabClick }) => {
     const [selected, setSelected] = useState<boolean>(false)
-    const { openModalWithUser: openContactModal } = useContactInteractionStore.getState()
 
     const boxProps = {
         onMouseEnter: () => setSelected(true),
@@ -24,8 +22,8 @@ export const ContactTab: React.FC<IContactTabProps> = ({ contact,onTabClick }) =
     }
 
     return (
-        <Contact
-            contact={contact}
+        <UserCard
+            user={user}
             props={boxProps}
             avatarSize='md'
             activityLabelSize='xs'

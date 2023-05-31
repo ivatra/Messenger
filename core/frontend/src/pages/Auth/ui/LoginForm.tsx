@@ -1,7 +1,8 @@
 import React from 'react';
+
 import { TextInput, PasswordInput } from '@mantine/core';
 import { IconAt, IconLock } from '@tabler/icons-react';
-import { UseFormReturnType, useForm } from '@mantine/form';
+import { UseFormReturnType, useForm } from '@mantine/form'
 import { IFormValues } from './AuthenticationPage';
 
 interface LoginFormProps {

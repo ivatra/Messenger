@@ -5,7 +5,7 @@ import { useDidUpdate } from "@mantine/hooks";
 import renderItem from "../renderMessageItem";
 
 import { ChatContext } from "../../../../../widgets";
-import { IContentItem, useUserStore } from "../../../../../entities";
+import { IContentItem, useProfileStore } from "../../../../../entities";
 
 
 interface IUseRenderMessagesProps {
@@ -20,7 +20,7 @@ export const useRenderMessages = ({ items,turnOffLoading, scrollRef }: IUseRende
 
     const {chat} = useContext(ChatContext);
 
-    const { id: userAgentId } = useUserStore().profile;
+    const { id: userAgentId } = useProfileStore().profile;
 
     useDidUpdate(() => {
         const fetchAndRenderItems = async () => {

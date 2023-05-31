@@ -1,32 +1,19 @@
 import { useEffect } from "react";
 import { useDidUpdate } from "@mantine/hooks";
 
-import { useContactListStore } from "../../../../entities";
+import { IContact, useContactListStore } from "../../../../entities";
 
 export const useContactsLoading = (
     scrollRef: React.RefObject<HTMLDivElement>,
     scrollPosition: number,
+    contacts: IContact[],
     limit: number
-    ) => {
-    const {
-        isLoading,
+) => {
 
-        contactsHasMore,
-        searchHasMore,
-
-        filter,
-        searchTerm,
-
-        visibleContacts,
-        contacts,
-        searchedContacts,
-
-        receiveByOffset: receiveContacts,
-        receiveBySearchTerm: searchContacts
-    } = useContactListStore()
-
+    const { receiveByOffset } = useContactListStore()
+    
     useEffect(() => {
-        receiveContacts(limit)
+        receiveByOffset(limit,contacts.length)
     }, [])
 
     useDidUpdate(() => {
@@ -40,11 +27,11 @@ export const useContactsLoading = (
             if (searchTerm && searchHasMore) searchContacts(limit);
             else if (!searchTerm && contactsHasMore) receiveContacts(limit);
         }
-        
+
     }, [scrollPosition]);
 
     useDidUpdate(() => {
-        const isTooFewFiltered = filter !== 'all' && visibleContacts.length < limit 
+        const isTooFewFiltered = filter !== 'all' && visibleContacts.length < limit
 
         if (isTooFewFiltered && !isLoading) {
             if (searchTerm && searchHasMore) searchContacts(limit);

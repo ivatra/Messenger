@@ -18,7 +18,7 @@ class attachementsQueries {
             },
             limit: limit,
             offset: offset,
-            attributes: ['id']
+            attributes: ['id','chatId']
         })
     }
 

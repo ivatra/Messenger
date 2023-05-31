@@ -5,6 +5,7 @@ export interface IDictAttachement {
 
 export interface IAttachement {
     id: number
+    chatId: number
     messageId: number
     type: 'string' | 'image'
     url: string

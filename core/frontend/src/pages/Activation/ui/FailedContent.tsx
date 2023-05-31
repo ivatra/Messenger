@@ -4,10 +4,10 @@ import { Stack, Modal, Group, Text, TextProps } from "@mantine/core"
 import { IconExclamationCircle } from "@tabler/icons-react"
 
 import { SharedUi } from "../../../shared"
-import { useUserStore } from "../../../entities"
+import { useProfileStore } from "../../../entities"
 
 export const FailedContent = () => {
-    const isAuth = useUserStore(state => state.isAuth)
+    const isAuth = useProfileStore(state => state.isAuth)
     const navigate = useNavigate()
 
     const handleRedirectToHome = () => {

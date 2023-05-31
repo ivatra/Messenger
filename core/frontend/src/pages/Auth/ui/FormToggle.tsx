@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Group, Anchor, Button, AnchorProps } from '@mantine/core';
+import { Group, Anchor, Button } from '@mantine/core';
 
 interface FormToggleProps {
     formType: 'register' | 'login';

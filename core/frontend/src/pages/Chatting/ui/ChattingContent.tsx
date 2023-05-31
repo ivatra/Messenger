@@ -18,12 +18,6 @@ export const ChattingContent = () => {
 
     const isDesktop = useMediaQuery(`(min-width: ${SharedConsts.DESKTOP_WIDTH})`);
 
-    const { setCurrentChatId } = useChatStore()
-
-    useEffect(() => {
-        setCurrentChatId(chatId ? +chatId : undefined)
-    }, [chatId])
-
     const navBarProps = {
         section: section,
         setSection: setSection

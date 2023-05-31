@@ -7,6 +7,7 @@ import { IChatParticipant } from "../types/ChatParticipantModel";
 
 import { api } from '../../../app';
 import { SharedHelpers } from '../../../shared';
+import { useMessageStore } from '../../Message';
 
 
 const baseUrl = 'content/chat/'
@@ -79,10 +80,15 @@ export const useChatStore = create<ChatStoreType>((set) => ({
             delete state.chats[chatId].participants[userId]
         }));
     },
+    decrementCUnreadMsgs(chatId) {
+        set(produce((state: ChatStoreType) => {
+            state.chats[chatId].countUnreadMsgs++
+        }));
+    },
     setGroupChatCreationOpened: (value) => {
         set({ groupChatCreationOpened: value });
     },
-    editGroupChat: async (chatId, fields, doHttp) => {
+    editGroupChat: async (chatId, fields) => {
         const formData = new FormData();
         if (fields.avatar) {
             formData.append('avatar', fields.avatar);
@@ -91,12 +97,17 @@ export const useChatStore = create<ChatStoreType>((set) => ({
             formData.append('name', fields.name);
         }
 
-        if (doHttp) {
-            const request = () => api.put(baseUrl + chatId, { body: formData });
+        const request = () => api.put(baseUrl + chatId, { body: formData });
 
-            await SharedHelpers.handleRequest(request, set);
-        }
+        await SharedHelpers.handleRequest(request, set);
 
+
+    },
+    editGroupChatWS(chatId, name, avatar) {
+        set(produce((state: ChatStoreType) => {
+            state.chats[chatId].name = name
+            state.chats[chatId].avatar = avatar
+        }));
     },
     addParticipantWS(chatId, participant) {
         set(produce((state: ChatStoreType) => {
@@ -109,11 +120,18 @@ export const useChatStore = create<ChatStoreType>((set) => ({
         }));
     },
     removeChat: (chatId) => {
+        const { clearMessagesByChatId: clearMessagesByChat } = useMessageStore.getState()
+
         set(produce((state: ChatStoreType) => {
             delete state.chats[chatId]
         }));
 
-        // TODO: Delete messages
+        clearMessagesByChat(chatId)
+    },
+    incrementCUnreadMsgs(chatId) {
+        set(produce((state: ChatStoreType) => {
+            state.chats[chatId].countUnreadMsgs--
+        }));
     },
     addTypingUser: (chatId, participantId) => {
         set(produce((state: ChatStoreType) => {
