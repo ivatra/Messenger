@@ -39,6 +39,7 @@ export const useMessageStore = create<IMessageStore>((set, get) => ({
                 for (const [key, value] of Object.entries(newMessages)) {
                     chatMsgs.add(Number(key))
                 }
+<<<<<<< HEAD
             })
         );
     },
@@ -129,6 +130,13 @@ export const useMessageStore = create<IMessageStore>((set, get) => ({
                 delete state.messages.byId[id]
             }
             msgIds.clear()
+=======
+                return item;
+            });
+            if(state.items[chatId]){
+                state.items[chatId].items = updatedItems;
+            }
+>>>>>>> new!
         }));
     },
 }));

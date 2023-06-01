@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 
 import { Box, ScrollArea, ScrollAreaProps, Stack, StackProps } from "@mantine/core";
+import { usePrevious } from "@mantine/hooks";
 
 import { useMessagesLoading } from "../helpers/hooks/useMessagesLoading";
 import { useRenderMessages } from "../helpers/hooks/useRenderMessages";
@@ -9,7 +10,6 @@ import { IChatContent } from "../../../../entities/Message/types/MessageStoreTyp
 
 import { ChatContext } from "../../../../widgets";
 import { SharedUi } from "../../../../shared";
-import { usePrevious } from "@mantine/hooks";
 
 
 /*
