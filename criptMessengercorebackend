@@ -1,0 +1,474 @@
+[33mcommit ad91212b74bea2d27f8be95de866953d13471795[m[33m ([m[1;36mHEAD -> [m[1;32mfrontend[m[33m, [m[1;31morigin/frontend[m[33m)[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Wed May 31 21:25:59 2023 +0700
+
+    commit
+
+[33mcommit bce70bea8f9ff1f4e4b75b45fd8e86e38bfd8882[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Tue May 30 18:34:36 2023 +0700
+
+    i guess finished with stores
+
+[33mcommit 55c32b4451d13cbc2b7f465bc2a5faea695c87ad[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Tue May 30 15:25:58 2023 +0700
+
+    all stores finished but messagestore
+
+[33mcommit b2b3028c3e641e17bad89f480e7c77ce1c841e7f[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Mon May 29 21:56:52 2023 +0700
+
+    changed inboxes store
+
+[33mcommit 212257948055d0438b5b8b627f55ce07da0e84a3[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Mon May 29 19:50:13 2023 +0700
+
+    proceeding...
+
+[33mcommit 96f25116b073b80611ac99d0508085ced754d264[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Fri May 26 18:41:31 2023 +0700
+
+     do not remember what i have changed
+
+[33mcommit fb7cbe260fe5b95141ffac8d4c0b5880a76813ae[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Thu May 25 17:57:42 2023 +0700
+
+    changed inboxes response and almost finished group chat creation
+
+[33mcommit 52156724233977f2ca8a6a0038d5886508f7a8c6[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Tue May 23 00:24:49 2023 +0700
+
+    fixes
+
+[33mcommit b4877159fc53ab886e77f8b48a0c6e89ea862e2b[m
+Merge: 9bc002e 7bdb382
+Author: ivatra <ivatra@yandex.ru>
+Date:   Thu May 18 13:10:37 2023 +0700
+
+    Merge branch 'detachedhead' into frontend
+
+[33mcommit 30da8a8144bd639232cc650a3dbb116afa1cc7d6[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Thu May 18 13:02:23 2023 +0700
+
+    asd
+
+[33mcommit 7bdb3822bb29b3f76feef17c0ce351326f02323b[m[33m ([m[1;32mdetachedhead[m[33m)[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Thu May 18 12:48:28 2023 +0700
+
+    replaced "external" to "ws"
+
+[33mcommit 49946164f0adcdfed44a37f0ed560cd6a408c629[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Wed May 17 23:52:30 2023 +0700
+
+    1234
+
+[33mcommit 3884a634607209f129e789dba2c35b8e87aeb5cc[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Wed May 17 23:51:01 2023 +0700
+
+    refactored imports
+
+[33mcommit 9bc002ee013a461524874c1b4a79e44272d3f8eb[m[33m ([m[1;31mMessenger/frontend[m[33m)[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Wed May 17 23:05:43 2023 +0700
+
+    wish me luck x2
+
+[33mcommit 841a9a535aa8afc17f2625d8675d5445a11a5baf[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Wed May 17 00:14:57 2023 +0700
+
+    alright,wish me luck
+
+[33mcommit 4a8ced831d7e7f66f811e24a3a7137f4c50f4121[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Tue May 16 13:25:33 2023 +0700
+
+    wrote replace-imports script
+
+[33mcommit 8bf9d2930fcb6560451d5ec49c72cf359347f5d5[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Mon May 15 21:11:54 2023 +0700
+
+    refactoring in process
+
+[33mcommit 7b69643b5c859d3ad1ef7b684ea9cd682d97a5d3[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Sat May 13 02:22:57 2023 +0700
+
+    finished messages pagination ,working on sockets
+
+[33mcommit 42aa8c87ab0c61d5f980ababc7b2991472439654[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Wed May 3 15:07:35 2023 +0700
+
+    finished event system (i believe)
+
+[33mcommit b596a540b912e226e4ed5fe87252ad0010232edf[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Sun Apr 23 15:57:36 2023 +0700
+
+    bulding chat
+
+[33mcommit a4c8f612fac4b6cc139832b3d868470bb4ef7f0a[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Sat Apr 22 02:35:25 2023 +0700
+
+    ...
+
+[33mcommit 61471a4e46f5d752af75812980dc0cdeab255378[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Sat Apr 22 02:35:07 2023 +0700
+
+    ....
+
+[33mcommit ccaffc0b480d045f993cf0ff5be16bba4c8f1765[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Sat Apr 22 00:10:33 2023 +0700
+
+    im making chat!
+
+[33mcommit 453be78c9bf1b5e4f5b8ecab174575464f3d288b[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Thu Mar 30 16:15:24 2023 +0700
+
+    changes!
+
+[33mcommit 69db91422c795a912aff84cb23367e0cd68925a8[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Thu Mar 30 00:43:55 2023 +0700
+
+    working..
+
+[33mcommit 82d549ff230b2d61406047b3f3db69de85a0d16b[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Wed Mar 29 18:54:26 2023 +0700
+
+    something changed for sure
+
+[33mcommit 6cf7f371816a45551130d2e793dba6fdd4ff805a[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Thu Mar 23 16:51:25 2023 +0700
+
+    refactoring and decomposition
+
+[33mcommit f2499a34c76bfa658464eeeeea204974696a047b[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Thu Mar 23 00:06:16 2023 +0700
+
+    update profile is done
+
+[33mcommit f37028c99a2565fabe30cbe4a355c09a706cc9dd[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Sun Mar 19 01:14:34 2023 +0700
+
+    update user drawer is done
+
+[33mcommit 45e1d6468165e803c23fd1b73775db150e53f275[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Thu Mar 16 02:28:10 2023 +0700
+
+    tab
+
+[33mcommit c05d8221f46d951789b43c87303795defa9dd6f4[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Fri Mar 10 23:35:14 2023 +0700
+
+    moved to react
+
+[33mcommit eb25febbb5a6a6593b86e4a5515b5617f389aaaa[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Fri Mar 10 22:00:06 2023 +0700
+
+    'hello'
+
+[33mcommit 8f51485e454483f6461434ed1ecb1e2f94856e73[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Wed Mar 8 17:42:35 2023 +0700
+
+    proccesing
+
+[33mcommit 30d471447c7cf58e4ddc4e0e001dd213ca10470a[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Mon Mar 6 01:01:29 2023 +0700
+
+    inicialize
+
+[33mcommit 213151bc3d108b8fe2614e89003e5627d3aa8b4f[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Mon Mar 6 01:01:14 2023 +0700
+
+    inicialize
+
+[33mcommit 17081caee764db8cf5a74c45584cfa09f1e1fec1[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Mon Mar 6 00:33:25 2023 +0700
+
+    complitely inicialized
+
+[33mcommit d57a84cc198d7b50ec09dca68e751ba5da6deb88[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Sun Mar 5 23:57:17 2023 +0700
+
+    inicialized next project
+
+[33mcommit 55986f0a013d47dd33008b21f6fe133c7f891375[m[33m ([m[1;31morigin/main[m[33m, [m[1;31mMessenger/main[m[33m, [m[1;32mmain[m[33m)[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Sun Mar 5 23:39:24 2023 +0700
+
+    removal
+
+[33mcommit 19698442af2629f9bf4bb559209406d896013ae8[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Sun Feb 26 16:15:03 2023 +0700
+
+    a little changes
+
+[33mcommit 9f619dfa777da13434693067bd969e4c360618b4[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Sat Feb 25 22:06:11 2023 +0700
+
+    i consider i have finished API
+
+[33mcommit 288738440dae60977b8de0ccd7bdf40b5b9302fd[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Fri Feb 24 16:00:08 2023 +0700
+
+    created messagesVector and indexes
+
+[33mcommit 04adcfbf9a97fc0758460d4b7d6c9833dc3424a9[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Sun Jan 29 19:01:51 2023 +0700
+
+    captcha is done
+
+[33mcommit fc34bad92bad95e9dd08e90612ef19feb60c9063[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Sun Jan 29 18:24:56 2023 +0700
+
+    watch @todo index.js
+
+[33mcommit 6a80a257a7e014c50f796cef0634679f837c95f0[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Fri Jan 27 23:15:19 2023 +0700
+
+    deleted something
+
+[33mcommit 9aac45e6684b5f345c556ebd34d796d58fc8179f[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Fri Jan 27 23:14:01 2023 +0700
+
+    refactoring + almost done authorization
+
+[33mcommit 7a9dec1feb54600dd05a4a7ee18dfecf569478cf[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Fri Jan 27 21:53:05 2023 +0700
+
+    raadad
+
+[33mcommit 3409daf60e1cafb61406163ee47e9d484f0c5522[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Fri Jan 27 21:51:02 2023 +0700
+
+    1313
+
+[33mcommit 852d738c35bd0760039c24b58b3104834e01b68c[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Fri Jan 27 21:46:02 2023 +0700
+
+    13133
+
+[33mcommit 826d1225f1322bfa3618c3dcec5d2f9368e90456[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Fri Jan 27 21:45:22 2023 +0700
+
+    1313
+
+[33mcommit 049c3453d9eebe0948cfefe0c090de49431451f6[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Fri Jan 27 21:43:21 2023 +0700
+
+    working
+
+[33mcommit dabd9327c7c5f122afbc9ba6a6ae28295070a5a0[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Thu Jan 26 23:57:36 2023 +0700
+
+    done check count of requests per minute middleware
+
+[33mcommit 4d169ffee403e5aaa6fe23458490072af8089eb6[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Thu Jan 26 21:56:33 2023 +0700
+
+    1313
+
+[33mcommit 61437348a1ed4b2091296fe42f1f81046ce344f2[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Fri Jan 20 22:16:11 2023 +0700
+
+    a lot of things changed.watch by index todo list
+
+[33mcommit 0bd0a24ec1e69aa65a93da23c6198b873f404976[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Fri Jan 20 16:55:10 2023 +0700
+
+    refactoring
+
+[33mcommit eba3e0bde2075f1762daec56b66725150740cf98[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Fri Jan 20 16:31:27 2023 +0700
+
+    little refactoring
+
+[33mcommit 58c0b7ac9d35a3e263285ccf8e32f4dea6820e81[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Thu Jan 19 22:40:26 2023 +0700
+
+    global refactoring done and it almost works
+
+[33mcommit cffc951e670b68e21b49154b767db432bdc2899e[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Mon Jan 16 00:36:18 2023 +0700
+
+    fixed messages event
+
+[33mcommit d8985a7188f90f39e636dbc7dbbeda7ea158c63c[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Sun Jan 15 21:14:59 2023 +0700
+
+    done count of participiants in group chat
+
+[33mcommit cbf09d2d210c1575e455dafbb6258cd22fef4592[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Sun Jan 15 16:27:55 2023 +0700
+
+    finished inbox and fixed user Activity
+
+[33mcommit cc8671b06a3eb6f98806765af0216e0d6a202dcd[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Sun Jan 15 02:57:03 2023 +0700
+
+    a little bit fixes
+
+[33mcommit 4db69ff6f610547908ff322aaaf7211270cc7c6f[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Sun Jan 15 02:44:27 2023 +0700
+
+    user activity is done
+
+[33mcommit 36bc12788ef69de770ce3edd27cecb7138e5616a[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Sat Jan 14 23:13:38 2023 +0700
+
+    refactored something
+
+[33mcommit 1beff1a7385c24a895c5cd9261897dea0b0c03bd[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Sat Jan 14 23:06:58 2023 +0700
+
+    isActive behaviour is done
+
+[33mcommit e5e4ed5c45adfb688d757c6c91001957d335b4ad[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Fri Jan 13 03:02:37 2023 +0700
+
+    done api/events get
+
+[33mcommit 92b1c79abc14f7eb961a364ef88578ec09178007[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Fri Jan 13 02:40:20 2023 +0700
+
+    configured mongo,implemented message hook
+
+[33mcommit e97a3e0e5154f1f8ade8a97468567babb40e5ffa[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Tue Jan 10 01:50:41 2023 +0700
+
+    renamed neco
+
+[33mcommit 98c9da55cc9ff3c4d9dc7d21fa42e2767949738b[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Tue Jan 10 01:49:55 2023 +0700
+
+    renamed filehandler
+
+[33mcommit 9b8edc9c40073d946d150e1f563d3d28b9d76daf[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Tue Jan 10 01:46:53 2023 +0700
+
+    rewrited models and messages are done
+
+[33mcommit 0f5b4dc9518d520a448a43db3a668e8f2d974406[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Sun Jan 8 22:52:43 2023 +0700
+
+    done messages
+
+[33mcommit 9da9952e7fdf682df8a5e45efdf51174d621b006[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Sun Jan 8 18:58:35 2023 +0700
+
+    messages get/create and pagination is done
+
+[33mcommit 640170e7da8a4b2e1b7fcfe5276df1d327629264[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Sun Jan 8 17:43:49 2023 +0700
+
+    ended chat and participants api.
+
+[33mcommit 2cc7b337042e9539e533fea9573765c122615bbb[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Thu Jan 5 17:48:41 2023 +0700
+
+    little refactoring and func create chat or find is done
+
+[33mcommit 0575c12118f81729921e0599ff2b9ff53dde8eb0[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Tue Jan 3 00:27:06 2023 +0700
+
+    almost done with contacts
+
+[33mcommit 9d044452f695928ae42bcc1f8ef9befffe11bfca[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Mon Jan 2 16:39:08 2023 +0700
+
+    after refactoring
+
+[33mcommit 69367ae3b56863f0c1ca93450f591b73789fb165[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Fri Dec 30 23:35:14 2022 +0700
+
+    templates
+
+[33mcommit c04da9a8ca6f692dbe45109d1413587596c884c9[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Thu Dec 29 21:08:08 2022 +0700
+
+    dependencies
+
+[33mcommit 7fc28965bfebe9a607b1c1da17107b3aaccf7e99[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Thu Dec 29 20:55:26 2022 +0700
+
+    installed all dependencies
+
+[33mcommit f1124c35bb2f331ffeb4cec9b2d47eb8ab19ff08[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Thu Dec 29 20:49:16 2022 +0700
+
+    installed start dependendies
+
+[33mcommit d3af20669f0af3c0c5fe853d11d84da5149c52ac[m
+Author: ivatra <ivatra@yandex.ru>
+Date:   Thu Dec 29 18:51:23 2022 +0700
+
+    commit

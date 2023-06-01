@@ -6,33 +6,6 @@ const fileService = require("../misc/fileService");
 const chatService = require("./chatService");
 
 
-async function handleMentioned(messages, userId) {
-    for (let i = 0; i < messages.length; i++) {
-        const user = await User.findByPk(userId)
-        const content = messages[i].dataValues.content
-
-        const contentWords = content.split(' ')
-
-        for (let word in contentWords) {
-            if (word.startsWith('@')) {
-                word = word.slice(1)
-                if (word === 'all' || word === user.dataValues.login) {
-                    messages[i].dataValues.mentioned = true
-                } else messages[i].dataValues.mentioned = false
-            } else messages[i].dataValues.mentioned = false
-        }
-
-    }
-    return messages
-}
-
-
-//fetch message
-//get its index
-//receive by index with limit
-//send response to frontend
-//
-
 class MessageService {
     async fetchMessages(userId, chatId, limit, offset) {
         await chatService.checkForMemberingInChat(userId, chatId)

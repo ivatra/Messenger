@@ -196,7 +196,9 @@ export const useMessageStore = create<StoreType>((set, get) => ({
                 }
                 return item;
             });
-            state.items[chatId].items = updatedItems;
+            if(state.items[chatId]){
+                state.items[chatId].items = updatedItems;
+            }
         }));
     },
 }));
