@@ -31,6 +31,7 @@ export const ChattingContent = () => {
 
     const appShellProps: Omit<AppShellProps, 'children'> = {
         padding: 0,
+        mah:'100vh',
         navbar: isDesktop ? <DesktopNavBar {...navBarProps} /> : undefined,
         footer: isDesktop === false && !chatId ? <MobileNavBar {...navBarProps} /> : undefined
     }
@@ -48,8 +49,7 @@ export const ChattingContent = () => {
                 <SideBar section={section} isDisplayed={sideBarVisible} />
                 <ChatView
                     chatId={chatId ? +chatId : undefined}
-                    isDisplayed={chatViewVisible}
-                />
+                    isDisplayed={chatViewVisible} />
             </>
         );
     }, [chatId, isDesktop, section]);

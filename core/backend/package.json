@@ -29,6 +29,7 @@
     "require-all": "^3.0.0",
     "sequelize": "^6.28.0",
     "svg-captcha": "^1.4.0",
+    "use-async-memo": "^1.2.4",
     "useragent": "^2.3.0",
     "uuid": "^9.0.0",
     "validator": "^13.7.0",

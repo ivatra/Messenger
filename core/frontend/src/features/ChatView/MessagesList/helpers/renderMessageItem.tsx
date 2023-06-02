@@ -21,38 +21,39 @@ interface IRenderItemCache {
 
 const renderItemCache: IRenderItemCache = {};
 
-const renderItem = async (chat: SharedTypes.IChat, containerRef: RefObject<HTMLDivElement>, userAgentId: string, message: IContentItem) => {
+const renderItem = (selected:boolean,chat: SharedTypes.IChat, containerRef: RefObject<HTMLDivElement>, userAgentId: string, message: IContentItem) => {
     if (message.type === "Message") {
         const messageData = message.data
-        const cacheItem = renderItemCache[messageData.id]
-        const newAttributes = { isMessageRead: messageData.isRead, status: messageData.status }
+        // const cacheItem = renderItemCache[messageData.id]
+        // const newAttributes = { isMessageRead: messageData.isRead, status: messageData.status }
 
-        if (cacheItem) {
-            if (!checkAttributesChanged(cacheItem.attributes, newAttributes)) {
-                return cacheItem.element;
-            } else {
-                const clonedElement = cloneElement(cacheItem.element, { message: messageData })
-                return clonedElement
-            }
-        }
+        // if (cacheItem) {
+        //     if (!checkAttributesChanged(cacheItem.attributes, newAttributes) && !selected) {
+        //         return cacheItem.element;
+        //     } else {
+        //         const clonedElement = cloneElement(cacheItem.element, { message: messageData })
+        //         return clonedElement
+        //     }
+        // }
 
-        const sender = await fetchSender(chat, messageData.senderId);
+        const sender = chat.participants.find((participant) => participant.user.id === messageData.senderId)
 
         if (!sender) {
-            return <></>
+            return <>Sender was removed from chat :(.</>
         }
 
         const renderedMessage = (
             <Message
+                isSelected = {selected}
                 message={messageData}
-                sender={sender}
+                sender={sender.user}
                 scrollAreaRef={containerRef}
                 key={messageData.index}
-                isSentBySelf={userAgentId === sender.id}
+                isSentBySelf={userAgentId === sender.user.id}
             />
         );
 
-        renderItemCache[messageData.id] = { element: renderedMessage, attributes: newAttributes };
+        // renderItemCache[messageData.id] = { element: renderedMessage, attributes: newAttributes };
 
         return renderedMessage;
     } else {

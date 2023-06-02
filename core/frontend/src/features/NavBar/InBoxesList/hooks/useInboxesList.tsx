@@ -17,6 +17,7 @@ export const useInboxesList = ({ ref, searchValue }: IInboxesProps) => {
         inboxes,
         isMatched,
         matchedInboxes,
+        isLoading
     } = useInboxStore();
 
 
@@ -36,7 +37,7 @@ export const useInboxesList = ({ ref, searchValue }: IInboxesProps) => {
     };
 
     const allInboxesComponent = useMemo(() => {
-        if (pinnedInboxes.length < 1 && inboxes.length < 1) {
+        if (pinnedInboxes.length < 1 && inboxes.length < 1 && !isLoading) {
             return <SharedUi.NothingFoundView subject="inboxes" />;
         }
 

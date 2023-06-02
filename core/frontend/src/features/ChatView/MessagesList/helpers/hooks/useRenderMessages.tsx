@@ -26,14 +26,14 @@ export const useRenderMessages = ({ items,turnOffLoading, scrollRef }: IUseRende
         const fetchAndRenderItems = async () => {
             if (!items) return
 
-            const itemsComponents = await Promise.all(items.map((item) => renderItem(
-                chat,
-                scrollRef,
-                userAgentId,
-                item
-            )))
+            // const itemsComponents = await Promise.all(items.map((item) => renderItem(
+            //     chat,
+            //     scrollRef,
+            //     userAgentId,
+            //     item
+            // )))
             
-            setRenderedItems(itemsComponents);
+            // setRenderedItems(itemsComponents);
             turnOffLoading()
         };
 

@@ -6,17 +6,18 @@ import { useScrollOnTabSwitch } from "../hooks/useScrollOnTabSwitch";
 
 import { IContact, useContactListStore, ContactTab } from "../../../../entities";
 import { SharedUi } from "../../../../shared";
+import { CenterLoader } from "../../../../shared/ui";
 
 interface IContactsListProps {
     onContactTabClick: (contact: IContact) => void
     limit: number
-    contacts:IContact[]
+    contacts: IContact[]
 }
 
 export const ContactsList: React.FC<IContactsListProps> = ({ onContactTabClick, contacts, limit }) => {
     const [scrollPosition, onScrollPositionChange] = useState({ x: 0, y: 0 });
     const { isLoading, searchTerm, filter } = useContactListStore()
-    
+
     const scrollViewPort = useScrollOnTabSwitch()
 
     useContactsLoading(scrollViewPort, scrollPosition.y, limit)
@@ -41,6 +42,8 @@ export const ContactsList: React.FC<IContactsListProps> = ({ onContactTabClick, 
 
     if (!contacts.length && !isLoading) {
         return <SharedUi.NothingFoundView subject={searchTerm || filter} />
+    } else if (isLoading && !contacts.length) {
+        return <CenterLoader />
     } else {
         return VisibleContacts
     }

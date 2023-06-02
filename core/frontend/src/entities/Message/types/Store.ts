@@ -32,7 +32,7 @@ export interface IMessageStore {
     items: IStoreMessage
     attachments: IStoreAttachement
 
-    receiveByOffset: (chatId: number,page:number,limit: number) => void
+    receiveByOffset: (chatId: number,offset:number,limit: number) => void
     receiveByMsg: (chatId: number, msgIndex: number, limit: number) => void
     receiveAttachments: (chatId: number, limit: number) => void
 

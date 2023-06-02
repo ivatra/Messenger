@@ -21,6 +21,8 @@ export type IMessageAction = {
 } & (IParticipantAction);
 
 
+
+
 export interface IListMessage extends SharedTypes.IMessage{
     index:number
     status?: SentStatuses
@@ -31,3 +33,4 @@ export interface IListMessage extends SharedTypes.IMessage{
 export type IContentItem = IMessageContentItem | IMessageActionContentItem
 export type SentStatuses = 'loading' | 'error' | 'sent'
 
+export type IDictMessage = { [page: number]: IContentItem[] }

@@ -34,19 +34,17 @@ function createOrFindAttachement(state: StoreType, chatId: number): IAttachement
 
 export const useMessageStore = create<StoreType>((set, get) => ({
     ...initialState,
-    receiveByOffset: async (chatId, page, limit) => {
+    receiveByOffset: async (chatId, offset, limit) => {
         const currentChat = get().items[chatId];
         const userSentMessageCount = currentChat ? currentChat.communicationMessagesTally : 0;
 
-        const offset = page * limit + userSentMessageCount
-        const request = () => api.get(`content/chat/${chatId}/messages/?offset=${offset}&limit=${limit}`);
+        const request = () => api.get(`content/chat/${chatId}/messages/?offset=${offset + userSentMessageCount}&limit=${limit}`);
 
         const newMessages = await SharedHelpers.handleRequest<IMessagesApiResponse>(request, set);
 
         if (!newMessages) return
 
-
-        await handleMessages(chatId, newMessages, page, set);
+        await handleMessages(chatId, newMessages, offset  * limit , set);
 
     },
     receiveByMsg: async (chatId, msgIndex, limit) => {

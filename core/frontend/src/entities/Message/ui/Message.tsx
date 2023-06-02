@@ -19,12 +19,13 @@ const observerOptions: IntersectionObserverInit = {
 
 interface IMessageProps {
     message: IListMessage
+    isSelected:boolean
     scrollAreaRef: React.RefObject<HTMLDivElement>
     isSentBySelf: boolean
     sender: SharedTypes.IUser
 }
 
-export const Message: React.FC<IMessageProps> = ({ message, sender, isSentBySelf, scrollAreaRef }) => {
+export const Message: React.FC<IMessageProps> = ({ message, sender, isSentBySelf, scrollAreaRef,isSelected }) => {
     const { decrementCountUnreadMsgs } = useInboxStore.getState()
 
     const ref = useRef<HTMLDivElement>(null);
@@ -54,6 +55,7 @@ export const Message: React.FC<IMessageProps> = ({ message, sender, isSentBySelf
                 marginRight: isSentBySelf ? 0 : 'auto',
                 alignSelf: isSentBySelf ? 'flex-end' : 'flex-start',
             }}
+            bg = {isSelected ? 'yellow' : 'inherit'}
             mb='md'
             mt='md'
             ref={ref}
@@ -63,6 +65,7 @@ export const Message: React.FC<IMessageProps> = ({ message, sender, isSentBySelf
                     <Group>
                         <Text>{sender.name}</Text>
                         <Text>{message.isRead ? 'read' : 'not read'}</Text>
+                        <Text>{message.index}</Text>
                         <Text>{message.isMentioned && 'mentioned'}</Text>
                         {message.attachement &&<Image src={message.attachement.url}/>}
                         <Text> {SharedHelpers.formatDate(message.createdAt)}</Text>
