@@ -30,6 +30,8 @@ export interface IStoreAttachement{
 
 export interface IMessageStore {
     items: IStoreMessage
+    currentImage:string | null
+    isImageViewEnabled:boolean
     attachments: IStoreAttachement
 
     receiveByOffset: (chatId: number,page:number,limit: number) => void
@@ -44,4 +46,7 @@ export interface IMessageStore {
     addLoadedPage:(chatId:number,page:number) => void
     increaseCommunicationMessagesTally:(chatId:number) => void
     addItemWS: (chatId: number,content:IContentItem) => void;
+
+    disableImageView:() => void
+    setImageViewEnabled:(src:string) => void
 }

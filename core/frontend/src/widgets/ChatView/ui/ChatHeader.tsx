@@ -6,7 +6,7 @@ import { IconArrowLeft, IconChalkboard, IconPaperclip, IconSearch, IconUser } fr
 import { useMediaQuery } from "@mantine/hooks"
 
 import { generateBottomTitle } from "../helpers/fetchBottomTitle"
-import { useContactInteractionStore } from "../../../entities"
+import { useChatStore, useContactInteractionStore } from "../../../entities"
 import { SharedConsts, SharedHelpers, SharedTypes, SharedUi } from "../../../shared"
 
 
@@ -20,6 +20,7 @@ export const ChatHeader: React.FC<IChatHeaderProps> = ({ chat, height }) => {
     const navigate = useNavigate()
 
     const { openContactModal, receiveContactById } = useContactInteractionStore.getState()
+    const {setChatInfoOpened} = useChatStore()
     const { name, avatar: avatarUrl, userId } = SharedHelpers.fetchChatProps(chat)
     
     const bottomTitle = generateBottomTitle(chat)
@@ -30,6 +31,15 @@ export const ChatHeader: React.FC<IChatHeaderProps> = ({ chat, height }) => {
         if (!userId) return
         receiveContactById(userId).then((contact) => contact && openContactModal(contact))
     }, [userId, receiveContactById, openContactModal])
+
+
+    const onUserOrChatClick = () =>{
+        if(chat.type === 'individual'){
+            onUserProfileClick()
+        }else{
+            setChatInfoOpened(true)
+        }
+    }
 
     const backToNavbarButton = (
         <ActionIcon size='2rem' onClick={handleArrowClick}>
@@ -51,7 +61,7 @@ export const ChatHeader: React.FC<IChatHeaderProps> = ({ chat, height }) => {
                 </Stack>
             </Group>
             <Group>
-                <ActionIcon onClick={onUserProfileClick}>
+                <ActionIcon onClick={onUserOrChatClick}>
                     {chat.type === 'individual' ? <IconUser /> : <IconChalkboard />}
                 </ActionIcon>
                 <ActionIcon>

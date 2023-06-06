@@ -26,7 +26,9 @@ inbox additional option - open user profile or group profile
 const itemsContainerProps: StackProps = {
     align: 'center',
     style: { flexDirection: 'column-reverse' },
-    mah: '100%'
+    mah: '100%',
+    w:'100%',
+    maw:'100%'
 }
 
 
@@ -79,8 +81,9 @@ export const MessagesList: React.FC<IMessagesListProps> = ({
     const scrollAreaProps: ScrollAreaProps = {
         viewportRef: scrollRef,
         h: '100%',
+        w:'100%',
+        style:{overflowX:'clip'},
         type: 'always',
-        w: '100%',
         onScrollPositionChange: onScrollPositionChange
     }
 
@@ -88,7 +91,7 @@ export const MessagesList: React.FC<IMessagesListProps> = ({
         return <Box h='100%'>Nothing found</Box>
     } else {
         return (
-            (<ScrollArea {...scrollAreaProps}>
+            (<ScrollArea {...scrollAreaProps} offsetScrollbars styles={{root:{overflow:'hidden'}}}>
                 {isMessagesLoading && <SharedUi.CenterLoader />}
                 <Stack {...itemsContainerProps} >
                     {renderedItems}

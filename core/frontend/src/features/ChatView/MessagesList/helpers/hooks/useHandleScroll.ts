@@ -29,16 +29,16 @@ export const useManageOverflowLocation = ({ items, renderedItems, scrollRef, msg
         // if (msgIndex && msgIndex !== previousMsgIndex) {
        
         // } else {
-        //     if (!hasScrolledToUnread.current) {
-        //         const lastReadMessage = [...items].reverse().find((item) => item.type === 'Message'
-        //             && !item.data.isRead
-        //             && item.data.senderId !== userId) as IMessageContentItem | undefined
-        //         if (lastReadMessage) {
-        //             scrollToSpecificMsg(lastReadMessage.data.index)
-        //         } else {
-        //             scrollToBottom()
-        //         }
-        //     }
+            if (!hasScrolledToUnread.current) {
+                const lastReadMessage = [...items].reverse().find((item) => item.type === 'Message'
+                    && !item.data.isRead
+                    && item.data.senderId !== userId) as IMessageContentItem | undefined
+                if (lastReadMessage) {
+                    scrollToSpecificMsg(lastReadMessage.data.index)
+                } else {
+                    scrollToBottom()
+                }
+            }
         // }
         if(msgIndex){
             scrollToSpecificMsg(msgIndex)

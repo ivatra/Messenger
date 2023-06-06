@@ -69,7 +69,7 @@ class messageQueries {
                 'index'
             ],
             limit: limit,
-            offset: offset > 0 ? offset : 0, // Ensure offset is not negative
+            offset: offset > 0 ? offset : 0, 
             order: [['index', 'DESC']]
         });
     }

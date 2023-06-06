@@ -7,13 +7,13 @@ const { Attachement } = require('./attachementModel')
 
 const Message = sequelize.define('message', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    content: { type: DataTypes.STRING, allowNull: true },
+    content: { type: DataTypes.TEXT('long'), allowNull: true },
     isRead: { type: DataTypes.BOOLEAN, defaultValue: false },
     index: { type: DataTypes.INTEGER }
 });
 
 const MessageVector = sequelize.define('messages_vector', {
-    contentCopy: { type: DataTypes.STRING }
+    contentCopy: { type: DataTypes.TEXT('long') }
 }, {
     timestamps: false
 })

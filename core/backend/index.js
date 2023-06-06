@@ -9,7 +9,7 @@ const path = require('path')
 
 const PORT = process.env.PORT || 5000
 
-const mongoCl = require('./database/mongo/mongo')
+// const mongoCl = require('./database/mongo/mongo')
 const sequelize = require('./database/postqre/postgre')
 const models = require('./database/postqre/models/index')
 const modelHooks = require('./database/postqre/hooks/index')
@@ -50,7 +50,7 @@ const start = async () => {
     try{
         await sequelize.authenticate()
         await sequelize.sync()
-        await mongoCl.connect()
+        // await mongoCl.connect()
         // await fillingDB.fillUsers()
         // await fillingDB.fillContacts()
         // await fillingDB.fillChats()

@@ -16,7 +16,6 @@ const StylesProvider:React.FC<StylesProps> = ({ children }): JSX.Element => {
             theme={{
                 globalStyles: (theme) => ({
                     '*': {
-                        maxHeight:'100vh',
                     }}),
                 colorScheme: 'dark',
                 fontFamily: 'Roboto, sans-serif',

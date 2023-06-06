@@ -10,10 +10,8 @@ import StylesProvider from "./StylesProvider"
 
 
 
-message apperance
 chat info menu (chat name,chat avatar,participants and interaction with them)
 attachemens grid modal
-personal attachement view
 in contact info add contact to group chat(need to filter chats by group)
 localization with i18
 

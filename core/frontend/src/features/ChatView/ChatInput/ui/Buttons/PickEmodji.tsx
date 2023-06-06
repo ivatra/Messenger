@@ -20,7 +20,7 @@ export const PickEmodji: React.FC<IPickEmodjiProps> = ({onEmojdiPick}) => {
     return (
         <>
             <PickButton Icon={IconMoodSmile} onClick={onPickButtonClicked} />
-            {/* <EmodjiOverlay onEmodjiPick={onEmodjiSelect} menuOpened = {emojdiMenuOpened}/> TODO: */}
+            <EmodjiOverlay onEmodjiPick={onEmodjiSelect} menuOpened = {emojdiMenuOpened}/>
         </>
     );
 }

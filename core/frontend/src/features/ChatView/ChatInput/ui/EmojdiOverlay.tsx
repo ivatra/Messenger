@@ -17,7 +17,7 @@ export const EmodjiOverlay:React.FC<EmodjiOverlayProps> = ({ onEmodjiPick,menuOp
 
     return (
         <Box {...boxProps}>
-            <EmojiPicker onEmojiClick={onEmodjiPick} theme={Theme.DARK} />
+            {/* <EmojiPicker onEmojiClick={onEmodjiPick} theme={Theme.DARK} /> */}
         </Box>
     );
 }

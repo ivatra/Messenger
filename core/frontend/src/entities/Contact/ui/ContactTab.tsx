@@ -3,9 +3,10 @@ import { useState } from "react";
 import { IContact } from "../..";
 import { Contact } from "./Contact";
 import { useContactInteractionStore } from "../store/ContactInteractionStore";
+import { IUser } from "../../../shared/types";
 
 interface IContactTabProps {
-    contact: IContact;
+    contact: IContact | IUser
     onTabClick:() => void
 }
 

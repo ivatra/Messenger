@@ -15,6 +15,7 @@ const baseUrl = 'content/chat/'
 const initialState = {
     chats: [],
     currentChatId: 0,
+    isChatInfoOpened:false,
     isGroupChatCreationOpened: false,
 
     isError: false,
@@ -45,27 +46,25 @@ export const useChatStore = create<StoreType>()((set, get) => ({
 
         addChat(chat)
     },
-    addParticipant: async (chatId, participant) => {
+    addParticipant: async (chatId, userId) => {
         const request = () =>
             api.post(baseUrl + chatId + '/participants', {
                 json: {
-                    participantId: participant.user.id,
+                    userId: userId,
                 },
             });
-        const response = await SharedHelpers.handleRequest(request, set);
+        const response = await SharedHelpers.handleRequest<SharedTypes.IChatParticipant>(request, set);
 
-        const foundParticipant = get().chats[chatId].participants.find((part) => part.id === participant.id);
-
-        if (!response || foundParticipant) return;
+        if (!response) return;
 
         set(
             produce((state: StoreType) => {
-                state.chats[chatId].participants.push(participant);
+                state.chats[chatId].participants.push(response);
             })
         );
     },
-    removeParticipant: async (chatId, userId) => {
-        const request = () => api.delete(baseUrl + chatId + `/participants/${userId}`);
+    removeParticipant: async (chatId, partid) => {
+        const request = () => api.delete(baseUrl + chatId + `/participants/${partid}`);
         const response = await SharedHelpers.handleRequest(request, set);
 
         if (!response) return;
@@ -73,7 +72,7 @@ export const useChatStore = create<StoreType>()((set, get) => ({
         set(
             produce((state: StoreType) => {
                 state.chats[chatId].participants = state.chats[chatId].participants.filter(
-                    (participant) => participant.user.id !== userId
+                    (participant) => participant.id !== partid
                 );
             })
         );
@@ -209,7 +208,10 @@ export const useChatStore = create<StoreType>()((set, get) => ({
 
     setGroupChatCreationOpened: (value) => {
         set({ isGroupChatCreationOpened: value })
-    }
+    },
+  setChatInfoOpened(val) {
+      set({isChatInfoOpened:val})
+  },
 }))
 
 export default useChatStore

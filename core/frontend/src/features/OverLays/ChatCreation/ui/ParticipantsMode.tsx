@@ -10,10 +10,11 @@ import { SelectedContact } from "./SelectedContact";
 
 interface ParticipantsModeProps {
     selectedContacts: IContact[]
+    selectedColsC?:number
     setSelectedContacts: React.Dispatch<React.SetStateAction<IContact[]>>
 }
 
-const ParticipantsMode: React.FC<ParticipantsModeProps> = ({ selectedContacts, setSelectedContacts }) => {
+const ParticipantsMode: React.FC<ParticipantsModeProps> = ({ selectedContacts, setSelectedContacts, selectedColsC = 4 }) => {
     const { visibleContacts } = useContactListStore();
     const [notSelectedContacts, setNotSelectedContacts] = useState<IContact[]>(visibleContacts)
 
@@ -33,7 +34,7 @@ const ParticipantsMode: React.FC<ParticipantsModeProps> = ({ selectedContacts, s
     return (
         <Paper>
             <Stack spacing={0} w="100%" display='flex' h='25rem'>
-                <Grid columns={4} justify="flex-start">
+                <Grid columns={selectedColsC} justify="space-between">
                     {selectedContacts.map(contact => <SelectedContact
                         removeContact={() => removeSelectedContact(contact.id)}
                         key={contact.id}

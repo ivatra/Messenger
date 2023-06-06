@@ -3,6 +3,8 @@ import { Box, BoxProps, Group, GroupProps, MantineNumberSize, Stack, Text } from
 import { IContact } from "../..";
 
 import { SharedHelpers, SharedUi } from "../../../shared";
+import { IUser } from "../../../shared/types";
+import React from "react";
 
 
 const groupProps: GroupProps = {
@@ -12,7 +14,7 @@ const groupProps: GroupProps = {
 }
 
 interface IContactProps {
-    contact: IContact;
+    contact: IContact | IUser
     props?:BoxProps
     userNameSize:MantineNumberSize
     avatarSize:MantineNumberSize
@@ -20,18 +22,18 @@ interface IContactProps {
 
 }
 
-export const Contact: React.FC<IContactProps> = ({ contact, props, avatarSize, activityLabelSize, userNameSize }) => {
-    const dateSeen = contact.lastSeen ? SharedHelpers.formatDate(contact.lastSeen) : 'unknown'
+export const Contact = React.forwardRef<HTMLDivElement, IContactProps>(({ contact, props, avatarSize, activityLabelSize, userNameSize }, ref) => {
+    const dateSeen = contact.lastSeen ? SharedHelpers.formatDate(contact.lastSeen) : 'unknown';
 
     return (
-        (<Box {...props}>
+        <Box ref={ref} {...props}>
             <Group {...groupProps}>
                 <SharedUi.CustomAvatar avatarSrc={contact.avatar} size={avatarSize} />
                 <Stack spacing={'0px'} justify="center">
-                    <SharedUi.UserName name={contact.name} nameSize={userNameSize}/>
+                    <SharedUi.UserName name={contact.name} nameSize={userNameSize} />
                     <Text size={activityLabelSize} color='dark.2' >last seen {dateSeen}</Text>
                 </Stack>
             </Group>
-        </Box>)
+        </Box>
     );
-};
+});

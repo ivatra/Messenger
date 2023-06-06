@@ -18,7 +18,8 @@ export type StoreType = IMessageStore & SharedTypes.IStoreFeedback
 const initialState = {
     items: [],
     attachments: [],
-
+    currentImage: null,
+    isImageViewEnabled: false,
     limit: 30,
     isLoading: false,
     isError: false
@@ -106,8 +107,9 @@ export const useMessageStore = create<StoreType>((set, get) => ({
         const formData = new FormData();
 
         formData.append('content', message);
+
         if (attachment) {
-            formData.append('attachment', attachment, attachment.name);
+            formData.append('attachement', attachment, attachment.name);
         }
 
         const request = () =>
@@ -198,5 +200,11 @@ export const useMessageStore = create<StoreType>((set, get) => ({
             });
             state.items[chatId].items = updatedItems;
         }));
+    },
+    setImageViewEnabled(src) {
+        set({ isImageViewEnabled: true, currentImage: src })
+    },
+    disableImageView() {
+        set({ isImageViewEnabled: false })
     },
 }));

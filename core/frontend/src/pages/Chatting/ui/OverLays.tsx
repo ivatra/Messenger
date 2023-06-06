@@ -1,7 +1,7 @@
 import React, { useCallback } from "react"
 
-import { SessionExpiredModal, Captcha, useCaptchaStore, EmailActivationHint, ChatCreation } from "../../../features"
-import { useContactInteractionStore, useUserStore, ContactModal, useChatStore } from "../../../entities"
+import { SessionExpiredModal, Captcha, useCaptchaStore, EmailActivationHint, ChatCreation, ImageView, ChatInfo } from "../../../features"
+import { useContactInteractionStore, useUserStore, ContactModal, useChatStore, useMessageStore } from "../../../entities"
 
 
 interface IOverlays {
@@ -14,9 +14,11 @@ const OverLays = (): JSX.Element => {
     const { isSessionExpired, isActivated } = useUserStore()
     const isCaptcha = useCaptchaStore(state => state.isCaptcha)
     const contactModalisOpened = useContactInteractionStore(state => state.contactModalisOpened)
-    const isGroupChatCreationOpened = useChatStore(state => state.isGroupChatCreationOpened)
-
+    const { isGroupChatCreationOpened, isChatInfoOpened } = useChatStore()
+    const isImageViewEnabled = useMessageStore().isImageViewEnabled
     const overlays: IOverlays[] = [
+        { component: ChatInfo, condition: isChatInfoOpened, priority: 1 },
+        { component: ImageView, condition: isImageViewEnabled, priority: 1 },
         { component: EmailActivationHint, condition: !isActivated, priority: 4 },
         { component: SessionExpiredModal, condition: isSessionExpired, priority: 3 },
         { component: Captcha, condition: isCaptcha, priority: 2 },

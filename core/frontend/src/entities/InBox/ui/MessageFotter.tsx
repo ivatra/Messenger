@@ -9,6 +9,8 @@ interface IContentProps {
 const textProps: TextProps = {
     size: 'xs',
     color: 'dark.2',
+    truncate:true,
+    display:'block',
     lineClamp: 1
 }
 
@@ -16,9 +18,9 @@ const textProps: TextProps = {
 export const MessageFotter: React.FC<IContentProps> = ({ content, countOfUnreadMsgs }) => {
 
     return (
-        <Group noWrap position="apart">
+        <Group noWrap position="apart" w = '100%' h = '100%'>
             <Text {...textProps}>
-                {content}
+                {content.slice(0,50)} {content.length > 50 && '...'}
             </Text>
             <Group position="right">
                 {/* <MessagesCounter count={11}/> */}
