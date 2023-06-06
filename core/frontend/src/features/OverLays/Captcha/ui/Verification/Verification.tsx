@@ -13,7 +13,7 @@ interface IVerification {
 const modalProps = {
     opened: true,
     zIndex: 800,
-    size: '15.2rem',
+    size: '15.5rem',
     display: 'flex',
     centered: true,
     closeOnClickOutside: false,
@@ -60,7 +60,7 @@ const Verification: React.FC<IVerification> = ({ setCaptcha }) => {
         <Modal onClose={() => setCaptcha(false)} {...modalProps}>
             <Stack spacing={0} m={'xs'}>
                 <Modal.CloseButton {...closeButtonProps} />
-                <Stack m="sm" spacing="xs" >
+                <Stack m="sm" spacing="xs"  >
                     <CaptchaSvg svgData={svgData} />
                     <Group noWrap spacing="xs" align="center">
                         <ReloadButton isLoading={isLoading} reloadCaptcha={reloadCaptcha} />

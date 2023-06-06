@@ -89,7 +89,7 @@ const useInboxStore = create<StoreType>()((set, get) => ({
         const request = () => api(baseUrl + `/bychat/?chatId=${chatId}`)
 
         const response = await SharedHelpers.handleRequest<IInbox>(request, set)
-
+        console.log(response)
         if (!response) return
         
         if (response.isPinned) {

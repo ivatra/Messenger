@@ -3,8 +3,8 @@ const userQueries = require("../../database/postqre/queries/userQueries")
 module.exports = async function (req, res, next) {
     try {
         const user = await userQueries.receiveUserServiceInfoById(req.user.id)
-        // if (user.requestsCountPerMinute > 30)
-        //     return res.status(429).json({message:'Too many requests'})
+        if (user.requestsCountPerMinute > 3)
+            return res.status(429).json({message:'Too many requests'})
 
         await userQueries.incrementUserRequestCount(req.user.id)
 

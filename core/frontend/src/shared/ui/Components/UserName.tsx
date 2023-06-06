@@ -6,6 +6,8 @@ interface IUserName{
     nameSize?:MantineNumberSize
 }
 
-export const UserName: React.FC<IUserName> = ({ name, nameSize }) => (
-    <Text lineClamp={1} size={nameSize || 'sm'}>{name}</Text>
-);
+export const UserName: React.FC<IUserName> = ({ name, nameSize }) => {
+
+
+    return <Text lineClamp={1} size={nameSize || 'sm'}>{name}</Text>
+}

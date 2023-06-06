@@ -1,6 +1,6 @@
 import { useMemo } from "react"
 
-import { Loader } from "@mantine/core"
+import { ActionIcon, Loader } from "@mantine/core"
 
 import { IconCheck, IconChecks, IconExclamationCircle } from "@tabler/icons-react"
 
@@ -8,20 +8,25 @@ import { IconCheck, IconChecks, IconExclamationCircle } from "@tabler/icons-reac
 
 interface IProps {
     status?: string,
+    onErrorIconClick:() => void
     isRead: boolean,
     iconSize: string
 }
 
-export const useMessageFeedBack = ({ iconSize, isRead, status }: IProps) => {
+export const useMessageFeedBack = ({ iconSize, isRead, status, onErrorIconClick }: IProps) => {
     const messageFeedback = useMemo(() => {
 
-        if(isRead){
+        if (isRead) {
             return <IconChecks size={iconSize} />
         }
-        
+
         switch (status) {
             case 'error': {
-                return <IconExclamationCircle size={iconSize} />
+                return (
+                    <ActionIcon onClick={() => {onErrorIconClick()}}>
+                        <IconExclamationCircle size={iconSize} />
+                    </ActionIcon>
+                )
             }
             case 'loading': {
                 return <Loader size={iconSize} />

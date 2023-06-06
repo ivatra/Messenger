@@ -60,6 +60,7 @@ class eventService {
         const [affectedRowsCount] = await messageQueries.markMessageRead(messageId)
 
         await messageQueries.updateMessageMetaRead(messageId,userId)
+        await messageQueries.updateMessage(messageId,{isRead:true})
         await inboxQueries.updateUnreadMsgs(userId, chatId, 'decrement', affectedRowsCount)
         
         const participants = await chatQueries.receiveParticipantsByChat(chatId)

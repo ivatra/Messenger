@@ -23,8 +23,6 @@ interface INavigationProps {
 
 
 export const MobileNavBar: React.FC<INavigationProps> = ({ section, setSection }) => {
-    const profile = useUserStore((state) => state.profile)
-
     return (
         <Footer {...fotterProps}>
             <Group {...groupProps}>

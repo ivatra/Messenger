@@ -1,4 +1,4 @@
-;import { IListMessage } from "./Model";
+;import { IListAttachement, IListMessage } from "./Model";
 
 
 export interface IMessagesApiResponse{
@@ -6,3 +6,7 @@ export interface IMessagesApiResponse{
     count:number
 }
 
+export interface IAttachementsApiResponse{
+    data:IListAttachement[]
+    count:number
+}

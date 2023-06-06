@@ -57,6 +57,7 @@ export const Message: React.FC<IMessageProps> = ({ message, sender, isSentBySelf
         <Box
             maw='100%'
             w = '100%'
+            ref = {ref}
             style={{ justifyContent: isSentBySelf ? 'flex-end' : 'flex-start' }}
             display='flex'>
             <Group maw='60%' w='60%'  position={isSentBySelf ? 'right' : 'left'} >

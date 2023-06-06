@@ -1,3 +1,3 @@
 export const CaptchaSvg = ({ svgData }: { svgData: string; }) => (
-    <div dangerouslySetInnerHTML={{ __html: svgData }} />
+    <div style = {{overflow:'hidden',maxWidth:'100%'}} dangerouslySetInnerHTML={{ __html: svgData }} />
 );

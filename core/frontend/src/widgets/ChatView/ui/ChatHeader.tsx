@@ -20,7 +20,7 @@ export const ChatHeader: React.FC<IChatHeaderProps> = ({ chat, height }) => {
     const navigate = useNavigate()
 
     const { openContactModal, receiveContactById } = useContactInteractionStore.getState()
-    const {setChatInfoOpened} = useChatStore()
+    const {setChatInfoOpened,setAttachementViewOpened} = useChatStore()
     const { name, avatar: avatarUrl, userId } = SharedHelpers.fetchChatProps(chat)
     
     const bottomTitle = generateBottomTitle(chat)
@@ -48,7 +48,7 @@ export const ChatHeader: React.FC<IChatHeaderProps> = ({ chat, height }) => {
     )
 
     return (
-        <Group h={height} position="apart" >
+        <Group h={height} position="apart"  bg = 'dark.7'>
             <Group>
                 {!isDesktop && backToNavbarButton}
                 <SharedUi.CustomAvatar avatarSrc={avatarUrl} size='md' />
@@ -64,7 +64,7 @@ export const ChatHeader: React.FC<IChatHeaderProps> = ({ chat, height }) => {
                 <ActionIcon onClick={onUserOrChatClick}>
                     {chat.type === 'individual' ? <IconUser /> : <IconChalkboard />}
                 </ActionIcon>
-                <ActionIcon>
+                <ActionIcon onClick={() => setAttachementViewOpened(true)}>
                     <IconPaperclip />
                 </ActionIcon>
             </Group>

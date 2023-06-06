@@ -22,6 +22,7 @@ export interface IChatStore {
 
     isGroupChatCreationOpened: boolean
     isChatInfoOpened: boolean
+    isAttachementViewOpened:boolean
 
     setCurrentChatId: (chatId: number | undefined) => void
 
@@ -46,5 +47,7 @@ export interface IChatStore {
 
     setGroupChatCreationOpened: (value: boolean) => void
     setChatInfoOpened: (val: boolean) => void
+
+    setAttachementViewOpened:(val:boolean) => void
 
 }

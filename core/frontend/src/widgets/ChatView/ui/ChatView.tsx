@@ -49,7 +49,7 @@ export const ChatView: React.FC<IChatViewProps> = ({ chatId, isDisplayed }) => {
     }, [chatId, chats, msgIndex])
 
     return (
-        (<Box pos="relative" w="100%" display={isDisplayed ? 'block' : 'none'} h='100%' >
+        (<Box pos="relative" w="100%" display={isDisplayed ? 'block' : 'none'} h='100%' bg='dark.8' >
             {!chatId && <ChatStart />}
             {isLoading && <SharedUi.CenterLoader />}
             {chatRoomComponent}

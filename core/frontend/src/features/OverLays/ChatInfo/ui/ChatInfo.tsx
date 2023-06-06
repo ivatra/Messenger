@@ -1,5 +1,5 @@
 import { Group, Text, Modal, Stack, ScrollArea, Box, Center, ActionIcon, Button, Tabs } from "@mantine/core"
-import { Contact, ContactTab, IContact, useChatStore, useContactListStore } from "../../../../entities"
+import { Contact, ContactTab, IContact, useChatStore, useContactListStore, useUserStore } from "../../../../entities"
 import { useCallback, useEffect, useState } from "react"
 import { SharedHelpers, SharedTypes } from "../../../../shared"
 import { CustomAvatar } from "../../../../shared/ui"
@@ -34,9 +34,10 @@ const ParticipantsSelection = ({ closeModal, opened, selectedContacts, setSelect
 interface IParticipantListProps {
     participants: SharedTypes.IChatParticipant[];
     onRemoveParticipant: (partId: number) => void;
+    role:'ADMIN' | 'USER'
 }
 
-const ParticipantList = ({ participants, onRemoveParticipant }: IParticipantListProps) => {
+const ParticipantList = ({ participants, onRemoveParticipant,role }: IParticipantListProps) => {
     return (
         <ScrollArea display='flex' h='350px' w='100%' m  = 'sm' offsetScrollbars>
             <Stack spacing={'0.5rem'} >
@@ -47,9 +48,12 @@ const ParticipantList = ({ participants, onRemoveParticipant }: IParticipantList
                             avatarSize='md'
                             activityLabelSize='xs'
                             userNameSize='sm' />
-                        <ActionIcon c='red.6' onClick={() => onRemoveParticipant(part.id)}>
-                            <IconMinus />
-                        </ActionIcon>
+                            {role === 'ADMIN' && 
+                            <ActionIcon c='red.6' onClick={() => onRemoveParticipant(part.id)}>
+                                <IconMinus />
+                            </ActionIcon>
+                            }
+                      
                     </Group>
                 ))}
             </Stack>
@@ -65,12 +69,8 @@ export const ChatInfo = () => {
     const [notChoosenContacts, setNotChoosenContacts] = useState<IContact[]>(visibleContacts)
     const [activeTab, setActiveTab] = useState<string>('current');
 
-    const currentChat = useCallback(() => {
-
-        return chats[currentChatId]
-
-    }, [chats[currentChatId], currentChatId])()
-
+    const currentChat = chats[currentChatId]
+    const currentUserId = useUserStore().profile.id
     useEffect(() => {
         setNotChoosenContacts(
             visibleContacts.filter(
@@ -102,7 +102,7 @@ export const ChatInfo = () => {
                 }, content: {
                     overflow: 'hidden'
                 }
-            }} size='md' style = {{maxHeight:'70%',width:'50%'}}>
+            }} size = 'xs' style = {{maxHeight:'70%'}}>
                 <Stack align='center' w='100%' mah='70%'>
                     <Group>
                         <CustomAvatar avatarSrc={currentChat.groupChat.avatar} size='xl' />
@@ -112,11 +112,12 @@ export const ChatInfo = () => {
                     <Tabs value={activeTab} onTabChange={(v: string) => setActiveTab(v)} >
                         <Tabs.List>
                             <Tabs.Tab value="current">Current participants</Tabs.Tab>
-                            <Tabs.Tab value="new">Choose new</Tabs.Tab>
+                            {currentChat.groupChat.role === 'ADMIN' &&<Tabs.Tab value="new">Choose new</Tabs.Tab>}
                         </Tabs.List>
                         <Tabs.Panel value="current">  <ParticipantList
-                            participants={currentChat.participants}
+                            participants={currentChat.participants.filter((part) => part.user.id !== currentUserId)}
                             onRemoveParticipant={onRemoveParticipant}
+                            role = {currentChat.groupChat.role}
                         /></Tabs.Panel>
                         <Tabs.Panel value="new"  > 
                             <Stack m='sm' h='350px' >

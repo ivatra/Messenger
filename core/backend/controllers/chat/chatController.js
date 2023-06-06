@@ -18,7 +18,7 @@ class ChatController {
       avatar = req.files.avatar
     }
     const chat = await chatService.createGroupChat(req.user.id, participants, avatar, name);
-    
+
     return res.json(chat);
   }
 
@@ -41,21 +41,20 @@ class ChatController {
   }
 
   async addChatParticipant(req, res) {
-    const { participantId } = req.body
+    const { userId } = req.body
     const { chatId } = req.params
-    await chatService.addParticipantToChat(chatId, participantId, true)
-    return res.json(`Participant ${participantId} added to chat ${chatId}`)
+    const part = await chatService.addParticipantToChat(chatId, userId, true, req.user.id, 'USER')
+    return res.json(part)
   }
 
   async removeChatParticipant(req, res) {
-    const { participantId } = req.query
+    const { participantId } = req.body
     const { chatId } = req.params
-    console.log('chat id = ', chatId)
-    await chatService.destroyParticipantFromChat(chatId, participantId,req.user.id)
+
+    await chatService.destroyParticipantFromChat(chatId, participantId, req.user.id)
     return res.json(`Participant ${participantId} removed from chat ${chatId}`)
   }
 
 }
 
 module.exports = new ChatController()
-

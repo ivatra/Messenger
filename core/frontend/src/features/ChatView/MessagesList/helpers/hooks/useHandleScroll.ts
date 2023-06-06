@@ -25,22 +25,19 @@ export const useManageOverflowLocation = ({ items, renderedItems, scrollRef, msg
             const element = scrollRef?.current?.querySelector(`[data-key="${msgIndex}"]`);
             element?.scrollIntoView({ behavior: 'auto', block: 'end' });
         }
-        
-        // if (msgIndex && msgIndex !== previousMsgIndex) {
-       
-        // } else {
-            if (!hasScrolledToUnread.current) {
-                const lastReadMessage = [...items].reverse().find((item) => item.type === 'Message'
-                    && !item.data.isRead
-                    && item.data.senderId !== userId) as IMessageContentItem | undefined
-                if (lastReadMessage) {
-                    scrollToSpecificMsg(lastReadMessage.data.index)
-                } else {
-                    scrollToBottom()
-                }
+
+        if (!hasScrolledToUnread.current) {
+            const lastReadMessage = [...items].reverse().find((item) => item.type === 'Message'
+                && !item.data.isRead
+                && item.data.senderId !== userId) as IMessageContentItem | undefined
+
+            if (lastReadMessage) {
+                scrollToSpecificMsg(lastReadMessage.data.index)
+            } else {
+                scrollToBottom()
             }
-        // }
-        if(msgIndex){
+        }
+        if (msgIndex) {
             scrollToSpecificMsg(msgIndex)
 
         }

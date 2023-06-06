@@ -34,7 +34,7 @@ export const InboxesList = () => {
                     <SharedUi.Search
                         value={searchValue}
                         setValue={setSearchValue}
-                        placeholder='Write something...' />
+                        placeholder='Search for inboxes...' />
                     <GroupChatButton />
                 </Group>
                 <SharedUi.ScrollableList

@@ -1,9 +1,19 @@
+import { Box } from "@mantine/core"
 import { IParticipantAction } from "../types/Model"
+import { IUser } from "../../../shared/types"
 
 
-export const ParticipantAction: React.FC<IParticipantAction> = ({ causeId, type, victimId }) => {
+interface IProps{
+    victim:IUser
+    inviter:IUser
+    type:'Added' | 'Removed'
+}
 
-    return <>
+export const ParticipantAction: React.FC<IProps> = ({ victim,inviter,type }) => {
 
-    </>
+    return (
+        <Box>
+            {inviter.name} {type} {victim.name}
+        </Box>
+    )
 }

@@ -17,6 +17,11 @@ interface ISearch {
 export const Search: React.FC<ISearch> = ({ value, setValue,placeholder: placeHolder }) => {
     return (
         <TextInput
+            styles={{input:{
+                ":placeholder-shown":{
+                    textOverflow: 'ellipsis',
+                }
+            }}}
             {...textInputProps}
             value={value}
             placeholder={placeHolder}

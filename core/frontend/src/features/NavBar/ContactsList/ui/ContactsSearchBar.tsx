@@ -32,7 +32,7 @@ export const ContactsSearchBar: React.FC<IHeaderProps> = ({ limit }) => {
         <SharedUi.Search
             value={searchTerm}
             setValue={handleSearch}
-            placeholder="Write something..." />
+            placeholder="Search for contacts..." />
 
     );
 };

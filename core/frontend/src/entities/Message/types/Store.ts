@@ -1,6 +1,6 @@
 import { FileWithPath } from "@mantine/dropzone"
 
-import { IContentItem, IListMessage } from "./Model"
+import { IContentItem, IListAttachement, IListMessage } from "./Model"
 
 
 export interface IChatContent {
@@ -13,7 +13,7 @@ export interface IChatContent {
 }
 
 export interface IAttachementsContent {
-    attachments: IListMessage[]
+    attachments: IListAttachement[]
     page: number
     totalCount: number | undefined
     hasMore: boolean
@@ -39,14 +39,14 @@ export interface IMessageStore {
     receiveAttachments: (chatId: number, limit: number) => void
 
     sendMessage: (chatId: number, message: string, attachement?: FileWithPath) => void
-    sendAttachment: (chatId: number, attachement: any) => void
+    sendAttachment: (chatId: number, attachement: IListAttachement) => void
 
     setMessageRead:(chatId:number,messageId:number) => void
     setPage:(chatId:number,page:number) => void
     addLoadedPage:(chatId:number,page:number) => void
     increaseCommunicationMessagesTally:(chatId:number) => void
     addItemWS: (chatId: number,content:IContentItem) => void;
-
+    deleteMsgById:(chatId:number,msgId:number) => void
     disableImageView:() => void
     setImageViewEnabled:(src:string) => void
 }

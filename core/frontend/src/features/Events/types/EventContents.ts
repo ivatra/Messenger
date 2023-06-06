@@ -50,7 +50,8 @@ export interface IParticipantRemovedEvent {
     type: 'participant_removed'
     data: {
         chatId: number
-        participantId: number
+        participantId:number
+        userId: string
         removerId:string
     }
 }

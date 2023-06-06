@@ -37,7 +37,7 @@ const ModalFunctionality: React.FC<IContactModalContentProps> = ({
     return (
         <Stack spacing='0px' style={{ cursor: 'pointer' }}>
             <InteractionButton status={contact.status} contactId={contact.id} />
-            <ButtonTab Icon={IconSquarePlus} label='Add to group' onClick={() => { }} />
+            {/* <ButtonTab Icon={IconSquarePlus} label='Add to group' onClick={() => { }} /> */}
             <ButtonTab Icon={IconMessageForward} label="Forward to chat" onClick={handleForward} />
         </Stack>
     );

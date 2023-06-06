@@ -2,8 +2,8 @@ import { create } from 'zustand'
 import produce from "immer";
 
 import { IAttachementsContent, IChatContent, IMessageStore, IStoreAttachement, IStoreMessage } from '../types/Store'
-import { IListMessage, SentStatuses } from '../types/Model'
-import { IMessagesApiResponse } from '../types/ApiResponse'
+import { IListAttachement, IListMessage, SentStatuses } from '../types/Model'
+import { IAttachementsApiResponse, IMessagesApiResponse } from '../types/ApiResponse'
 import { createMessage } from '../helpers/createMessage'
 import { useUserStore } from '../../User'
 import { useInboxStore } from '../..';
@@ -68,12 +68,11 @@ export const useMessageStore = create<StoreType>((set, get) => ({
     },
     receiveAttachments: async (chatId, limit) => {
         const page = get().attachments[chatId] ? get().attachments[chatId].page : 1;
-        const offset = page * limit;
 
         const request = () =>
-            api.get(`content/chat/${chatId}/attachments/?limit=${limit}&offset=${offset}`);
+            api.get(`content/chat/${chatId}/attachements/?limit=${limit}`);
 
-        const newAttachments = await SharedHelpers.handleRequest<IMessagesApiResponse>(request, set);
+        const newAttachments = await SharedHelpers.handleRequest<IAttachementsApiResponse>(request, set);
 
         if (!newAttachments) return;
 
@@ -81,7 +80,7 @@ export const useMessageStore = create<StoreType>((set, get) => ({
             produce((state: StoreType) => {
                 const chatAttachments = createOrFindAttachement(state, chatId)
                 chatAttachments.attachments.push(...newAttachments.data);
-                chatAttachments.hasMore = newAttachments.count >= chatAttachments.attachments.length;
+                chatAttachments.hasMore = newAttachments.count > chatAttachments.attachments.length;
                 chatAttachments.totalCount = chatAttachments.attachments.length
                 state.attachments[chatId] = chatAttachments;
             })
@@ -140,6 +139,12 @@ export const useMessageStore = create<StoreType>((set, get) => ({
 
         if (response) {
             updateMessageStatus('sent');
+            if (response.attachement) {
+                set(produce((state: StoreType) => {
+                    if (!state.attachments[chatId]) return
+                    state.attachments[chatId].attachments.push(response as IListAttachement);
+                }));
+            }
         } else {
             updateMessageStatus('error');
         }
@@ -151,7 +156,7 @@ export const useMessageStore = create<StoreType>((set, get) => ({
                     attachment: attachment,
                 },
             });
-        const newAttachment = await SharedHelpers.handleRequest<IListMessage>(request, set);
+        const newAttachment = await SharedHelpers.handleRequest<IListAttachement>(request, set);
 
         if (!newAttachment) return;
 
@@ -168,6 +173,12 @@ export const useMessageStore = create<StoreType>((set, get) => ({
         }));
         if (contentItem.type === 'Message') {
             get().increaseCommunicationMessagesTally(chatId)
+            if (contentItem.data.attachement) {
+                set(produce((state: StoreType) => {
+                    if (!state.attachments[chatId]) return
+                    state.attachments[chatId].attachments.push(contentItem.data as IListAttachement);
+                }));
+            }
         }
     },
     addLoadedPage(chatId, page) {
@@ -189,6 +200,8 @@ export const useMessageStore = create<StoreType>((set, get) => ({
     },
     setMessageRead: (chatId, messageId) => {
         set(produce((state: StoreType) => {
+            if (!state.items[chatId]) return
+
             const chatItems = state.items[chatId] || { items: [], page: 1, hasMore: false };
             const updatedItems = chatItems.items.map((item) => {
                 if (item.type === 'Message' && item.data.id === messageId) {
@@ -207,4 +220,11 @@ export const useMessageStore = create<StoreType>((set, get) => ({
     disableImageView() {
         set({ isImageViewEnabled: false })
     },
+    deleteMsgById(chatId, msgId) {
+        set(produce((state: StoreType) => {
+            if (state.items[chatId]) {
+                state.items[chatId].items = state.items[chatId].items.filter((item) =>  item.data.id !== msgId)
+            }
+        }));
+    }
 }));

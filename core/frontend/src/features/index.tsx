@@ -1,3 +1,5 @@
+export { AttachementsView } from "./OverLays/AttachementsView";
+
 export { ChatInfo } from "./OverLays/ChatInfo";
 
 export { ImageView } from "./OverLays/ImageView";

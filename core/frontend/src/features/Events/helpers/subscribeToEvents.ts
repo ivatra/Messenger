@@ -5,7 +5,7 @@ import { SharedConsts } from "../../../shared";
 
 
 function handleEvent(event: IEvent) {
-    console.log(event.type)
+    console.log(event)
     switch (event.type) {
         case 'received_message': {
             const receivedMessageData = event.data;

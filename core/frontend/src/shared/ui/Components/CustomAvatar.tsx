@@ -7,7 +7,7 @@ interface IAvatarProps {
     avatarSrc: string
 }
 
-//TODO: center avatars
+
 export const CustomAvatar = forwardRef<HTMLDivElement, IAvatarProps>(
     ({ size, avatarSrc }, ref?) => {
         const avatarProps: AvatarProps = {

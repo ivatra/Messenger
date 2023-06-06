@@ -56,7 +56,17 @@ const renderItem = async (chat: SharedTypes.IChat, containerRef: RefObject<HTMLD
 
         return renderedMessage;
     } else {
-        const renderedParticipantAction = <ParticipantAction {...message.data} />;
+        const victim = await fetchSender(chat, message.data.victimId)
+        const inviter = chat.participants.find((part) => part.user.id === message.data.causeId)
+
+        if (!victim || !inviter) return <></>
+
+        const renderedParticipantAction = <ParticipantAction
+            key={message.data.id}
+            inviter={inviter.user}
+            type={message.data.type}
+            victim={victim} />;
+
         return renderedParticipantAction;
     }
 };

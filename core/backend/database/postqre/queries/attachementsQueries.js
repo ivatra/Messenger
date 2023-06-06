@@ -5,7 +5,7 @@ const { Sequelize } = require("../postgre")
 
 class attachementsQueries {
     async receiveAll(chatId, limit, offset) {
-        return await Message.findAll({
+        return await Message.findAndCountAll({
             where: {
                 chatId: chatId,
                 '$attachement$': {

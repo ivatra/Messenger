@@ -3,7 +3,6 @@ import { IEvent } from "../../../features/Events/types/Event";
 import { useChatStore, useContactListStore, useInboxStore, useMessageStore } from "../../../entities";
 
 export function handleEvent(event: IEvent) {
-    console.log(event.type)
     switch (event.type) {
         case 'received_message': {
             const receivedMessageData = event.data;
@@ -65,9 +64,14 @@ export function handleEvent(event: IEvent) {
             const participant = participantInvitedData.participant;
 
             const { addParticipantWS } = useChatStore.getState()
+            const { addItemWS } = useMessageStore.getState()
+
 
             addParticipantWS(invitedChatId, participant)
-
+            addItemWS(invitedChatId, {
+                type: 'Action',
+                data: { causeId: event.data.inviterId, id: Date.now(), type: 'Added', victimId: participant.user.id }
+            })
             break;
         }
 
@@ -75,10 +79,16 @@ export function handleEvent(event: IEvent) {
             const participantRemovedData = event.data;
             const removedChatId = participantRemovedData.chatId;
             const removedParticipantId = participantRemovedData.participantId;
+            const userId = participantRemovedData.userId
 
             const { removeParticipantWS } = useChatStore.getState()
+            const { addItemWS } = useMessageStore.getState()
 
             removeParticipantWS(removedChatId, removedParticipantId)
+            addItemWS(removedChatId, {
+                type: 'Action',
+                data: { causeId: event.data.removerId, id: Date.now(), type: 'Removed', victimId: userId }
+            })
             break;
         }
         case 'excluded_from_chat': {
@@ -87,7 +97,10 @@ export function handleEvent(event: IEvent) {
 
             const { removeChat } = useChatStore.getState()
 
+            window.location.href = '/chat'
+
             removeChat(excludedChatId)
+
             break;
         }
         case 'invited_to_chat': {
@@ -95,8 +108,11 @@ export function handleEvent(event: IEvent) {
             const invitedChat = invitedToChatData.chat;
 
             const { addChat } = useChatStore.getState()
+            const {receiveByChat} = useInboxStore.getState()
+
 
             addChat(invitedChat)
+            receiveByChat(invitedChat.id)
             break;
         }
         case 'chat_updated': {
@@ -105,10 +121,10 @@ export function handleEvent(event: IEvent) {
             const updatedChatId = chatUpdatedData.chatId;
 
             const { editGroupChatWS } = useChatStore.getState()
-            const {updateApperance} = useInboxStore.getState()
+            const { updateApperance } = useInboxStore.getState()
             console.log(chatUpdatedData)
             editGroupChatWS(updatedChatId, name, avatar)
-            updateApperance(updatedChatId,name,avatar)
+            updateApperance(updatedChatId, name, avatar)
             break;
         }
         default:

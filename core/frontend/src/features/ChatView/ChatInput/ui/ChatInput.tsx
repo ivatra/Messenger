@@ -30,7 +30,7 @@ export const ChatInput: React.FC<IChatInputProps> = ({ parentHeight, isDragging,
 
     const { sendMessage, isLoading, isError, increaseCommunicationMessagesTally } = useMessageStore()
 
-    const {chat} = useContext(ChatContext)
+    const { chat } = useContext(ChatContext)
 
 
     useDidUpdate(() => {
@@ -46,10 +46,15 @@ export const ChatInput: React.FC<IChatInputProps> = ({ parentHeight, isDragging,
     const handleFileRemove = () => setFiles([])
 
     const handleMessageSend = () => {
-        if (messageInput.length < 1) return
+        if (messageInput.length < 1 && !files[0]) return
+
+        if (files[0] && !messageInput) {
+            sendMessage(chat.id, 'Attachement', files[0])
+        } else {
+            sendMessage(chat.id, messageInput, files[0])
+        }
         setMessageSending(true)
         increaseCommunicationMessagesTally(chat.id)
-        sendMessage(chat.id, messageInput, files[0])
     }
 
 

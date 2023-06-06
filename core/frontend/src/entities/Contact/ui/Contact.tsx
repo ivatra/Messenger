@@ -1,6 +1,6 @@
 import { Box, BoxProps, Group, GroupProps, MantineNumberSize, Stack, Text } from "@mantine/core";
 
-import { IContact } from "../..";
+import { IContact, useContactInteractionStore } from "../..";
 
 import { SharedHelpers, SharedUi } from "../../../shared";
 import { IUser } from "../../../shared/types";
@@ -15,22 +15,24 @@ const groupProps: GroupProps = {
 
 interface IContactProps {
     contact: IContact | IUser
-    props?:BoxProps
-    userNameSize:MantineNumberSize
-    avatarSize:MantineNumberSize
-    activityLabelSize:MantineNumberSize
+    props?: BoxProps
+    userNameSize: MantineNumberSize
+    avatarSize: MantineNumberSize
+    activityLabelSize: MantineNumberSize
 
 }
 
 export const Contact = React.forwardRef<HTMLDivElement, IContactProps>(({ contact, props, avatarSize, activityLabelSize, userNameSize }, ref) => {
-    const dateSeen = contact.lastSeen ? SharedHelpers.formatDate(contact.lastSeen) : 'unknown';
+    const dateSeen = contact.lastSeen ? SharedHelpers.formatDate(contact.lastSeen) : 'unknown'
 
     return (
         <Box ref={ref} {...props}>
             <Group {...groupProps}>
                 <SharedUi.CustomAvatar avatarSrc={contact.avatar} size={avatarSize} />
                 <Stack spacing={'0px'} justify="center">
-                    <SharedUi.UserName name={contact.name} nameSize={userNameSize} />
+                    <SharedUi.UserName
+                        name={contact.name}
+                        nameSize={userNameSize} />
                     <Text size={activityLabelSize} color='dark.2' >last seen {dateSeen}</Text>
                 </Stack>
             </Group>

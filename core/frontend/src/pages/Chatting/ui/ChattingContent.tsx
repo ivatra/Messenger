@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 
-import { useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 import { useMediaQuery } from "@mantine/hooks";
 import { AppShell, AppShellProps, Group } from "@mantine/core";
@@ -17,16 +17,25 @@ export const ChattingContent = () => {
     const { chatId } = useParams()
 
     const isDesktop = useMediaQuery(`(min-width: ${SharedConsts.DESKTOP_WIDTH})`);
-
+    const navigate = useNavigate()
     const { setCurrentChatId } = useChatStore()
 
     useEffect(() => {
         setCurrentChatId(chatId ? +chatId : undefined)
     }, [chatId])
 
+
+    const onSectionChange = (val: sections) => {
+        if (val === 'Chats') {
+            navigate('/chat')
+        }
+
+        setSection(val)
+
+    }
     const navBarProps = {
         section: section,
-        setSection: setSection
+        setSection: onSectionChange
     }
 
     const appShellProps: Omit<AppShellProps, 'children'> = {
@@ -65,4 +74,4 @@ export const ChattingContent = () => {
     )
 }
 
-export const MemoziedChattingPage = React.memo(ChattingContent)
+export const MemoizedChattingContent = React.memo(ChattingContent)

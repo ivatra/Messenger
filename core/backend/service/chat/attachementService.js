@@ -2,7 +2,9 @@ const attachementsQueries = require('../../database/postqre/queries/attachements
 
 class AttachementService {
     async fetchAll(chatId, limit, offset) {
-        return await attachementsQueries.receiveAll(chatId,limit,offset)
+        const {rows:data,count} = await attachementsQueries.receiveAll(chatId,limit,offset)
+        
+        return {data,count}
     }
 
     async fetchOne(chatId, attachementId) {

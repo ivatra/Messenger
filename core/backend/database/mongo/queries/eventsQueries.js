@@ -90,13 +90,14 @@ class eventQueries {
         insertEvent(event);
     }
 
-    async createParticipantRemovedEvent(recipientId, chatId, participantId, removerId) {
+    async createParticipantRemovedEvent(recipientId, chatId, participantId,userId, removerId) {
         const event = {
             type: 'participant_removed',
             recipientId: recipientId,
             data: {
                 chatId: chatId,
-                participantId: participantId,
+                participantId:participantId,
+                userId: userId,
                 removerId: removerId
             },
             notify: false
@@ -133,13 +134,13 @@ class eventQueries {
         insertEvent(event);
     }
 
-    async createChatUpdatedEvent(recipientId, name,avatar, chatId) {
+    async createChatUpdatedEvent(recipientId, name, avatar, chatId) {
         const event = {
             type: 'chat_updated',
             recipientId: recipientId,
             data: {
-                name:name,
-                avatar:avatar,
+                name: name,
+                avatar: avatar,
                 chatId: chatId
             },
             notify: false

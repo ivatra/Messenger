@@ -7,8 +7,8 @@ const { Message, MessageMeta } = require("../models/messageModel");
 const { User, UserVector } = require("../models/userModel");
 
 class inBoxQueries {
-  async createInbox(chatId, userId) {
-    return await InBox.create({ chatId: chatId, userId: userId })
+  async createInbox(chatId, userId,messageId) {
+    return await InBox.create({ chatId: chatId, userId: userId,messageId:messageId ? messageId : undefined })
   }
 
   async receiveInboxById(inboxId) {
@@ -197,6 +197,12 @@ class inBoxQueries {
     })
 
     return await inbox.update({ messageId: messageId })
+  }
+  
+
+  async destroyInboxByChatIdAndUser(chatId,userId){
+
+    return await InBox.destroy({  where:{chatId, userId} })
   }
   async updateUnreadMsgs(userId, chatId, property, count = 1) {
     if (property !== 'increment' && property !== 'decrement') {

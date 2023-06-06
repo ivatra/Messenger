@@ -13,6 +13,8 @@ const { ChatParticipant, Chat, GroupChat, IndividualChat } = require('../../data
 const { InBox } = require('../../database/postqre/models');
 const contactsService = require('../pages/contactsService');
 const { validateAndSaveAvatar } = require('../userService');
+const userQueries = require('../../database/postqre/queries/userQueries');
+const { User } = require('../../database/postqre/models/userModel');
 
 
 async function filterChatParticipants(chat, firstUser, secondUser) {
@@ -51,33 +53,17 @@ class ChatService {
 
     const chat = await chatQueries.createChat("group");
     await chatQueries.createGroupChat(chat.id, chatAvatar, chatName);
+
     await this.addParticipantToChat(chat.id, userId, false, userId, 'ADMIN')
+
+    await messageQueries.createMessage(chat.id, 'I have just created a chat. Hello guys!', userId)
 
     for (var partId of participantsIds) {
       await this.addParticipantToChat(chat.id, partId, true, userId, 'USER')
     }
-    console.log(chat.id)
-    await messageQueries.createMessage(chat.id, 'I have just created a chat. Hello guys!', userId)
 
     const chato = await chatQueries.receiveChatContent(chat.id, userId);
     return { ...chato.dataValues, ...{ groupChat: { ...chato.dataValues.groupChat.dataValues, role: 'ADMIN' } } }
-  }
-
-  async addParticipantToChat(chatId, participantId, eventNeeded = false, invitedId, role = 'USER') {
-    const [participant, created] = await chatQueries.createParticipant(chatId, participantId, role)
-    if (!created)
-      throw ApiError.badRequest(`Participant ${participantId} arleady exists in ${chatId} or chat doesn't exist`);
-
-    await inboxQueries.createInbox(chatId, participantId)
-
-    const chat = await chatQueries.receiveChatContent(chatId, invitedId)
-
-    const part = await contactsService.getContact(invitedId, participantId)
-
-    if (eventNeeded) {
-      await this.notifyAllUsersAboutNewParticipant(chatId, part)
-      await eventsQueries.createInvitedToChatEvent(participantId, chat.dataValues, invitedId)
-    }
   }
 
   async fetchChatContent(chatId, userId) {
@@ -123,28 +109,66 @@ class ChatService {
     return 'Chat succesfuly updated'
   }
 
+  async addParticipantToChat(chatId, participantId, eventNeeded = false, invitedId, role = 'USER') {
+
+    console.log(participantId, chatId)
+    if (!chatId || !participantId) {
+      throw ApiError.badRequest('ChatId or participantId is absent')
+    }
+    const [participant, created] = await chatQueries.createParticipant(chatId, participantId, role)
+
+    if (!created)
+      throw ApiError.badRequest(`Participant ${participantId} arleady exists in ${chatId} or chat doesn't exist`);
+
+
+    const {rows,count} = await messageQueries.receiveByChat(chatId, participantId, 1, 0)
+    await inboxQueries.createInbox(chatId, participantId,rows[0] ? rows[0].id : undefined)
+
+    const chat = await chatQueries.receiveChatContent(chatId, invitedId)
+
+    const contact = await contactsService.getContact(invitedId, participantId)
+
+    const merged = { ...participant.dataValues, isTyping: false, user: contact }
+    if (eventNeeded) {
+      await this.notifyAllUsersAboutNewParticipant(chatId, merged, invitedId)
+      await eventsQueries.createInvitedToChatEvent(participantId, chat.dataValues, invitedId)
+    }
+
+    return merged
+  }
+
   async destroyParticipantFromChat(chatId, participantId, destroyerId) {
     const groupChat = await this.checkForGroupChat(chatId)
 
     if (!groupChat)
       throw ApiError.badRequest('Chat have to be group to destroy participants.')
 
-    const destroyedParticipant = await chatQueries.destroyParticipant(chatId, participantId)
+    const currPart = await ChatParticipant.findByPk(participantId)
+
+    if (!currPart) {
+      throw ApiError.badRequest('Participant was not found')
+    }
+
+    const destroyedParticipant = await chatQueries.destroyParticipant(participantId)
 
     if (destroyedParticipant === 0) {
       throw ApiError.badRequest(`Participant ${participantId} doesn't exist in chat ${chatId}`);
     }
+
     const chat = await chatQueries.receiveChatByPk(chatId)
-    await InBox.destroy({ chatId: chatId, userId: participantId })
-    await ChatParticipant.destroy({ chatId: chatId, participantId: participantId })
+
+
+    await inboxQueries.destroyInboxByChatIdAndUser(chatId, currPart.userId)
+
+    await ChatParticipant.destroy({ where: { chatId: chatId, userId: currPart.userId } })
 
     const participants = await chatQueries.receiveParticipantsByChat(chatId)
 
     for (var participant of participants) {
-      await eventsQueries.createParticipantRemovedEvent(participant.user.id, chatId, participantId, destroyerId)
+      await eventsQueries.createParticipantRemovedEvent(participant.user.id, chatId, participantId, currPart.userId, destroyerId)
     }
 
-    await eventsQueries.createExcludedFromChatEvent(participantId, chat.dataValues.id, destroyerId)
+    await eventsQueries.createExcludedFromChatEvent(currPart.userId, chat.dataValues.id, destroyerId)
   }
 
   async checkForMemberingInChat(userId, chatId) {
@@ -157,10 +181,10 @@ class ChatService {
     return participant
   }
 
-  async notifyAllUsersAboutNewParticipant(chatId, participant) {
+  async notifyAllUsersAboutNewParticipant(chatId, part, inviterId) {
     const participants = await chatQueries.receiveParticipantsByChat(chatId)
     for (var participant of participants) {
-      await eventsQueries.createParticipantInvitedEvent(participant.userId, chatId,)
+      await eventsQueries.createParticipantInvitedEvent(participant.userId, chatId, part, inviterId)
     }
   }
 

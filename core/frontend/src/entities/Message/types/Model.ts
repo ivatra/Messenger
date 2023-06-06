@@ -28,6 +28,10 @@ export interface IListMessage extends SharedTypes.IMessage{
     attachement?:SharedTypes.IAttachement
 }
 
+export interface IListAttachement extends SharedTypes.IMessage{
+    attachement: SharedTypes.IAttachement
+}
+
 export type IContentItem = IMessageContentItem | IMessageActionContentItem
 export type SentStatuses = 'loading' | 'error' | 'sent'
 

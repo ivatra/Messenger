@@ -15,8 +15,9 @@ const baseUrl = 'content/chat/'
 const initialState = {
     chats: [],
     currentChatId: 0,
-    isChatInfoOpened:false,
+    isChatInfoOpened: false,
     isGroupChatCreationOpened: false,
+    isAttachementViewOpened: false,
 
     isError: false,
     isLoading: false
@@ -53,18 +54,15 @@ export const useChatStore = create<StoreType>()((set, get) => ({
                     userId: userId,
                 },
             });
-        const response = await SharedHelpers.handleRequest<SharedTypes.IChatParticipant>(request, set);
-
-        if (!response) return;
-
-        set(
-            produce((state: StoreType) => {
-                state.chats[chatId].participants.push(response);
-            })
-        );
+        await SharedHelpers.handleRequest<SharedTypes.IChatParticipant>(request, set);
     },
     removeParticipant: async (chatId, partid) => {
-        const request = () => api.delete(baseUrl + chatId + `/participants/${partid}`);
+        const request = () => api.delete(baseUrl + chatId + `/participants`, {
+            json: {
+                participantId: partid
+            }
+        });
+
         const response = await SharedHelpers.handleRequest(request, set);
 
         if (!response) return;
@@ -93,8 +91,8 @@ export const useChatStore = create<StoreType>()((set, get) => ({
         const participantsIds = participants.map((part) => part.id)
 
         formData.append('participants', JSON.stringify(participantsIds));
-        
-        const request = () => api.post(baseUrl + 'group',{body:formData});
+
+        const request = () => api.post(baseUrl + 'group', { body: formData });
 
         const response = await SharedHelpers.handleRequest<SharedTypes.IChat>(request, set);
 
@@ -107,6 +105,7 @@ export const useChatStore = create<StoreType>()((set, get) => ({
             })
         );
         receiveByChat(response.id)
+        window.location.href = `/chat/${response.id}`
     },
     editGroupChat: async (chatId, fields) => {
         const formData = new FormData();
@@ -209,9 +208,12 @@ export const useChatStore = create<StoreType>()((set, get) => ({
     setGroupChatCreationOpened: (value) => {
         set({ isGroupChatCreationOpened: value })
     },
-  setChatInfoOpened(val) {
-      set({isChatInfoOpened:val})
-  },
+    setChatInfoOpened(val) {
+        set({ isChatInfoOpened: val })
+    },
+    setAttachementViewOpened(val) {
+        set({ isAttachementViewOpened: val })
+    },
 }))
 
 export default useChatStore
