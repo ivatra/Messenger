@@ -115,11 +115,6 @@ export const useUserStore = create<StoreType>()(
                 window.location.href = SharedConsts.WEBSITE_URL + '/chat'
             },
             register: async (name, login, email, pass, avatar) => {
-                // name = 'ivatra'
-                // login = 'ivatra'
-                // email = 'ivatra@yandex.ru'
-                // pass = '12345'
-
                 const formData = new FormData();
                 formData.append('name', name)
                 formData.append('login', login)

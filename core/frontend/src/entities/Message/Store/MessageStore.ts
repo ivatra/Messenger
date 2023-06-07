@@ -67,7 +67,6 @@ export const useMessageStore = create<StoreType>((set, get) => ({
 
     },
     receiveAttachments: async (chatId, limit) => {
-        const page = get().attachments[chatId] ? get().attachments[chatId].page : 1;
 
         const request = () =>
             api.get(`content/chat/${chatId}/attachements/?limit=${limit}`);
